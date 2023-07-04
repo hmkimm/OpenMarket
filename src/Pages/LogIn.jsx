@@ -1,20 +1,23 @@
 import { React, useState } from "react";
 import styled from "styled-components";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 
 import logo from "../Assets/Icons/Logo-hodu.svg";
 import Button from "../Components/Common/Button";
+import userToken from "../Recoil/userToken/userToken";
+
 import LogInAPI from "../Utils/LogInAPI";
 
 const LogIn = () => {
   const navigate = useNavigate();
   const [selectedBtn, setSelectedBtn] = useState(null);
-
   const [userInput, setUserInput] = useState({
     username: "",
     password: "",
     login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
   });
+  const [token, setToken] = useRecoilState(userToken);
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -27,6 +30,7 @@ const LogIn = () => {
     console.log("handlelogin 호출");
     e.preventDefault();
     const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
+    setToken(res.token);
     navigate("/buyermain");
   };
   const handleBtn = (btnValue) => {

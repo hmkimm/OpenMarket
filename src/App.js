@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LogIn from "./Pages/LogIn";
 import GlobalStyle from "./GlobalStyle";
 import BuyerMain from "./Pages/BuyerMain";
+import { RecoilRoot } from "recoil";
 
 function App() {
-  return ( 
-    <div>
+  return (
+    <RecoilRoot>
       <GlobalStyle />
       <Router>
         <Routes>
@@ -14,7 +15,7 @@ function App() {
           <Route path="/buyermain" element={<BuyerMain />} />
         </Routes>
       </Router>
-    </div>
+    </RecoilRoot>
   );
 }
 export default App;
