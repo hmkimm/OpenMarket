@@ -1,4 +1,4 @@
-import URL from "./URL";
+import URL from "../URL";
 
 const ProductAPI = (token) => {
   const fetchproducts = async () => {
@@ -6,7 +6,7 @@ const ProductAPI = (token) => {
       const res = await fetch(`${URL}/products/`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `JWT ${token}`,
         },
       });
       const data = await res.json();
@@ -16,7 +16,7 @@ const ProductAPI = (token) => {
     }
   };
   return { fetchproducts };
-  //memo: 현재는 fetchProducts 함수만을 포함하고 있지만 나중에 다른 API 처리 함수를 추가할 수도 있습니다. 따라서 이 경우 객체로 반환하는 방식이 더 유연한 설계를 가능케 합니다. 객체로 반환하면 다음과 같이 여러 함수를 쉽게 추가할 수 있습니다.   
+  //memo: 현재는 fetchProducts 함수만을 포함하고 있지만 나중에 다른 API 처리 함수를 추가할 수도 있습니다. 따라서 이 경우 객체로 반환하는 방식이 더 유연한 설계를 가능케 합니다. 객체로 반환하면 다음과 같이 여러 함수를 쉽게 추가할 수 있습니다.
   // return { fetchProducts, createProduct, updateProduct };
 };
 

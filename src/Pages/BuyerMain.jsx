@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 
-import ProductAPI from "../Utils/ProductAPI";
+import ProductAPI from "../Utils/Product/ProductAPI";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import insta from "../Assets/Icons/insta.svg";

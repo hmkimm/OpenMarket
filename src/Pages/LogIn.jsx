@@ -31,7 +31,12 @@ const LogIn = () => {
     e.preventDefault();
     const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
     setToken(res.token);
-    navigate("/buyermain");
+
+    if (userInput.login_type === "SELLER") {
+      navigate("/sellermain");
+    } else {
+      navigate("/buyermain");
+    }
   };
   const handleBtn = (btnValue) => {
     setSelectedBtn(btnValue);
