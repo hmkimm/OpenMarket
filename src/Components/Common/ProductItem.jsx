@@ -6,7 +6,7 @@ import { styled } from "styled-components";
 export default function ProductItem(props) {
   return (
     <ProductLayout>
-      <ProductImg src={pouch} alt="노트북 파우치" />
+      <ProductImg src={props.img || pouch} alt="노트북 파우치" />
       <ProductSeller>{props.seller}</ProductSeller>
       <ProductName>{props.name}</ProductName>
       <Price>

@@ -28,31 +28,23 @@ const BuyerMain = () => {
     };
     getProduct();
   }, []);
-  console.log(productList);
+  console.log(productList.results);
   return (
     <div>
       <BasicHeader />
       <Grid>
-        <ProductItem
-          seller="우당탕탕 라이캣의 실험실"
-          name="Hack Your Life 개발자 노트북 파우치"
-          price="29,000"
-        />
-        <ProductItem
-          seller="우당탕탕 라이캣의 실험실"
-          name="Hack Your Life 개발자 노트북 파우치"
-          price="29,000"
-        />
-        <ProductItem
-          seller="우당탕탕 라이캣의 실험실"
-          name="Hack Your Life 개발자 노트북 파우치"
-          price="29,000"
-        />
-        <ProductItem
-          seller="우당탕탕 라이캣의 실험실"
-          name="Hack Your Life 개발자 노트북 파우치"
-          price="29,000"
-        />
+        {productList.results?.map((item, i) => {
+          return (
+            <ProductItem
+              key={i}
+              seller={item.store_name}
+              name={item.product_name}
+              // price={item.price?.toLocalString()}
+              price={item.price ? item.price.toLocaleString() : ""}
+              img={item.image}
+            />
+          );
+        })}
       </Grid>
 
       <Footer>
@@ -124,7 +116,7 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   grid-gap: 70px;
-  margin: 0 auto;
+  margin: 0 auto 50px auto;
   max-width: calc(380px * 3 + 70px * 2);
 `;
 
