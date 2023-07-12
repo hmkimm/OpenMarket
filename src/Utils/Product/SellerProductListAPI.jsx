@@ -2,6 +2,7 @@ import URL from "../URL";
 
 const SellerProductListAPI = async (token) => {
   // const fetchProduct = async () => {
+    // fetchProduct 함수 생략 가능
   try {
     const res = await fetch(`${URL}/seller/`, {
       method: "GET",
