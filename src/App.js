@@ -5,6 +5,7 @@ import GlobalStyle from "./GlobalStyle";
 import BuyerMain from "./Pages/BuyerMain";
 import SellerMain from "./Pages/SellerMain";
 import { RecoilRoot } from "recoil";
+import AddProduct from "./Pages/AddProduct";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<LogIn />} />
           <Route path="/buyermain" element={<BuyerMain />} />
           <Route path="/sellermain" element={<SellerMain />} />
+          <Route path="/addproduct" element={<AddProduct />} />
         </Routes>
       </Router>
     </RecoilRoot>
