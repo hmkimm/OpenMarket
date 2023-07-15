@@ -40,6 +40,8 @@ const AddProduct = () => {
           <Title>상품명</Title>
           <TextInput type="text" />
           <UnitInput title="판매가">원</UnitInput>
+          <Title>배송방법</Title>
+          <Button>택배, 소포, 등기</Button>
           <UnitInput title="기본 배송비">원</UnitInput>
           <UnitInput title="재고">개</UnitInput>
         </div>
@@ -82,4 +84,13 @@ const TextInput = styled.input`
   margin-bottom: 16px;
 `;
 
+const Button = styled.button`
+  width: 220px;
+  border-radius: 5px;
+  padding: 17px 0px;
+  margin-bottom: 16px;
+  color: #767676;
+  /* background-color: ||white; */
+  background: #21bf48;
+`;
 export default AddProduct;
