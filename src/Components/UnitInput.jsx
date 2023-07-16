@@ -6,7 +6,12 @@ const UnitInput = (props) => {
     <>
       <Title>{props.title}</Title>
       <Layout>
-        <Input type="number" />
+        <Input
+          onChange={props.onChange}
+          name={props.name}
+          value={props.value}
+          type="number"
+        />
         <Unit>{props.children}</Unit>
       </Layout>
     </>
@@ -34,14 +39,14 @@ const Input = styled.input`
   width: 166px;
   padding: 17px 0 17px 16px;
   font-size: 16px;
-  ::-webkit-inner-spin-button{
-  -webkit-appearance: none; 
-  margin: 0; 
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
-  ::-webkit-outer-spin-button{
-  -webkit-appearance: none; 
-  margin: 0; 
-  }  
+  ::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 `;
 
 const Unit = styled.div`
