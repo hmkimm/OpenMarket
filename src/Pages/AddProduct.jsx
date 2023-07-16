@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import { useRecoilState } from "recoil";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import imgicon from "../Assets/Icons/icon-img.svg";
 import UnitInput from "../Components/UnitInput";
 
+import AddProductAPI from "../Utils/Product/AddProductAPI";
+import userToken from "../Recoil/userToken/userToken";
+
 const AddProduct = () => {
+  const token = useRecoilState(userToken);
   const [inputs, setInputs] = useState({
     product_name: "",
     image: "",
@@ -15,13 +20,21 @@ const AddProduct = () => {
     stock: "",
     product_info: "",
   });
+  console.log(inputs);
   const [selectedBtn, setSelectedBtn] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setInputs(() => ({
+    setInputs((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleSubmit = async () => {
+    console.log("handlesumbmit 호출");
+    const res = await AddProductAPI(inputs, token);
+    console.log(res);
   };
   return (
     <>
@@ -73,39 +86,66 @@ const AddProduct = () => {
               value={inputs.product_name}
               type="text"
             />
-            <UnitInput name="price" value={inputs.price} title="판매가">
+            <UnitInput
+              onChange={handleInputChange}
+              name="price"
+              value={inputs.price}
+              title="판매가"
+            >
               원
             </UnitInput>
             <Title>배송방법</Title>
             <Button
-              onClick={() => {
+              name="shipping_method"
+              value="PARCEL"
+              onClick={(e) => {
                 setSelectedBtn("left");
-                // value = "PARCEL";
+                handleInputChange(e);
               }}
-              name="shipping"
               isSelected={selectedBtn === "left"}
             >
               택배, 소포, 등기
             </Button>
             <Button
-              onClick={() => {
+              name="shipping_method"
+              value="DELIVERY"
+              onClick={(e) => {
                 setSelectedBtn("right");
+                handleInputChange(e);
               }}
               isSelected={selectedBtn === "right"}
             >
               직접배송(화물배달)
             </Button>
-            <UnitInput title="기본 배송비">원</UnitInput>
-            <UnitInput title="재고">개</UnitInput>
+            <UnitInput
+              onChange={handleInputChange}
+              name="shipping_fee"
+              value={inputs.shipping_fee}
+              title="기본 배송비"
+            >
+              원
+            </UnitInput>
+            <UnitInput
+              onChange={handleInputChange}
+              name="stock"
+              value={inputs.stock}
+              title="재고"
+            >
+              개
+            </UnitInput>
           </div>
         </BodyLayout>
         <Title>상품 상세 정보 </Title>
-        <ProductInfo />
+        <ProductInfo
+          onChange={handleInputChange}
+          name="product_info"
+          value={inputs.product_info}
+        />
       </Layout>
       <Button width="200px" padding="19px 0">
         취소
       </Button>
-      <Button width="200px" padding="19px 0">
+      <Button onClick={handleSubmit} width="200px" padding="19px 0">
         저장하기
       </Button>
     </>
