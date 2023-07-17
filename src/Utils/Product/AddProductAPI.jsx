@@ -10,7 +10,7 @@ const AddProductAPI = async ({ inputs, token }) => {
       },
       body: JSON.stringify(inputs),
     });
-    // console.log(JSON.stringify(inputs));
+   
     const data = await res.json();
     return data;
   } catch (error) {
