@@ -16,7 +16,7 @@ const BuyerMain = () => {
 
   const [productList, setProductList] = useState({});
   // const data = ProductAPI();
-  // console.log(data);
+  console.log(data);
   //memo: 위 코드에서 문제가 되는 부분은 ProductAPI 함수를 동기식으로 호출하려고 시도한다는 것입니다. 그러나 ProductAPI 함수는 async 로 선언되어 있기 때문에 이를 동기식으로 호출할 수 없습니다. 해당 함수를 호출하면 즉시 Promise 객체가 반환되며, 실제 데이터는 아직 반환되지 않습니다. 이를 해결하려면, ProductAPI 함수를 비동기적으로 호출하는 코드를 사용해야 합니다. 그래서 useEffect를 사용하여 이를 처리하는 것이 좋습니다. useEffect 내에서 async-await를 사용하여 함수를 호출하면 적절한 시점에 상태를 업데이트할 수 있습니다.
   useEffect(() => {
     const getProduct = async () => {
