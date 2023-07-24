@@ -13,7 +13,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <Routes>
-          <Route path="/login" element={<LogIn />} />
+          <Route path="/" element={<LogIn />} />
           <Route path="/buyermain" element={<BuyerMain />} />
           <Route path="/sellermain" element={<SellerMain />} />
           <Route path="/addproduct" element={<AddProduct />} />

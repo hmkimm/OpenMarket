@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import logo from "../Assets/Icons/Logo-hodu.svg";
 import Button from "../Components/Common/Button";
 import userToken from "../Recoil/userToken/userToken";
+import ErrorMsg from "../Components/Common/ErrorMsg";
 
 import LogInAPI from "../Utils/LogInAPI";
 
@@ -18,6 +19,7 @@ const LogIn = () => {
     login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
   });
   const [token, setToken] = useRecoilState(userToken);
+  const [errMsg, setErrMsg] = useState("");
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -27,15 +29,25 @@ const LogIn = () => {
     }));
   };
   const handleLogIn = async (e) => {
-    console.log("handlelogin 호출");
     e.preventDefault();
-    const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
-    setToken(res.token);
+    try {
+      const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
+      console.log(res);
+      setToken(res.token);
 
-    if (userInput.login_type === "SELLER") {
-      navigate("/sellermain");
-    } else {
-      navigate("/buyermain");
+      if (userInput.login_type === "SELLER") {
+        navigate("/sellermain");
+      } else {
+        navigate("/buyermain");
+      }
+    } catch {
+      setErrMsg("아이디 또는 비밀번호가 일치하지 않습니다.");
+      setUserInput({
+        username: "",
+        password: "",
+        login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
+      });
+      // userInput.username.focus();
     }
   };
   const handleBtn = (btnValue) => {
@@ -87,14 +99,8 @@ const LogIn = () => {
           placeholder="비밀번호"
           onChange={handleInputChange}
         />
-        <Button
-          type="submit"
-          onClick={() => {
-            console.log(33333);
-          }}
-        >
-          로그인
-        </Button>
+        {errMsg && <ErrorMsg>{errMsg}</ErrorMsg>}
+        <Button type="submit">로그인</Button>
       </FormLayout>
       <LinkLayout>
         <Link to="/">회원가입 </Link>
@@ -126,6 +132,7 @@ const LogInButton = styled.button.attrs({
   font-size: 18px;
   border-radius: 10px;
   border: 1px solid #c4c4c4;
+  border-bottom: transparent;
   background-color: ${(props) => (props.$isSelected ? "#F2F2F2" : "")};
 `;
 
