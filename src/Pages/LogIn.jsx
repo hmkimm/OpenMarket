@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useRef } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -20,6 +20,7 @@ const LogIn = () => {
   });
   const [token, setToken] = useRecoilState(userToken);
   const [errMsg, setErrMsg] = useState("");
+  const inputRef = useRef();
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -30,24 +31,32 @@ const LogIn = () => {
   };
   const handleLogIn = async (e) => {
     e.preventDefault();
-    try {
-      const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
-      console.log(res);
-      setToken(res.token);
 
-      if (userInput.login_type === "SELLER") {
-        navigate("/sellermain");
-      } else {
-        navigate("/buyermain");
+    if (!userInput.username && !userInput.password) {
+      setErrMsg("아이디를 입력해주세요.");
+    } else if (!userInput.username) {
+      setErrMsg("아이디를 입력해주세요.");
+    } else if (!userInput.password) {
+      setErrMsg("비밀번호를 입력해주세요.");
+    } else {
+      try {
+        const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
+        setToken(res.token);
+
+        if (userInput.login_type === "SELLER") {
+          navigate("/sellermain");
+        } else {
+          navigate("/buyermain");
+        }
+      } catch (error) {
+        setErrMsg("아이디 또는 비밀번호가 일치하지 않습니다.");
+        setUserInput({
+          username: "",
+          password: "",
+          login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
+        });
+        inputRef.current.focus();
       }
-    } catch {
-      setErrMsg("아이디 또는 비밀번호가 일치하지 않습니다.");
-      setUserInput({
-        username: "",
-        password: "",
-        login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
-      });
-      // userInput.username.focus();
     }
   };
   const handleBtn = (btnValue) => {
@@ -92,15 +101,27 @@ const LogIn = () => {
           value={userInput.username}
           placeholder="아이디"
           onChange={handleInputChange}
+          ref={inputRef}
         />
+        {errMsg === "아이디를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
         <Input
           name="password"
           value={userInput.password}
           placeholder="비밀번호"
           onChange={handleInputChange}
         />
-        {errMsg && <ErrorMsg>{errMsg}</ErrorMsg>}
-        <Button type="submit">로그인</Button>
+        {errMsg === "비밀번호를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
+        {errMsg === "아이디 또는 비밀번호가 일치하지 않습니다." && (
+          <ErrorMsg>{errMsg}</ErrorMsg>
+        )}
+        <Button
+          empty={
+            !userInput.login_type || !userInput.username || !userInput.password
+          }
+          type="submit"
+        >
+          로그인
+        </Button>
       </FormLayout>
       <LinkLayout>
         <Link to="/">회원가입 </Link>
@@ -113,7 +134,7 @@ const LogIn = () => {
 const FormLayout = styled.form`
   margin: 0 auto;
   width: 550px;
-  height: 352px;
+  /* height: 352px; */
   border: 1px solid #c4c4c4;
   padding: 0 35px 36px 35px;
   border-radius: 10px;
