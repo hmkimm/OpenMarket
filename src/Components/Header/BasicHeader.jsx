@@ -23,11 +23,11 @@ const BasicHeader = () => {
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
         <IconBtnLayout>
-          <IconBtn bg={cart} />
+          <IconBtn $bg={cart} />
           <span>장바구니</span>
         </IconBtnLayout>
         <IconBtnLayout>
-          <IconBtn bg={user} />
+          <IconBtn $bg={user} />
           <span>마이페이지</span>
         </IconBtnLayout>
       </div>
@@ -78,6 +78,6 @@ const IconBtnLayout = styled.button`
 const IconBtn = styled.button`
   width: 32px;
   height: 32px;
-  background: url(${(props) => props.bg}) no-repeat center;
+  background: url(${(props) => props.$bg}) no-repeat center;
 `;
 export default BasicHeader;

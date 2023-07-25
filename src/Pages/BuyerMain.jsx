@@ -58,9 +58,9 @@ const BuyerMain = () => {
               <a href="#">제휴문의 </a>
             </div>
             <div>
-              <SnsBtn img={insta} />
-              <SnsBtn img={fb} />
-              <SnsBtn img={yt} />
+              <SnsBtn $img={insta} />
+              <SnsBtn $img={fb} />
+              <SnsBtn $img={yt} />
             </div>
           </Links>
 
@@ -104,7 +104,7 @@ const InfoTxt = styled.p`
 const SnsBtn = styled.button`
   width: 32px;
   height: 32px;
-  background: url(${(props) => props.img}) no-repeat center;
+  background: url(${(props) => props.$img}) no-repeat center;
 
   & + & {
     margin-left: 14px;
