@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
+import { Link } from "react-router-dom";
 
 import ProductAPI from "../Utils/Product/ProductAPI";
 
@@ -34,14 +35,16 @@ const BuyerMain = () => {
       <Grid>
         {productList.results?.map((item, i) => {
           return (
-            <ProductItem
-              key={i}
-              seller={item.store_name}
-              name={item.product_name}
-              // price={item.price?.toLocalString()}
-              price={item.price ? item.price.toLocaleString() : ""}
-              img={item.image}
-            />
+            <Link to={`/products/${item.product_id}`}>
+              <ProductItem
+                key={i}
+                seller={item.store_name}
+                name={item.product_name}
+                // price={item.price?.toLocalString()}
+                price={item.price ? item.price.toLocaleString() : ""}
+                img={item.image}
+              />
+            </Link>
           );
         })}
       </Grid>
