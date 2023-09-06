@@ -75,6 +75,8 @@ const LogIn = () => {
           <LogInButton
             name="login_type"
             value="BUYER"
+            br="10px 10px 0 0 "
+            borLeft='none'
             onClick={(e) => {
               handleInputChange(e);
               handleBtn("BUYER");
@@ -86,6 +88,8 @@ const LogIn = () => {
           <LogInButton
             name="login_type"
             value="SELLER"
+            br="10px 10px 0 0 "
+            borRight='none'
             onClick={(e) => {
               handleInputChange(e);
               handleBtn("SELLER");
@@ -106,6 +110,7 @@ const LogIn = () => {
         {errMsg === "아이디를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
         <Input
           name="password"
+          type="password"
           value={userInput.password}
           placeholder="비밀번호"
           onChange={handleInputChange}
@@ -151,10 +156,13 @@ const LogInButton = styled.button.attrs({
   width: 50%;
   height: 60px;
   font-size: 18px;
-  border-radius: 10px;
+  border-radius: ${(props) => props.br || "10px"};
   border: 1px solid #c4c4c4;
+  color: ${(props) => (props.$isSelected ? "white" : "black")};
   border-bottom: transparent;
-  background-color: ${(props) => (props.$isSelected ? "#F2F2F2" : "")};
+  background-color: ${(props) => (props.$isSelected ? "var(--primary)" : "")};
+  border-left: ${(props) => props.borLeft};
+  border-right: ${(props) => props.borRight};
 `;
 
 const Input = styled.input`
