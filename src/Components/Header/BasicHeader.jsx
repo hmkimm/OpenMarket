@@ -1,13 +1,24 @@
 import React from "react";
 import { styled } from "styled-components";
-import { Link } from "react-router-dom";
-
+import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 import logo from "../../Assets/Icons/Logo-hodu.svg";
 import search from "../../Assets/Icons/search.svg";
 import cart from "../../Assets/Icons/shopping-cart.svg";
 import user from "../../Assets/Icons/icon-user.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import userToken from "../../Recoil/userToken/userToken";
 
 const BasicHeader = () => {
+  const navigate = useNavigate();
+  const [token, setToken] = useRecoilState(userToken);
+
+  const handleLogout = () => {
+    alert("로그아웃 하시겠습니까?");
+    setToken("");
+    navigate("/");
+  };
   return (
     <Layout>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -30,6 +41,12 @@ const BasicHeader = () => {
           <IconBtn $bg={user} />
           <span>마이페이지</span>
         </IconBtnLayout>
+        <IconBtnLayout>
+          <button onClick={handleLogout}>
+            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            <div>로그아웃</div>
+          </button>
+        </IconBtnLayout>
       </div>
     </Layout>
   );
@@ -37,8 +54,14 @@ const BasicHeader = () => {
 
 const Layout = styled.div`
   display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
   padding: 22px 0;
+  margin-bottom: 20px;
   justify-content: space-around;
+  background: #fff;
+  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.4);
 `;
 
 const SearchLayout = styled.div`
@@ -65,7 +88,7 @@ const SearchBtn = styled.button`
   background: url(${search}) no-repeat center;
 `;
 
-const IconBtnLayout = styled.button`
+const IconBtnLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
