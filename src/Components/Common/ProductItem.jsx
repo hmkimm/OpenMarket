@@ -21,8 +21,8 @@ const ProductLayout = styled.div`
 `;
 
 const ProductImg = styled.img`
-  width: 100%;
-  /* height: 380px; */
+  width: 380px;
+  height: 380px;
   border-radius: 10px;
   margin-bottom: 16px;
   src: url(${(props) => props.img});
