@@ -10,7 +10,7 @@ const ButtonStyle = styled.button`
   display: ${(props) => props.display || "block"};
   padding: ${(props) => props.padding || "19px"};
   margin: ${(props) => props.margin || "36px 0 0 0"};
-  background-color: ${(props) => (props.empty ? "#d5d4d4" : "#21bf48")};
+  background-color: ${(props) => (props.empty ? "var(--gray)" : "var(--primary)")};
   border-radius: 5px;
   font-size: 18px;
   color: #fff;
