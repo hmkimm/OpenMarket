@@ -5,11 +5,12 @@ const GlobalStyle = createGlobalStyle`
   /* root */
   :root {
     //color
-    --primary : #21BF48
+    --primary : #21BF48;
+    --gray : #767676;
   }
 
 
-// reset css
+
 ${reset} 
 
 .a11y-hidden {
