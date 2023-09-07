@@ -7,28 +7,56 @@ import Button from "../Components/Common/Button";
 import CountButton from "../Components/CountButton";
 import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
-
+import AddCartAPI from "../Utils/Product/AddCartAPI";
+import { useRecoilState } from "recoil";
+import cartItem from "../Recoil/cartItem/cartItem";
 const ProductDetail = (props) => {
   const params = useParams();
   const productId = params.productId;
-  const [productDetail, setProductDetail] = useState(() => {});
   const getDetail = ProductDetailAPI(productId);
+  const [productDetail, setProductDetail] = useState(() => {});
+  const productStock = productDetail?.stock;
+  console.log("남은 재고 : ", productStock);
+  const [savedCart, setSavedCart] = useRecoilState(cartItem);
+  console.log("cart 🥎 : ", savedCart);
   const [isClicked, setIsClicked] = useState("");
   const [orderNum, setOrderNum] = useState(1);
+  const [cartInfo, setCartInfo] = useState({
+    product_id: productId,
+    quantity: 1,
+    check: productStock >= orderNum ? true : false,
+  });
+  const addCart = AddCartAPI(cartInfo);
 
   const handleClick = (num) => {
     setIsClicked(num);
   };
 
+  const handleCart = async () => {
+    const res = await addCart();
+    setSavedCart(res);
+    setSavedCart((prev) => [...prev, ...res]);
+    // console.log("🍏🍏 장바구니 결과", res);
+  };
+
+  const handleCountChange = (newOrderNum) => {
+    setCartInfo((prev) => ({
+      ...prev,
+      quantity: newOrderNum,
+      check: productStock >= orderNum ? true : false,
+    }));
+  };
+  console.log(cartInfo);
+
   useEffect(() => {
     const handleDetail = async () => {
       const res = await getDetail();
-      console.log(res, 'rendering');
       setProductDetail(res);
     };
     handleDetail();
   }, [getDetail]);
 
+  console.log("상품 상세⛸️ : ", productDetail);
   return (
     <>
       <BasicHeader />
@@ -47,9 +75,21 @@ const ProductDetail = (props) => {
               </FlexLayout>
             </ProudctInfo>
             <DeliveryInfo>
-              <DeliveryMethod>택배배송 / 무료배송</DeliveryMethod>
+              <DeliveryMethod>
+                {productDetail?.shipping_method === "PARCEL"
+                  ? "택배배송"
+                  : "화물배달"}{" "}
+                /&nbsp;
+                {productDetail?.shipping_fee !== 0
+                  ? `${productDetail?.shipping_fee}원`
+                  : "무료배송"}
+              </DeliveryMethod>
               <HorizontalLine />
-              <CountButton orderNum={orderNum} setOrderNum={setOrderNum}>
+              <CountButton
+                orderNum={orderNum}
+                setOrderNum={setOrderNum}
+                handleCountChange={handleCountChange}
+              >
                 {orderNum}
               </CountButton>
               <HorizontalLine />
@@ -67,7 +107,7 @@ const ProductDetail = (props) => {
               </FlexLayout>
               <FlexLayout $gap="14px">
                 <Button width="416px">바로 구매</Button>
-                <Button width="200px" $empty>
+                <Button width="200px" $empty onClick={handleCart}>
                   장바구니
                 </Button>
               </FlexLayout>
@@ -81,7 +121,7 @@ const ProductDetail = (props) => {
                 }}
                 $isClicked={isClicked === 1}
               >
-                버튼
+                상세 정보
               </ContentButton>
               <ContentButton
                 onClick={() => {
@@ -109,7 +149,12 @@ const ProductDetail = (props) => {
               </ContentButton>
             </FlexLayout>
           </div>
-          {isClicked && <MoreInfo>준비 중</MoreInfo>}
+          {(isClicked !== 1 && isClicked !== "") && (
+            <MoreInfo>준비 중</MoreInfo>
+          )}
+          {isClicked === 1 && (
+            <MoreInfo>{productDetail?.product_info}</MoreInfo>
+          )}
         </ProductDetailLayout>
       )}
     </>
@@ -192,8 +237,8 @@ const ContentButton = styled.button`
 
   &:hover {
     background-color: var(--primary);
-    color : white;
-    border-radius : 10px 10px 0 0 ;
+    color: white;
+    border-radius: 10px 10px 0 0;
   }
 `;
 
@@ -203,6 +248,6 @@ const MoreInfo = styled.section`
   line-height: 180px;
   text-align: center;
   background-color: var(--light-gray);
-  color : white;
+  color: white;
 `;
 export default ProductDetail;
