@@ -2,29 +2,33 @@ import React, { useEffect, useState } from "react";
 import ProductDetailAPI from "../Utils/Product/ProductDetailAPI";
 import BasicHeader from "../Components/Header/BasicHeader";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../Components/Common/Button";
 import CountButton from "../Components/CountButton";
 import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
 import AddCartAPI from "../Utils/Product/AddCartAPI";
 import { useRecoilState } from "recoil";
-import cartItem from "../Recoil/cartItem/cartItem";
+import cartInfo from "../Recoil/cart/cartInfo";
+import cartProducts from "../Recoil/cart/cartProducts";
+
 const ProductDetail = (props) => {
+  const navigate = useNavigate();
   const params = useParams();
   const productId = params.productId;
   const getDetail = ProductDetailAPI(productId);
   const [productDetail, setProductDetail] = useState(() => {});
   const productStock = productDetail?.stock;
   console.log("남은 재고 : ", productStock);
-  const [savedCart, setSavedCart] = useRecoilState(cartItem);
+  const [savedCart, setSavedCart] = useRecoilState(cartProducts);
+  // const [cart]
   console.log("cart 🥎 : ", savedCart);
   const [isClicked, setIsClicked] = useState("");
   const [orderNum, setOrderNum] = useState(1);
   const [cartInfo, setCartInfo] = useState({
     product_id: productId,
     quantity: 1,
-    check: productStock >= orderNum ? true : false,
+    check: true,
   });
   const addCart = AddCartAPI(cartInfo);
 
@@ -34,23 +38,62 @@ const ProductDetail = (props) => {
 
   const handleCart = async () => {
     const res = await addCart();
-    setSavedCart(res);
-    setSavedCart((prev) => [...prev, ...res]);
-    // console.log("🍏🍏 장바구니 결과", res);
+    console.log("카트 정보 : ", res);
+    // 새로운 카트 아이템 생성
+    const cartItem = {
+      img: productDetail?.image,
+      provider: productDetail?.store_name,
+      name: productDetail?.product_name,
+      price: productDetail?.price,
+      shippingMethod: productDetail?.shipping_method,
+      shippingFee: productDetail?.shipping_fee,
+      quantity: orderNum,
+      myCart: res.my_cart,
+      cartId: res.cart_item_id,
+      productId: res.product_id,
+    };
+
+    // 장바구니에 해당 아이템이 이미 있는지 검사
+    const existingCartItemIndex = savedCart.findIndex((item) => {
+      // 여기서는 'name' 속성을 기준으로 중복을 검사합니다.
+      return item.name === cartItem.name;
+    });
+
+    if (existingCartItemIndex !== -1) {
+      // 이미 장바구니에 있는 아이템일 경우, 수량만 더하기
+      const updatedCart = [...savedCart];
+      updatedCart[existingCartItemIndex] = {
+        ...updatedCart[existingCartItemIndex],
+        quantity:
+          updatedCart[existingCartItemIndex].quantity + cartItem.quantity,
+      };
+
+      setSavedCart(updatedCart);
+    } else {
+      // 장바구니에 없는 아이템일 경우, 아이템을 추가
+      setSavedCart([...savedCart, cartItem]);
+    }
+
+    navigate("/cart");
   };
 
-  const handleCountChange = (newOrderNum) => {
-    setCartInfo((prev) => ({
-      ...prev,
-      quantity: newOrderNum,
-      check: productStock >= orderNum ? true : false,
-    }));
+  const handleCountChange = (orderNum) => {
+    if (cartInfo.check) {
+      setCartInfo((prev) => ({
+        ...prev,
+        quantity: orderNum,
+        check: productStock >= orderNum,
+      }));
+    }
   };
   console.log(cartInfo);
+  console.log("주문개수 : ", orderNum);
+  console.log("남은 재고 : ", productStock);
 
   useEffect(() => {
     const handleDetail = async () => {
       const res = await getDetail();
+      console.log("rendering test");
       setProductDetail(res);
     };
     handleDetail();
@@ -89,6 +132,7 @@ const ProductDetail = (props) => {
                 orderNum={orderNum}
                 setOrderNum={setOrderNum}
                 handleCountChange={handleCountChange}
+                productStock={productStock}
               >
                 {orderNum}
               </CountButton>
@@ -149,9 +193,7 @@ const ProductDetail = (props) => {
               </ContentButton>
             </FlexLayout>
           </div>
-          {(isClicked !== 1 && isClicked !== "") && (
-            <MoreInfo>준비 중</MoreInfo>
-          )}
+          {isClicked !== 1 && isClicked !== "" && <MoreInfo>준비 중</MoreInfo>}
           {isClicked === 1 && (
             <MoreInfo>{productDetail?.product_info}</MoreInfo>
           )}

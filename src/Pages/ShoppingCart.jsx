@@ -1,10 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
+import { useRecoilState } from "recoil";
+import cartProducts from "../Recoil/cart/cartProducts";
+import DeleteCartAPI from "../Utils/Cart/DeleteCartAPI";
+import GetCartAPI from "../Utils/Cart/GetCartAPI";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import { Layout } from "../Style/Layout";
+import Button from "../Components/Common/Button";
+import del from "../Assets/Icons/icon-delete.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import DeleteAllCartsAPI from "../Utils/Cart/DeleteAllCartsAPI";
 
 const ShoppingCart = () => {
+  const [cartProductDetails, setCartProductDetails] =
+    useRecoilState(cartProducts);
+  const fetchCartItem = GetCartAPI();
+  const [savedCart, setSavedCart] = useRecoilState(cartProducts);
+  // const selectedCartId = savedCart.filter((item)=> {item.cartId === })
+  const [cartItems, setCartItems] = useState([]);
+  const delCartItem = DeleteCartAPI();
+  const handleDeleteAllCart = DeleteAllCartsAPI();
+
+  const handleDeleteAllCartItems = async () => {
+    // await handleDeleteAllCart();
+    setSavedCart([]);
+  };
+
+  const handleDeleteCart = async (cartId) => {
+    // await delCartItem(cartId);
+    const existingItemIndex = savedCart.findIndex((el) => el.cartId === cartId);
+    const deletedCart = [...savedCart];
+    deletedCart.splice(existingItemIndex, 1);
+    setSavedCart([...deletedCart]);
+    console.log(deletedCart, "삭제된 카트");
+  };
+
+  console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", cartProductDetails);
+
+  useEffect(() => {
+    const getCartItem = async () => {
+      const data = await fetchCartItem();
+      setCartItems(data);
+    };
+    getCartItem();
+  }, []);
+  console.log("api에 저장된 카트템 : ", cartItems);
+  // console.log("장바구니 정보 : ", savedCart);
   return (
     <>
       <BasicHeader />
@@ -16,7 +60,64 @@ const ShoppingCart = () => {
           <div>수량</div>
           <div>상품금액</div>
         </CartHeader>
-        <CartInfo></CartInfo>
+        <Button
+          onClick={handleDeleteAllCartItems}
+          width="140px"
+          $padding="10px"
+          $margin="10px 0"
+        >
+          모두 삭제
+        </Button>
+        {cartProductDetails &&
+          cartProductDetails?.map((el, i) => {
+            console.log(el.cartId);
+            return (
+              <CartItem key={i}>
+                <CartImg src={el.img} />
+                <div>
+                  <CartProvider>{el.provider}</CartProvider>
+                  <CartName>{el.name}</CartName>
+                  <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
+                  <CartShipping>
+                    {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
+                    &nbsp; /&nbsp;
+                    {el?.shippingFee !== 0
+                      ? `${el?.shippingFee}원`
+                      : "무료배송"}
+                  </CartShipping>
+                </div>
+                <QuantityLayout>
+                  <QuantityButton $borRadius="8px 0 0 8px">
+                    {" "}
+                    <FontAwesomeIcon icon={faMinus} />
+                  </QuantityButton>
+                  <QuantityDisplay>{el.quantity}</QuantityDisplay>
+                  <QuantityButton $borRadius=" 0 8px 8px 0 ">
+                    <FontAwesomeIcon icon={faPlus} />
+                  </QuantityButton>
+                </QuantityLayout>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "100px",
+                    textAlign: "center",
+                  }}
+                >
+                  <CartPrice color="red" $mb="26px">
+                    {el.price?.toLocaleString()}원
+                  </CartPrice>
+                  <Button $padding="10px" width="130px">
+                    주문하기
+                  </Button>
+                </div>
+                <DeleteButton
+                  onClick={() => {
+                    handleDeleteCart(el?.cartId);
+                  }}
+                />
+              </CartItem>
+            );
+          })}
       </Layout>
     </>
   );
@@ -34,6 +135,7 @@ const CartHeader = styled.div`
   justify-content: space-around;
   width: 100%;
   padding: 18px;
+  margin-bottom: 35px;
   background-color: var(--light-gray);
   border-radius: 10px;
   box-sizing: border-box;
@@ -54,16 +156,80 @@ const SelectButton = styled.button`
   border: 1px solid var(--primary);
 `;
 
-const CartInfo = styled.section`
+const CartItem = styled.section`
+  display: flex;
+  position: relative;
+  align-items: center;
   width: 100%;
   height: 200px;
+  border: 2px solid var(--light-gray);
+  padding: 0 100px 0 30px;
+  margin-bottom: 10px;
   border-radius: 10px;
+  box-sizing: border-box;
 `;
 const CartImg = styled.img`
   width: 160px;
   height: 160px;
+  margin-right: 36px;
   border-radius: 10px;
 `;
 
-const CartProductInfo = styled.div` `
+const CartProvider = styled.div`
+  color: var(--gray);
+  margin-bottom: 10px;
+`;
+
+const CartName = styled.div`
+  font-size: 18px;
+  margin-bottom: 10px;
+`;
+
+const CartPrice = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: ${(props) => props.$mb || "40px"};
+  color: ${(props) => props.color};
+`;
+
+const CartShipping = styled.div`
+  color: var(--gray);
+`;
+
+const DeleteButton = styled.button`
+  display: block;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: url(${del}) no-repeat center;
+`;
+
+const QuantityLayout = styled.div`
+  position: absolute;
+  display: flex;
+  right: 378px;
+`;
+const QuantityButton = styled.button`
+  width: 50px;
+  height: 50px;
+  padding: 15px;
+  border: 1px solid var(--light-gray);
+  box-sizing: border-box;
+  border-radius: ${(props) => props.$borRadius};
+`;
+const QuantityDisplay = styled.div`
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 25px;
+  padding: 15px;
+  border: 1px solid var(--light-gray);
+  border-left: none;
+  border-right: none;
+  box-sizing: border-box;
+`;
+const CartProductInfo = styled.div``;
+
 export default ShoppingCart;
