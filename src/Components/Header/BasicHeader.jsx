@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
 import { useRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "../../Assets/Icons/Logo-hodu.svg";
 import search from "../../Assets/Icons/search.svg";
 import cart from "../../Assets/Icons/shopping-cart.svg";
@@ -19,13 +19,19 @@ const BasicHeader = () => {
     setToken("");
     navigate("/");
   };
+
+  const navigateMain = () => {
+    navigate("/buyermain");
+  };
+
   return (
     <Layout>
       <div style={{ display: "flex", alignItems: "center" }}>
         <img
           src={logo}
           alt="hodu-market"
-          style={{ width: "124px", height: "38px" }}
+          style={{ width: "124px", height: "38px", cursor: "pointer" }}
+          onClick={navigateMain}
         />
         <SearchLayout>
           <SearchInput placeholder="상품을 검색해보세요!" />
@@ -33,10 +39,16 @@ const BasicHeader = () => {
         </SearchLayout>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <IconBtnLayout>
-          <IconBtn $bg={cart} />
-          <span>장바구니</span>
-        </IconBtnLayout>
+        <Link to="/cart">
+          <IconBtnLayout
+            onClick={() => {
+              navigate("/cart");
+            }}
+          >
+            <IconBtn $bg={cart} />
+            <span>장바구니</span>
+          </IconBtnLayout>
+        </Link> 
         <IconBtnLayout>
           <IconBtn $bg={user} />
           <span>마이페이지</span>
