@@ -8,8 +8,8 @@ const Button = (props) => {
 const ButtonStyle = styled.button`
   width: ${(props) => props.width || "100%"};
   display: ${(props) => props.display || "block"};
-  padding: ${(props) => props.padding || "19px"};
-  margin: ${(props) => props.margin || "36px 0 0 0"};
+  padding: ${(props) => props.$padding || "19px"};
+  margin: ${(props) => props.$margin || "36px 0 0 0"};
   background-color: ${(props) => (props.empty ? "var(--light-gray)" : "var(--primary)")};
   border-radius: 5px;
   font-size: 18px;
