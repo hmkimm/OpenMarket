@@ -3,10 +3,10 @@ import { recoilPersist } from "recoil-persist";
 
 const { persistAtom } = recoilPersist();
 
-const cartItem = atom({
-  key: "cartItem",
+const cartInfo = atom({
+  key: "cartInfo",
   default: [],
   effects_UNSTABLE: [persistAtom],
 });
 
-export default cartItem;
+export default cartInfo;
