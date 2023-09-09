@@ -144,7 +144,7 @@ const ProductDetail = (props) => {
                       {(productDetail?.price * orderNum).toLocaleString()}
                     </ProductPrice>
                   </div>
-                  <PriceCurrency color="var(--primary)">원</PriceCurrency>
+                  <PriceCurrency color="var(--primary)">원(배송비 별도)</PriceCurrency>
                 </FlexLayout>
               </FlexLayout>
               <FlexLayout $gap="14px">
