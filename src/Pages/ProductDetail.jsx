@@ -35,7 +35,7 @@ const ProductDetail = (props) => {
   const handleClick = (num) => {
     setIsClicked(num);
   };
-
+console.log(productDetail, 'productDetail')
   const handleCart = async () => {
     const res = await addCart();
     console.log("카트 정보 : ", res);
@@ -48,9 +48,9 @@ const ProductDetail = (props) => {
       shippingMethod: productDetail?.shipping_method,
       shippingFee: productDetail?.shipping_fee,
       quantity: orderNum,
-      myCart: res.my_cart,
-      cartId: res.cart_item_id,
-      productId: res.product_id,
+      myCart: res?.my_cart,
+      cartId: res?.cart_item_id,
+      productId: res?.product_id,
     };
 
     // 장바구니에 해당 아이템이 이미 있는지 검사
