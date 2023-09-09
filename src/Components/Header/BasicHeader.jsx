@@ -68,6 +68,7 @@ const BasicHeader = () => {
 const Layout = styled.div`
   display: flex;
   position: fixed;
+  z-index: 9;
   left: 0;
   right: 0;
   padding: 22px 0;
