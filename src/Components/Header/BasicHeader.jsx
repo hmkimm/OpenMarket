@@ -8,6 +8,7 @@ import cart from "../../Assets/Icons/shopping-cart.svg";
 import user from "../../Assets/Icons/icon-user.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+
 import userToken from "../../Recoil/userToken/userToken";
 
 const BasicHeader = () => {
@@ -48,15 +49,15 @@ const BasicHeader = () => {
             <IconBtn $bg={cart} />
             <span>장바구니</span>
           </IconBtnLayout>
-        </Link> 
+        </Link>
         <IconBtnLayout>
           <IconBtn $bg={user} />
           <span>마이페이지</span>
         </IconBtnLayout>
         <IconBtnLayout>
           <button onClick={handleLogout}>
-            <FontAwesomeIcon icon={faArrowRightFromBracket} />
-            <div>로그아웃</div>
+            <FontAwesomeIcon icon={faArrowRightFromBracket} size="2xl" />
+            <div style={{ marginTop: "5px", fontSize: "16px" }}>로그아웃</div>
           </button>
         </IconBtnLayout>
       </div>
@@ -106,9 +107,12 @@ const IconBtnLayout = styled.div`
   align-items: center;
   gap: 4px;
 
-  &:last-child {
-    margin-left: 47px;
+  &:nth-child(2) {
+    margin: 0 47px;
   }
+  /* &:last-child {
+    margin-left: 47px;
+  } */
 `;
 const IconBtn = styled.button`
   width: 32px;
