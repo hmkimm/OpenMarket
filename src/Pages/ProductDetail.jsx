@@ -35,7 +35,6 @@ const ProductDetail = (props) => {
   const handleClick = (num) => {
     setIsClicked(num);
   };
-console.log(productDetail, 'productDetail')
   const handleCart = async () => {
     const res = await addCart();
     console.log("카트 정보 : ", res);
@@ -55,7 +54,6 @@ console.log(productDetail, 'productDetail')
 
     // 장바구니에 해당 아이템이 이미 있는지 검사
     const existingCartItemIndex = savedCart.findIndex((item) => {
-      // 여기서는 'name' 속성을 기준으로 중복을 검사합니다.
       return item.name === cartItem.name;
     });
 
@@ -86,7 +84,7 @@ console.log(productDetail, 'productDetail')
       }));
     }
   };
-  console.log(cartInfo);
+  console.log('주문하려는 상품 정보 : ', cartInfo);
   console.log("주문개수 : ", orderNum);
   console.log("남은 재고 : ", productStock);
 
