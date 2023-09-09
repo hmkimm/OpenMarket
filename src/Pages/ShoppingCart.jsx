@@ -15,22 +15,23 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteAllCartsAPI from "../Utils/Cart/DeleteAllCartsAPI";
 
 const ShoppingCart = () => {
-  const [cartProductDetails, setCartProductDetails] =
-    useRecoilState(cartProducts);
+  // const [cartProductDetails, setCartProductDetails] =
+  //   useRecoilState(cartProducts);
   const fetchCartItem = GetCartAPI();
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
   // const selectedCartId = savedCart.filter((item)=> {item.cartId === })
+  //api에 저장
   const [cartItems, setCartItems] = useState([]);
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
   const handleDeleteAllCartItems = async () => {
-    // await handleDeleteAllCart();
+    await handleDeleteAllCart();
     setSavedCart([]);
   };
 
   const handleDeleteCart = async (cartId) => {
-    // await delCartItem(cartId);
+    await delCartItem(cartId);
     const existingItemIndex = savedCart.findIndex((el) => el.cartId === cartId);
     const deletedCart = [...savedCart];
     deletedCart.splice(existingItemIndex, 1);
@@ -38,15 +39,18 @@ const ShoppingCart = () => {
     console.log(deletedCart, "삭제된 카트");
   };
 
-  console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", cartProductDetails);
+  console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
 
   useEffect(() => {
     const getCartItem = async () => {
       const data = await fetchCartItem();
       setCartItems(data);
+      console.log("rendering test");
     };
     getCartItem();
-  }, []);
+  }, [fetchCartItem, savedCart]);
+
+  //장바구니 get api, 삭제해도 바로 업뎃 안됨.
   console.log("api에 저장된 카트템 : ", cartItems);
   // console.log("장바구니 정보 : ", savedCart);
   return (
@@ -68,8 +72,8 @@ const ShoppingCart = () => {
         >
           모두 삭제
         </Button>
-        {cartProductDetails &&
-          cartProductDetails?.map((el, i) => {
+        {savedCart &&
+          savedCart?.map((el, i) => {
             console.log(el.cartId);
             return (
               <CartItem key={i}>
@@ -104,7 +108,8 @@ const ShoppingCart = () => {
                   }}
                 >
                   <CartPrice color="red" $mb="26px">
-                    {el.price?.toLocaleString()}원
+                    {(el.price * el.quantity + el.shippingFee).toLocaleString()}
+                    원
                   </CartPrice>
                   <Button $padding="10px" width="130px">
                     주문하기
