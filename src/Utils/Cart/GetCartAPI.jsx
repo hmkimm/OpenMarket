@@ -1,11 +1,11 @@
-import React from "react";
 import URL from "../URL";
 import { useRecoilValue } from "recoil";
 import userToken from "../../Recoil/userToken/userToken";
+import { useCallback } from "react";
 
 const GetCartAPI = () => {
   const token = useRecoilValue(userToken);
-  const fetchCartItem = async () => {
+  const fetchCartItem = useCallback(async () => {
     try {
       const res = await fetch(`${URL}/cart`, {
         method: "GET",
@@ -21,7 +21,8 @@ const GetCartAPI = () => {
       console.error("api error", error);
       throw error;
     }
-  };
+  }, [token]);
+
   return fetchCartItem;
 };
 
