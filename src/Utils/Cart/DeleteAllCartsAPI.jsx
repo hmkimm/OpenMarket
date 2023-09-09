@@ -7,15 +7,13 @@ const DeleteAllCartsAPI = () => {
 
   const handleDeleteAllCart = async () => {
     try {
-      const res = await fetch(`${URL}/cart`, {
+      await fetch(`${URL}/cart`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `JWT ${token}`,
         },
       });
-      const result = await res.json();
-      return result;
     } catch (error) {
       console.error("api error", error);
       throw error;
