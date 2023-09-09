@@ -15,11 +15,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteAllCartsAPI from "../Utils/Cart/DeleteAllCartsAPI";
 
 const ShoppingCart = () => {
-  // const [cartProductDetails, setCartProductDetails] =
-  //   useRecoilState(cartProducts);
+
   const fetchCartItem = GetCartAPI();
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
   // const selectedCartId = savedCart.filter((item)=> {item.cartId === })
+
   //api에 저장
   const [cartItems, setCartItems] = useState([]);
   const delCartItem = DeleteCartAPI();
@@ -36,7 +36,9 @@ const ShoppingCart = () => {
     const deletedCart = [...savedCart];
     deletedCart.splice(existingItemIndex, 1);
     setSavedCart([...deletedCart]);
+
     console.log(deletedCart, "삭제된 카트");
+    
   };
 
   console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
@@ -51,8 +53,8 @@ const ShoppingCart = () => {
   }, [fetchCartItem, savedCart]);
 
   //장바구니 get api, 삭제해도 바로 업뎃 안됨.
-  console.log("api에 저장된 카트템 : ", cartItems);
-  // console.log("장바구니 정보 : ", savedCart);
+  console.log("get api에 저장된 카트템 : ", cartItems);
+
   return (
     <>
       <BasicHeader />
