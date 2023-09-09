@@ -13,9 +13,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteAllCartsAPI from "../Utils/Cart/DeleteAllCartsAPI";
+import FlexLayout from "../Style/FlexLayout";
 
 const ShoppingCart = () => {
-
   const fetchCartItem = GetCartAPI();
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
   // const selectedCartId = savedCart.filter((item)=> {item.cartId === })
@@ -38,7 +38,6 @@ const ShoppingCart = () => {
     setSavedCart([...deletedCart]);
 
     console.log(deletedCart, "삭제된 카트");
-    
   };
 
   console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
@@ -66,14 +65,23 @@ const ShoppingCart = () => {
           <div>수량</div>
           <div>상품금액</div>
         </CartHeader>
-        <Button
-          onClick={handleDeleteAllCartItems}
-          width="140px"
-          $padding="10px"
-          $margin="10px 0"
-        >
-          모두 삭제
-        </Button>
+        <FlexLayout $jc="flex-start">
+          <Button
+            onClick={handleDeleteAllCartItems}
+            width="110px"
+            $padding="10px"
+            $margin=" 10px 15px 10px 0 "
+          >
+            모두 삭제
+          </Button>
+          <div>
+            총{" "}
+            <strong style={{ color: "var(--primary" }}>
+              {savedCart.length}
+            </strong>
+            개
+          </div>
+        </FlexLayout>
         {savedCart &&
           savedCart?.map((el, i) => {
             console.log(el.cartId);
