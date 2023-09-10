@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../Assets/Icons/Logo-hodu.svg";
 import search from "../../Assets/Icons/search.svg";
@@ -10,11 +10,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 import userToken from "../../Recoil/userToken/userToken";
+import cartProducts from "../../Recoil/cart/cartProducts";
 
 const BasicHeader = () => {
   const navigate = useNavigate();
-  const [token, setToken] = useRecoilState(userToken);
-
+  const setToken = useSetRecoilState(userToken);
+  const savedCart = useRecoilValue(cartProducts);
+  const cartProductNumber = savedCart.length;
+  console.log(savedCart, "header cart");
   const handleLogout = () => {
     alert("로그아웃 하시겠습니까?");
     setToken("");
@@ -45,9 +48,11 @@ const BasicHeader = () => {
             onClick={() => {
               navigate("/cart");
             }}
+            $position="relative"
           >
             <IconBtn $bg={cart} />
             <span>장바구니</span>
+            <AlertCart>{cartProductNumber}</AlertCart>
           </IconBtnLayout>
         </Link>
         <IconBtnLayout>
@@ -104,6 +109,7 @@ const SearchBtn = styled.button`
 
 const IconBtnLayout = styled.div`
   display: flex;
+  position: ${(props) => props.$position};
   flex-direction: column;
   align-items: center;
   gap: 4px;
@@ -119,5 +125,18 @@ const IconBtn = styled.button`
   width: 32px;
   height: 32px;
   background: url(${(props) => props.$bg}) no-repeat center;
+`;
+
+const AlertCart = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: -3px;
+  right: 5px;
+  color: white;
+  text-align: center;
+  line-height: 20px;
 `;
 export default BasicHeader;
