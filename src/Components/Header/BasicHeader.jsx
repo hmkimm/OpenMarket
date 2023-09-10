@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../Assets/Icons/Logo-hodu.svg";
-import search from "../../Assets/Icons/search.svg";
+import search from "../../Assets/Icons/search.svg"; 
 import cart from "../../Assets/Icons/shopping-cart.svg";
 import user from "../../Assets/Icons/icon-user.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
