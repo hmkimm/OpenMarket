@@ -1,9 +1,14 @@
-import React from "react";
 
 import pouch from "../../Assets/Icons/pouch.svg";
 import { styled } from "styled-components";
 
-export default function ProductItem(props) {
+interface ProductItemProps {
+  img?: string;
+  seller: string;
+  name: string;
+  price: number;
+}
+export default function ProductItem(props: ProductItemProps) {
   return (
     <ProductLayout>
       <ProductImg src={props.img || pouch} alt="노트북 파우치" />
@@ -20,7 +25,7 @@ const ProductLayout = styled.div`
   width: 380px;
 `;
 
-const ProductImg = styled.img`
+const ProductImg = styled.img<{ img?: string }>`
   width: 380px;
   height: 380px;
   border-radius: 10px;
