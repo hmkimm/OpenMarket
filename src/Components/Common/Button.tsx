@@ -1,13 +1,12 @@
-import { ReactNode } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 import { styled } from "styled-components";
 
-interface ButtonProps {
-  width: string;
-  display: string;
-  $padding: string;
-  $margin: string;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  width?: string;
+  display?: string;
+  $padding?: string;
+  $margin?: string;
   empty: boolean;
-  children: ReactNode;
 }
 
 const Button = ({ children, ...props }: ButtonProps) => {
