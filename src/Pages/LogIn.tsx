@@ -1,4 +1,4 @@
-import { React, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
@@ -10,26 +10,48 @@ import ErrorMsg from "../Components/Common/ErrorMsg";
 
 import LogInAPI from "../Utils/LogInAPI";
 
+interface userInput {
+  username: string;
+  password: string;
+  login_type: "BUYER" | "SELLER" | "";
+}
+interface LogInButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  br?: string;
+  borLeft?: string;
+  borRight?: string;
+  $isSelected: boolean;
+  // onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  // onChange: (e: React.ChangeEvent<HTMLButtonElement>) => void;
+}
+interface Input extends React.InputHTMLAttributes<HTMLInputElement> {
+  width?: string;
+  padding?: string;
+  margin?: string;
+}
+
 const LogIn = () => {
   const navigate = useNavigate();
-  const [selectedBtn, setSelectedBtn] = useState(null);
-  const [userInput, setUserInput] = useState({
+  const [selectedBtn, setSelectedBtn] = useState<"BUYER" | "SELLER" | null>(
+    null
+  );
+  const [userInput, setUserInput] = useState<userInput>({
     username: "",
     password: "",
     login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
   });
-  const [token, setToken] = useRecoilState(userToken);
-  const [errMsg, setErrMsg] = useState("");
-  const inputRef = useRef();
+  const [token, setToken] = useRecoilState<string>(userToken);
+  const [errMsg, setErrMsg] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleInputChange = async (e) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserInput((prevState) => ({
       ...prevState, //note: 이렇게 하면 기존 상태 값은 유지되고 변경된 값만 새로운 상태 객체에서 업데이트하게 됩니다.
       [name]: value, //note: 계산된 속성명(Computed Property Name) 문법
     }));
   };
-  const handleLogIn = async (e) => {
+  const handleLogIn = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!userInput.username && !userInput.password) {
@@ -55,11 +77,11 @@ const LogIn = () => {
           password: "",
           login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
         });
-        inputRef.current.focus();
+        if (inputRef.current) inputRef.current.focus();
       }
     }
   };
-  const handleBtn = (btnValue) => {
+  const handleBtn = (btnValue: "BUYER" | "SELLER") => {
     setSelectedBtn(btnValue);
   };
 
@@ -76,11 +98,13 @@ const LogIn = () => {
             name="login_type"
             value="BUYER"
             br="10px 10px 0 0 "
-            borLeft='none'
-            onClick={(e) => {
-              handleInputChange(e);
+            borLeft="none"
+            onClick={() => {
               handleBtn("BUYER");
             }}
+            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            //   handleInputChange(e);
+            // }}
             $isSelected={selectedBtn === "BUYER"}
           >
             구매회원 로그인
@@ -89,16 +113,15 @@ const LogIn = () => {
             name="login_type"
             value="SELLER"
             br="10px 10px 0 0 "
-            borRight='none'
-            onClick={(e) => {
-              handleInputChange(e);
+            borRight="none"
+            onClick={() => {
               handleBtn("SELLER");
             }}
+            // onChange={handleInputChange}
             $isSelected={selectedBtn === "SELLER"}
           >
             판매회원 로그인
           </LogInButton>
-          {/* //note: 스타일드 컴포넌트가 $ 기호로 시작하는 속성은 DOM에 전달하는 것을 피함 */}
         </LogInButtonLayout>
         <Input
           name="username"
@@ -152,7 +175,7 @@ const LogInButtonLayout = styled.div`
 `;
 const LogInButton = styled.button.attrs({
   type: "button",
-})`
+})<LogInButtonProps>`
   width: 50%;
   height: 60px;
   font-size: 18px;
@@ -165,7 +188,7 @@ const LogInButton = styled.button.attrs({
   border-right: ${(props) => props.borRight};
 `;
 
-const Input = styled.input`
+const Input = styled.input<Input>`
   &::placeholder {
     color: #767676;
     font-size: 16px;
