@@ -6,7 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   display?: string;
   $padding?: string;
   $margin?: string;
-  empty: boolean;
+  empty?: boolean;
 }
 
 const Button = ({ children, ...props }: ButtonProps) => {
