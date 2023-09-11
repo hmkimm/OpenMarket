@@ -6,7 +6,7 @@ interface ProductItemProps {
   img?: string;
   seller: string;
   name: string;
-  price: number;
+  price: string;
 }
 export default function ProductItem(props: ProductItemProps) {
   return (
