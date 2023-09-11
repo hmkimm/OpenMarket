@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { TextareaHTMLAttributes, useState } from "react";
 import { styled } from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import imgicon from "../Assets/Icons/icon-img.svg";
@@ -9,8 +9,17 @@ import UnitInput from "../Components/UnitInput";
 import AddProductAPI from "../Utils/Product/AddProductAPI";
 import userToken from "../Recoil/userToken/userToken";
 
+interface Button {
+  width?: string;
+  padding?: string;
+  name?: string;
+  value?: string;
+  isSelected?: boolean;
+}
+
+interface ProductInfo extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
 const AddProduct = () => {
-  const token = useRecoilState(userToken);
+  const token = useRecoilValue(userToken);
   const [inputs, setInputs] = useState({
     product_name: "",
     image: "",
@@ -21,9 +30,11 @@ const AddProduct = () => {
     product_info: "",
   });
   console.log(inputs);
-  const [selectedBtn, setSelectedBtn] = useState(null);
+  const [selectedBtn, setSelectedBtn] = useState<null | string>(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setInputs((prevState) => ({
       ...prevState,
@@ -33,7 +44,7 @@ const AddProduct = () => {
 
   const handleSubmit = async () => {
     console.log("handlesumbmit 호출");
-    const res = await AddProductAPI(inputs, token);
+    const res = await AddProductAPI({ inputs, token });
     console.log(res);
   };
   return (
@@ -98,9 +109,10 @@ const AddProduct = () => {
             <Button
               name="shipping_method"
               value="PARCEL"
-              onClick={(e) => {
+              //fixme: handleInputChange 수정
+              onClick={() => {
                 setSelectedBtn("left");
-                handleInputChange(e);
+                // handleInputChange(e);
               }}
               isSelected={selectedBtn === "left"}
             >
@@ -109,9 +121,11 @@ const AddProduct = () => {
             <Button
               name="shipping_method"
               value="DELIVERY"
-              onClick={(e) => {
+              //fixme: handleInputChange 수정
+
+              onClick={() => {
                 setSelectedBtn("right");
-                handleInputChange(e);
+                // handleInputChange(e);
               }}
               isSelected={selectedBtn === "right"}
             >
@@ -199,7 +213,7 @@ const TextInput = styled.input`
   margin-bottom: 16px;
 `;
 
-const Button = styled.button`
+const Button = styled.button<Button>`
   width: ${(props) => props.width || "220px"};
   height: 54px;
   border-radius: 5px;
@@ -212,7 +226,7 @@ const Button = styled.button`
   box-sizing: border-box;
 `;
 
-const ProductInfo = styled.textarea`
+const ProductInfo = styled.textarea<ProductInfo>`
   width: 1320px;
   height: 700px;
 `;

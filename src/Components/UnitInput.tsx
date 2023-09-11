@@ -1,7 +1,13 @@
-import React from "react";
+import React, { InputHTMLAttributes } from "react";
 import { styled } from "styled-components";
 
-const UnitInput = (props) => {
+interface UnitInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  title: string;
+  name: string;
+  value: string;
+  children: React.ReactNode;
+}
+const UnitInput = (props: UnitInputProps) => {
   return (
     <>
       <Title>{props.title}</Title>
