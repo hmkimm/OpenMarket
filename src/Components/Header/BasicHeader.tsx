@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../Assets/Icons/Logo-hodu.svg";
-import search from "../../Assets/Icons/search.svg"; 
+import search from "../../Assets/Icons/search.svg";
 import cart from "../../Assets/Icons/shopping-cart.svg";
 import user from "../../Assets/Icons/icon-user.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +12,12 @@ import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import userToken from "../../Recoil/userToken/userToken";
 import cartProducts from "../../Recoil/cart/cartProducts";
 
+interface IconBtnLayout {
+  $position?: string;
+}
+interface IconBtn {
+  $bg: string;
+}
 const BasicHeader = () => {
   const navigate = useNavigate();
   const setToken = useSetRecoilState(userToken);
@@ -107,7 +113,7 @@ const SearchBtn = styled.button`
   background: url(${search}) no-repeat center;
 `;
 
-const IconBtnLayout = styled.div`
+const IconBtnLayout = styled.div<IconBtnLayout>`
   display: flex;
   position: ${(props) => props.$position};
   flex-direction: column;
@@ -121,7 +127,7 @@ const IconBtnLayout = styled.div`
     margin-left: 47px;
   } */
 `;
-const IconBtn = styled.button`
+const IconBtn = styled.button<IconBtn>`
   width: 32px;
   height: 32px;
   background: url(${(props) => props.$bg}) no-repeat center;

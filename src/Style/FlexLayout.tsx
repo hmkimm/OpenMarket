@@ -1,6 +1,12 @@
+import { Interface } from "readline";
 import { styled } from "styled-components";
 
-const FlexLayout = styled.div`
+interface FlexLayout {
+  $jc?: string;
+  $ai?: string;
+  $gap?: string;
+}
+const FlexLayout = styled.div<FlexLayout>`
   display: flex;
   justify-content: ${(props) => props.$jc || "center"};
   align-items: ${(props) => props.$ai || "center"};

@@ -5,7 +5,19 @@ import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import FlexLayout from "../Style/FlexLayout";
 
-const CountButton = (props) => {
+interface CountButtonProps {
+  setOrderNum: (orderNum: number) => void;
+  orderNum: number;
+  handleCountChange: (orderNum: number) => void;
+  productStock: number;
+  children: React.ReactNode;
+}
+
+interface Button {
+  $br?: string;
+}
+
+const CountButton = (props: CountButtonProps) => {
   const { setOrderNum, orderNum, handleCountChange, productStock } = props;
 
   const handlePlus = () => {
@@ -28,9 +40,6 @@ const CountButton = (props) => {
 
   useEffect(() => {}, [handlePlus, handleMinus]);
 
-  // useEffect(()=> {
-  //   orderNum
-  // },[])
   return (
     <FlexLayout $jc="flex-start">
       <Button onClick={handleMinus} $br="5px 0 0 5px">
@@ -44,7 +53,7 @@ const CountButton = (props) => {
   );
 };
 
-const Button = styled.button`
+const Button = styled.button<Button>`
   width: 50px;
   height: 50px;
   padding: 15px;
