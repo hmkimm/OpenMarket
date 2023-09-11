@@ -12,10 +12,25 @@ import yt from "../Assets/Icons/yt.svg";
 import ProductItem from "../Components/Common/ProductItem";
 import userToken from "../Recoil/userToken/userToken";
 
+interface ProductList {
+  results?: MyProduct[];
+}
+interface MyProduct {
+  store_name: string;
+  product_name: string;
+  product_id: number;
+  price: number;
+  image: string;
+}
+interface SnsBtn {
+  $img: string;
+}
 const BuyerMain = () => {
   const token = useRecoilValue(userToken);
   const { fetchproducts } = ProductAPI(token);
-  const [productList, setProductList] = useState({});
+  const [productList, setProductList] = useState<ProductList>({
+    results: [],
+  });
 
   useEffect(() => {
     const getProduct = async () => {
@@ -98,7 +113,7 @@ const InfoTxt = styled.p`
   line-height: 24px;
 `;
 
-const SnsBtn = styled.button`
+const SnsBtn = styled.button<SnsBtn>`
   width: 32px;
   height: 32px;
   background: url(${(props) => props.$img}) no-repeat center;

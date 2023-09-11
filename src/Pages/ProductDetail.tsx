@@ -11,19 +11,61 @@ import AddCartAPI from "../Utils/Product/AddCartAPI";
 import { useRecoilState } from "recoil";
 import cartInfo from "../Recoil/cart/cartInfo";
 import cartProducts from "../Recoil/cart/cartProducts";
+import { CartItem } from "\btypes";
 
-const ProductDetail = (props) => {
+interface ProductDetailProps {
+  color?: string;
+  $isSelected: boolean;
+}
+
+interface productDetail {
+  image: string;
+  store_name: string;
+  product_name: string;
+  price: number;
+  shipping_method: string;
+  shipping_fee: number;
+  product_info: string;
+  stock: number;
+}
+
+// export interface CartItem {
+//   img: string;
+//   provider: string;
+//   name: string;
+//   price: number;
+//   shippingMethod: string;
+//   shippingFee: number;
+//   quantity: number;
+//   myCart: number;
+//   cartId: number;
+//   productId: number;
+// }
+
+interface ContentButton {
+  $isClicked?: boolean;
+}
+const ProductDetail = (props: ProductDetailProps) => {
   const navigate = useNavigate();
   const params = useParams();
   const productId = params.productId;
   const getDetail = ProductDetailAPI(productId);
-  const [productDetail, setProductDetail] = useState(() => {});
+  const [productDetail, setProductDetail] = useState<productDetail>({
+    image: "",
+    store_name: "",
+    product_name: "",
+    price: 0,
+    shipping_method: "",
+    product_info: "",
+    shipping_fee: 0,
+    stock: 0,
+  });
   const productStock = productDetail?.stock;
   console.log("남은 재고 : ", productStock);
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
   // const [cart]
   console.log("cart 🥎 : ", savedCart);
-  const [isClicked, setIsClicked] = useState("");
+  const [isClicked, setIsClicked] = useState<null | number>(null);
   const [orderNum, setOrderNum] = useState(1);
   const [cartInfo, setCartInfo] = useState({
     product_id: productId,
@@ -32,14 +74,14 @@ const ProductDetail = (props) => {
   });
   const addCart = AddCartAPI(cartInfo);
 
-  const handleClick = (num) => {
+  const handleClick = (num: number) => {
     setIsClicked(num);
   };
   const handleCart = async () => {
     const res = await addCart();
     console.log("카트 정보 : ", res);
     // 새로운 카트 아이템 생성
-    const cartItem = {
+    const cartItem: CartItem = {
       img: productDetail?.image,
       provider: productDetail?.store_name,
       name: productDetail?.product_name,
@@ -53,7 +95,7 @@ const ProductDetail = (props) => {
     };
 
     // 장바구니에 해당 아이템이 이미 있는지 검사
-    const existingCartItemIndex = savedCart.findIndex((item) => {
+    const existingCartItemIndex = savedCart.findIndex((item: CartItem) => {
       return item.name === cartItem.name;
     });
 
@@ -75,7 +117,7 @@ const ProductDetail = (props) => {
     navigate("/cart");
   };
 
-  const handleCountChange = (orderNum) => {
+  const handleCountChange = (orderNum: number) => {
     if (cartInfo.check) {
       setCartInfo((prev) => ({
         ...prev,
@@ -84,7 +126,7 @@ const ProductDetail = (props) => {
       }));
     }
   };
-  console.log('주문하려는 상품 정보 : ', cartInfo);
+  console.log("주문하려는 상품 정보 : ", cartInfo);
   console.log("주문개수 : ", orderNum);
   console.log("남은 재고 : ", productStock);
 
@@ -144,12 +186,14 @@ const ProductDetail = (props) => {
                       {(productDetail?.price * orderNum).toLocaleString()}
                     </ProductPrice>
                   </div>
-                  <PriceCurrency color="var(--primary)">원(배송비 별도)</PriceCurrency>
+                  <PriceCurrency color="var(--primary)">
+                    원(배송비 별도)
+                  </PriceCurrency>
                 </FlexLayout>
               </FlexLayout>
               <FlexLayout $gap="14px">
                 <Button width="416px">바로 구매</Button>
-                <Button width="200px" $empty onClick={handleCart}>
+                <Button width="200px" empty onClick={handleCart}>
                   장바구니
                 </Button>
               </FlexLayout>
@@ -191,7 +235,9 @@ const ProductDetail = (props) => {
               </ContentButton>
             </FlexLayout>
           </div>
-          {isClicked !== 1 && isClicked !== "" && <MoreInfo>준비 중</MoreInfo>}
+          {isClicked !== 1 && isClicked !== null && (
+            <MoreInfo>준비 중</MoreInfo>
+          )}
           {isClicked === 1 && (
             <MoreInfo>{productDetail?.product_info}</MoreInfo>
           )}
@@ -263,7 +309,7 @@ const HorizontalLine = styled.div`
   margin: 20px 0;
 `;
 
-const ContentButton = styled.button`
+const ContentButton = styled.button<ContentButton>`
   width: 320px;
   padding: 19px;
   background-color: white;
