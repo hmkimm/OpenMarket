@@ -1,9 +1,10 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { CartItem } from "\btypes";
+import { CartItemType } from "../../\btypes";
+
 const { persistAtom } = recoilPersist();
 
-const cartProducts = atom<CartItem[]>({
+const cartProducts = atom<CartItemType[]>({
   key: "cartProducts",
   default: [],
   effects_UNSTABLE: [persistAtom],
