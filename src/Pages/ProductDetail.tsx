@@ -15,7 +15,7 @@ import { CartItem } from "\btypes";
 
 interface ProductDetailProps {
   color?: string;
-  $isSelected: boolean;
+  $isSelected?: boolean;
 }
 
 interface productDetail {
@@ -28,19 +28,6 @@ interface productDetail {
   product_info: string;
   stock: number;
 }
-
-// export interface CartItem {
-//   img: string;
-//   provider: string;
-//   name: string;
-//   price: number;
-//   shippingMethod: string;
-//   shippingFee: number;
-//   quantity: number;
-//   myCart: number;
-//   cartId: number;
-//   productId: number;
-// }
 
 interface ContentButton {
   $isClicked?: boolean;
