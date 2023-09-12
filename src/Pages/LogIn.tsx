@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 import logo from "../Assets/Icons/Logo-hodu.svg";
 import Button from "../Components/Common/Button";
@@ -40,7 +40,7 @@ const LogIn = () => {
     password: "",
     login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
   });
-  const [token, setToken] = useRecoilState<string>(userToken);
+  const setToken = useSetRecoilState(userToken);
   const [errMsg, setErrMsg] = useState<string>("");
   const inputRef = useRef<HTMLInputElement | null>(null);
 
