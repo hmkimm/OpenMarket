@@ -21,8 +21,8 @@ interface LogInButtonProps
   borLeft?: string;
   borRight?: string;
   $isSelected: boolean;
-  // onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  // onChange: (e: React.ChangeEvent<HTMLButtonElement>) => void;
+  name: string;
+  value: string;
 }
 interface Input extends React.InputHTMLAttributes<HTMLInputElement> {
   width?: string;
@@ -45,7 +45,7 @@ const LogIn = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.currentTarget;
     setUserInput((prevState) => ({
       ...prevState, //note: 이렇게 하면 기존 상태 값은 유지되고 변경된 값만 새로운 상태 객체에서 업데이트하게 됩니다.
       [name]: value, //note: 계산된 속성명(Computed Property Name) 문법
@@ -81,6 +81,13 @@ const LogIn = () => {
       }
     }
   };
+  const handleBtnChange = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { name, value } = e.currentTarget;
+    setUserInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handleBtn = (btnValue: "BUYER" | "SELLER") => {
     setSelectedBtn(btnValue);
   };
@@ -99,8 +106,9 @@ const LogIn = () => {
             value="BUYER"
             br="10px 10px 0 0 "
             borLeft="none"
-            onClick={() => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               handleBtn("BUYER");
+              handleBtnChange(e);
             }}
             // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             //   handleInputChange(e);
@@ -114,10 +122,10 @@ const LogIn = () => {
             value="SELLER"
             br="10px 10px 0 0 "
             borRight="none"
-            onClick={() => {
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               handleBtn("SELLER");
+              handleBtnChange(e);
             }}
-            // onChange={handleInputChange}
             $isSelected={selectedBtn === "SELLER"}
           >
             판매회원 로그인
