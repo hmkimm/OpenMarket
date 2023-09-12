@@ -2,9 +2,9 @@ import URL from "../URL";
 import userToken from "../../Recoil/userToken/userToken";
 import { useRecoilValue } from "recoil";
 
-const AddCartAPI = (cartInfo) => {
+const AddCartAPI = (cartInfo: {}): (() => Promise<{}>) => {
   const token = useRecoilValue(userToken);
-  const addCart = async () => {
+  const addCart = async (): Promise<{}> => {
     try {
       const res = await fetch(`${URL}/cart/`, {
         method: "POST",
