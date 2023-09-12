@@ -1,16 +1,14 @@
-import { createGlobalStyle } from "styled-components";
-const { default: reset } = require("styled-reset");
+import { createGlobalStyle, DefaultTheme } from "styled-components";
+import reset from "styled-reset";
 
 const GlobalStyle = createGlobalStyle`
   /* root */
   :root {
     //color
-    --primary : #21BF48;
-    --gray : #767676;
-    --light-gray : #dad7d7;
+    --primary: #21BF48;
+    --gray: #767676;
+    --light-gray: #dad7d7;
   }
-
-
 
 ${reset} 
 
