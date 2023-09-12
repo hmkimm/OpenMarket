@@ -1,9 +1,9 @@
 import { atom } from "recoil";
-import { recoilPersist } from 'recoil-persist';
+import { recoilPersist } from "recoil-persist";
 
-const {persistAtom} = recoilPersist();
+const { persistAtom } = recoilPersist();
 
-const userToken = atom({
+const userToken = atom<string>({
   key: "userToken",
   default: "",
   effects_UNSTABLE: [persistAtom],

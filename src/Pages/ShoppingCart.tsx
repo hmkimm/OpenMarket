@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useRecoilState } from "recoil";
 import cartProducts from "../Recoil/cart/cartProducts";
@@ -14,11 +14,18 @@ import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteAllCartsAPI from "../Utils/Cart/DeleteAllCartsAPI";
 import FlexLayout from "../Style/FlexLayout";
+import { CartItemType } from "\btypes";
+
+interface QuantityButton {
+  $borRadius: string;
+}
+interface CartPrice {
+  $mb?: string;
+}
 
 const ShoppingCart = () => {
   const fetchCartItem = GetCartAPI();
-  const [savedCart, setSavedCart] = useRecoilState(cartProducts);
-  // const selectedCartId = savedCart.filter((item)=> {item.cartId === })
+  const [savedCart, setSavedCart] = useRecoilState<CartItemType[]>(cartProducts);
 
   //api에 저장
   const [cartItems, setCartItems] = useState([]);
@@ -30,7 +37,7 @@ const ShoppingCart = () => {
     setSavedCart([]);
   };
 
-  const handleDeleteCart = async (cartId) => {
+  const handleDeleteCart = async (cartId: number) => {
     await delCartItem(cartId);
     const existingItemIndex = savedCart.findIndex((el) => el.cartId === cartId);
     const deletedCart = [...savedCart];
@@ -183,6 +190,7 @@ const CartItem = styled.section`
   border-radius: 10px;
   box-sizing: border-box;
 `;
+
 const CartImg = styled.img`
   width: 160px;
   height: 160px;
@@ -200,7 +208,7 @@ const CartName = styled.div`
   margin-bottom: 10px;
 `;
 
-const CartPrice = styled.div`
+const CartPrice = styled.div<CartPrice>`
   font-size: 18px;
   font-weight: 700;
   margin-bottom: ${(props) => props.$mb || "40px"};
@@ -226,7 +234,7 @@ const QuantityLayout = styled.div`
   display: flex;
   right: 378px;
 `;
-const QuantityButton = styled.button`
+const QuantityButton = styled.button<QuantityButton>`
   width: 50px;
   height: 50px;
   padding: 15px;
