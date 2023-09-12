@@ -11,7 +11,7 @@ import AddCartAPI from "../Utils/Product/AddCartAPI";
 import { useRecoilState } from "recoil";
 import cartInfo from "../Recoil/cart/cartInfo";
 import cartProducts from "../Recoil/cart/cartProducts";
-import { CartItem } from "\btypes";
+import { CartItemType } from "\btypes";
 
 interface ProductDetailProps {
   color?: string;
@@ -68,7 +68,7 @@ const ProductDetail = (props: ProductDetailProps) => {
     const res = await addCart();
     console.log("카트 정보 : ", res);
     // 새로운 카트 아이템 생성
-    const cartItem: CartItem = {
+    const cartItem: CartItemType = {
       img: productDetail?.image,
       provider: productDetail?.store_name,
       name: productDetail?.product_name,
@@ -82,7 +82,7 @@ const ProductDetail = (props: ProductDetailProps) => {
     };
 
     // 장바구니에 해당 아이템이 이미 있는지 검사
-    const existingCartItemIndex = savedCart.findIndex((item: CartItem) => {
+    const existingCartItemIndex = savedCart.findIndex((item: CartItemType) => {
       return item.name === cartItem.name;
     });
 
