@@ -1,4 +1,4 @@
-import { styled, css } from "styled-components";
+import styled, { css } from "styled-components";
 
 const LayoutStyle = css`
   width: 1280px;
@@ -7,6 +7,9 @@ const LayoutStyle = css`
 `;
 
 const Layout = styled.div`
-  ${LayoutStyle}
+  ${(props) => css`
+    ${LayoutStyle}
+  `}
 `;
+
 export { Layout, LayoutStyle };
