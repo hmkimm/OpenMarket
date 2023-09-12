@@ -2,12 +2,12 @@ import URL from "../URL";
 import { useRecoilValue } from "recoil";
 import userToken from "../../Recoil/userToken/userToken";
 
-const DeleteAllCartsAPI = () => {
+const DeleteCartAPI = (): ((cartId: number) => Promise<void>) => {
   const token = useRecoilValue(userToken);
 
-  const handleDeleteAllCart = async () => {
+  const delCartItem = async (cartId: number) => {
     try {
-      await fetch(`${URL}/cart`, {
+      await fetch(`${URL}/cart/${cartId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -15,11 +15,11 @@ const DeleteAllCartsAPI = () => {
         },
       });
     } catch (error) {
-      console.error("api error", error);
+      console.log("api error", error);
       throw error;
     }
   };
-  return handleDeleteAllCart;
+  return delCartItem;
 };
 
-export default DeleteAllCartsAPI;
+export default DeleteCartAPI;

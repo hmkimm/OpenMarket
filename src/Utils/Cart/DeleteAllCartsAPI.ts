@@ -1,29 +1,25 @@
 import URL from "../URL";
 import { useRecoilValue } from "recoil";
 import userToken from "../../Recoil/userToken/userToken";
-import { useCallback } from "react";
 
-const GetCartAPI = () => {
+const DeleteAllCartsAPI = (): (() => Promise<void>) => {
   const token = useRecoilValue(userToken);
-  const fetchCartItem = useCallback(async () => {
+
+  const handleDeleteAllCart = async () => {
     try {
-      const res = await fetch(`${URL}/cart`, {
-        method: "GET",
+      await fetch(`${URL}/cart`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `JWT ${token}`,
         },
       });
-
-      const result = await res.json();
-      return result;
     } catch (error) {
       console.error("api error", error);
       throw error;
     }
-  }, [token]);
-
-  return fetchCartItem;
+  };
+  return handleDeleteAllCart;
 };
 
-export default GetCartAPI;
+export default DeleteAllCartsAPI;
