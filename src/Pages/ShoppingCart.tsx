@@ -29,7 +29,7 @@ const ShoppingCart = () => {
     useRecoilState<CartItemType[]>(cartProducts);
 
   //api에 저장
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<{}>([]);
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
@@ -135,7 +135,7 @@ const ShoppingCart = () => {
                 </div>
                 <DeleteButton
                   onClick={() => {
-                    handleDeleteCart(el?.cartId);
+                    handleDeleteCart(el?.cartId!);
                   }}
                 />
               </CartItem>
