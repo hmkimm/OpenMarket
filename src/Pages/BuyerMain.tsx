@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 
-import ProductAPI from "../Utils/Product/ProductAPI";
+import ProductAPI from "../API/Product/ProductAPI";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import insta from "../Assets/Icons/insta.svg";

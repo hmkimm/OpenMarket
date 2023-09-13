@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useRecoilState } from "recoil";
 import cartProducts from "../Recoil/cart/cartProducts";
-import DeleteCartAPI from "../Utils/Cart/DeleteCartAPI";
-import GetCartAPI from "../Utils/Cart/GetCartAPI";
+import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
+import GetCartAPI from "../API/Cart/GetCartAPI";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import { Layout } from "../Style/Layout";
@@ -12,7 +12,7 @@ import del from "../Assets/Icons/icon-delete.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import DeleteAllCartsAPI from "../Utils/Cart/DeleteAllCartsAPI";
+import DeleteAllCartsAPI from "../API/Cart/DeleteAllCartsAPI";
 import FlexLayout from "../Style/FlexLayout";
 import { CartItemType } from "\btypes";
 
@@ -25,7 +25,8 @@ interface CartPrice {
 
 const ShoppingCart = () => {
   const fetchCartItem = GetCartAPI();
-  const [savedCart, setSavedCart] = useRecoilState<CartItemType[]>(cartProducts);
+  const [savedCart, setSavedCart] =
+    useRecoilState<CartItemType[]>(cartProducts);
 
   //api에 저장
   const [cartItems, setCartItems] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import SellerProductListAPI from "../Utils/Product/SellerProductListAPI";
+import SellerProductListAPI from "../API/Product/SellerProductListAPI";
 import { useRecoilValue } from "recoil";
 import userToken from "../Recoil/userToken/userToken";
 import BasicHeader from "../Components/Header/BasicHeader";

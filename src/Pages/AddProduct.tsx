@@ -6,7 +6,7 @@ import BasicHeader from "../Components/Header/BasicHeader";
 import imgicon from "../Assets/Icons/icon-img.svg";
 import UnitInput from "../Components/UnitInput";
 
-import AddProductAPI from "../Utils/Product/AddProductAPI";
+import AddProductAPI from "../API/Product/AddProductAPI";
 import userToken from "../Recoil/userToken/userToken";
 
 interface Button {

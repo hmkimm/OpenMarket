@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductDetailAPI from "../Utils/Product/ProductDetailAPI";
+import ProductDetailAPI from "../API/Product/ProductDetailAPI";
 import BasicHeader from "../Components/Header/BasicHeader";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import Button from "../Components/Common/Button";
 import CountButton from "../Components/CountButton";
 import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
-import AddCartAPI from "../Utils/Product/AddCartAPI";
+import AddCartAPI from "../API/Product/AddCartAPI";
 import { useRecoilState } from "recoil";
 import cartInfo from "../Recoil/cart/cartInfo";
 import cartProducts from "../Recoil/cart/cartProducts";

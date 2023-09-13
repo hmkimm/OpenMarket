@@ -8,7 +8,7 @@ import Button from "../Components/Common/Button";
 import userToken from "../Recoil/userToken/userToken";
 import ErrorMsg from "../Components/Common/ErrorMsg";
 
-import LogInAPI from "../Utils/LogInAPI";
+import LogInAPI from "../API/LogInAPI";
 
 interface userInput {
   username: string;
