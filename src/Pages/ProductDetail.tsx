@@ -27,15 +27,30 @@ interface productDetail {
   shipping_fee: number;
   product_info: string;
   stock: number;
+  product_id: number;
 }
 
 interface ContentButton {
   $isClicked?: boolean;
 }
+
+export interface ResponseType {
+  my_cart: number;
+  cart_item_id: number;
+  product_id?: number;
+  is_active?: boolean;
+  quantity?: number;
+}
+export interface CartInfoType {
+  product_id: string | undefined;
+  quantity: number;
+  check: boolean;
+}
+
 const ProductDetail = (props: ProductDetailProps) => {
   const navigate = useNavigate();
   const params = useParams();
-  const productId = params.productId;
+  const productId: string | undefined = params.productId;
   const getDetail = ProductDetailAPI(productId);
   const [productDetail, setProductDetail] = useState<productDetail>({
     image: "",
@@ -46,6 +61,7 @@ const ProductDetail = (props: ProductDetailProps) => {
     product_info: "",
     shipping_fee: 0,
     stock: 0,
+    product_id: 0,
   });
   const productStock = productDetail?.stock;
   console.log("남은 재고 : ", productStock);
@@ -65,7 +81,7 @@ const ProductDetail = (props: ProductDetailProps) => {
     setIsClicked(num);
   };
   const handleCart = async () => {
-    const res = await addCart();
+    const res: ResponseType = await addCart();
     console.log("카트 정보 : ", res);
     // 새로운 카트 아이템 생성
     const cartItem: CartItemType = {
@@ -78,7 +94,7 @@ const ProductDetail = (props: ProductDetailProps) => {
       quantity: orderNum,
       myCart: res?.my_cart,
       cartId: res?.cart_item_id,
-      productId: res?.product_id,
+      productId: productDetail?.product_id,
     };
 
     // 장바구니에 해당 아이템이 이미 있는지 검사
