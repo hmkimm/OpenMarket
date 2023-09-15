@@ -17,16 +17,25 @@ interface Button {
   isSelected?: boolean;
 }
 
+export interface ProductInputs {
+  product_name: string;
+  image: string;
+  price: number;
+  shipping_method: "PARCEL" | "DELIVERY";
+  shipping_fee: number;
+  stock: number;
+  product_info: string;
+}
 interface ProductInfo extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
 const AddProduct = () => {
-  const token = useRecoilValue(userToken);
-  const [inputs, setInputs] = useState({
+  // const token = useRecoilValue(userToken);
+  const [inputs, setInputs] = useState<ProductInputs>({
     product_name: "",
     image: "",
-    price: "",
-    shipping_method: "", // PARCEL 또는 DELIVERY 선택
-    shipping_fee: "",
-    stock: "",
+    price: 0,
+    shipping_method: "PARCEL",
+    shipping_fee: 0,
+    stock: 0,
     product_info: "",
   });
   console.log(inputs);
@@ -44,7 +53,7 @@ const AddProduct = () => {
 
   const handleSubmit = async () => {
     console.log("handlesumbmit 호출");
-    const res = await AddProductAPI({ inputs, token });
+    const res = await AddProductAPI(inputs);
     console.log(res);
   };
   return (

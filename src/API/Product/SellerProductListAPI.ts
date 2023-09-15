@@ -1,8 +1,9 @@
 import URL from "../URL";
+import { useRecoilValue } from "recoil";
+import userToken from "Recoil/userToken/userToken";
 
-const SellerProductListAPI = async (token) => {
-  // const fetchProduct = async () => {
-    // fetchProduct 함수 생략 가능
+const SellerProductListAPI = async () => {
+  const token = useRecoilValue(userToken);
   try {
     const res = await fetch(`${URL}/seller/`, {
       method: "GET",
@@ -18,6 +19,5 @@ const SellerProductListAPI = async (token) => {
     throw error;
   }
 };
-
 
 export default SellerProductListAPI;

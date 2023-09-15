@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import userToken from "../../Recoil/userToken/userToken";
 import { useRecoilValue } from "recoil";
 
-const ProductDetailAPI = (productId) => {
+const ProductDetailAPI = (productId: string | undefined) => {
   const token = useRecoilValue(userToken);
 
   const getDetail = useCallback(async () => {

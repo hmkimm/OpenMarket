@@ -10,7 +10,7 @@ import ErrorMsg from "../Components/Common/ErrorMsg";
 
 import LogInAPI from "../API/LogInAPI";
 
-interface userInput {
+export interface userInput {
   username: string;
   password: string;
   login_type: "BUYER" | "SELLER" | "";
@@ -62,7 +62,7 @@ const LogIn = () => {
       setErrMsg("비밀번호를 입력해주세요.");
     } else {
       try {
-        const res = await LogInAPI(userInput); //note:함수에 객체를 인자로 직접 넣으면 {}필요없음
+        const res = await LogInAPI(userInput);
         setToken(res.token);
 
         if (userInput.login_type === "SELLER") {

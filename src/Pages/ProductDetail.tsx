@@ -50,7 +50,7 @@ export interface CartInfoType {
 const ProductDetail = (props: ProductDetailProps) => {
   const navigate = useNavigate();
   const params = useParams();
-  const productId: string | undefined = params.productId;
+  const productId = params.productId;
   const getDetail = ProductDetailAPI(productId);
   const [productDetail, setProductDetail] = useState<productDetail>({
     image: "",
