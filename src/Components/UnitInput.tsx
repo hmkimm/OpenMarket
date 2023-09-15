@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 interface UnitInputProps extends InputHTMLAttributes<HTMLInputElement> {
   title: string;
   name: string;
-  value: string;
+  value: number;
   children: React.ReactNode;
 }
 const UnitInput = (props: UnitInputProps) => {
