@@ -26,8 +26,7 @@ interface SnsBtn {
   $img: string;
 }
 const BuyerMain = () => {
-  const token = useRecoilValue(userToken);
-  const { fetchproducts } = ProductAPI(token);
+  const { fetchproducts } = ProductAPI();
   const [productList, setProductList] = useState<ProductList>({
     results: [],
   });
