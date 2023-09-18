@@ -63,16 +63,22 @@ const AddProduct = () => {
     event: ChangeEvent<HTMLInputElement>
   ) => {
     if (event.target.files) {
-      const file = event.target.files[0];
-      const res = await handleImg(file!);
-      const imageURL = `https://api.mandarin.weniv.co.kr/${res.filename}`;
+      const file = event.target.files;
+      console.log(file);
+      const res = await handleImg(file);
+      console.log(res);
+      let imageURL = `https://api.mandarin.weniv.co.kr/${res}`;
+      if (file.length > 1) {
+        const firstURL = res.split(",")[0];
+        imageURL = `https://api.mandarin.weniv.co.kr/${firstURL}`;
+      }
       setInputs((prev) => ({
         ...prev,
         image: imageURL,
       }));
     }
   };
-
+  console.log(inputs.image);
   const handleButtonClick = (name: string, value: string, val: string) => {
     // const { name, value } = e.target;
     setInputs((prev) => ({
@@ -150,6 +156,7 @@ const AddProduct = () => {
               type="file"
               id="file-upload"
               className="a11y-hidden"
+              multiple
             />
           </div>
           <div>

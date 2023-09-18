@@ -1,24 +1,25 @@
-
-
 const imageUploadAPI = () => {
   const otherURL = "https://api.mandarin.weniv.co.kr/";
 
-  const handleImg = async (file: File) => {
-
-
+  const handleImg = async (files: FileList) => {
     const formData = new FormData();
-    formData.append("image", file);
+    Array.from(files).forEach((file) => {
+      formData.append("image", file);
+    });
+    console.log(formData);
     try {
-      const res = await fetch(`${otherURL}image/uploadfile`, {
+      const res = await fetch(`${otherURL}image/uploadfiles`, {
         method: "POST",
-        // headers: {
-        //   "Content-type": "multipart/form-data",
-        // },
         body: formData,
       });
       const result = await res.json();
-      console.log(result);
-      return result;
+      
+      let filenames: string[] = [];
+      for (let item of result) {
+        filenames.push(item["filename"]);
+      }
+
+      return filenames.length > 1 ? filenames.join(",") : filenames[0];
     } catch (error) {
       console.error("api err", error);
       throw error;
