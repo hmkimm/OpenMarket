@@ -196,7 +196,7 @@ const ProductDetail = (props: ProductDetailProps) => {
               </FlexLayout>
               <FlexLayout $gap="14px">
                 <Button width="416px">바로 구매</Button>
-                <Button width="200px" empty onClick={handleCart}>
+                <Button width="200px" onClick={handleCart}>
                   장바구니
                 </Button>
               </FlexLayout>
