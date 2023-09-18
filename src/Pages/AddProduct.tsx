@@ -1,20 +1,27 @@
-import React, { TextareaHTMLAttributes, useState } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  TextareaHTMLAttributes,
+  useState,
+} from "react";
 import { styled } from "styled-components";
-import { useRecoilValue } from "recoil";
+import logo from "../Assets/Icons/Logo-hodu.svg";
 
-import BasicHeader from "../Components/Header/BasicHeader";
 import imgicon from "../Assets/Icons/icon-img.svg";
+import defaultimg from "../Assets/Icons/icon-default.svg";
 import UnitInput from "../Components/UnitInput";
 
 import AddProductAPI from "../API/Product/AddProductAPI";
-import userToken from "../Recoil/userToken/userToken";
+import { Layout, HeaderLayout } from "Style/Layout";
+import { useNavigate } from "react-router-dom";
+import imageUploadAPI from "API/Product/ImageUploadAPI";
 
 interface Button {
   width?: string;
-  padding?: string;
+  $padding?: string;
   name?: string;
   value?: string;
-  isSelected?: boolean;
+  $isSelected?: boolean;
 }
 
 export interface ProductInputs {
@@ -28,7 +35,7 @@ export interface ProductInputs {
 }
 interface ProductInfo extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
 const AddProduct = () => {
-  // const token = useRecoilValue(userToken);
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState<ProductInputs>({
     product_name: "",
     image: "",
@@ -40,6 +47,7 @@ const AddProduct = () => {
   });
   console.log(inputs);
   const [selectedBtn, setSelectedBtn] = useState<null | string>(null);
+  const handleImg = imageUploadAPI();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -51,6 +59,30 @@ const AddProduct = () => {
     }));
   };
 
+  const handleImageChange: ChangeEventHandler<HTMLInputElement> = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      const res = await handleImg(file!);
+      const imageURL = `https://api.mandarin.weniv.co.kr/${res.filename}`;
+      setInputs((prev) => ({
+        ...prev,
+        image: imageURL,
+      }));
+    }
+  };
+
+  const handleButtonClick = (name: string, value: string, val: string) => {
+    // const { name, value } = e.target;
+    setInputs((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setSelectedBtn(val);
+  };
+
+  console.log(inputs);
   const handleSubmit = async () => {
     console.log("handlesumbmit 호출");
     const res = await AddProductAPI(inputs);
@@ -58,9 +90,24 @@ const AddProduct = () => {
   };
   return (
     <>
-      <BasicHeader />
+      <SellerCenterHeader>
+        <div>
+          <img
+            src={logo}
+            alt="hodu-market"
+            style={{
+              width: "124px",
+              height: "38px",
+              cursor: "pointer",
+              verticalAlign: "bottom",
+            }}
+            onClick={() => navigate("/sellermain")}
+          />
+          <H1>판매자 센터</H1>
+        </div>
+      </SellerCenterHeader>
       <Layout>
-        <h1
+        <h2
           style={{
             fontSize: "36px",
             fontWeight: "700",
@@ -70,10 +117,12 @@ const AddProduct = () => {
           }}
         >
           상품 등록
-        </h1>
+        </h2>
         <BodyLayout>
           <div>
-            <p style={{ color: "red" }}>*상품 등록 주의사항</p>
+            <p style={{ color: "red", lineHeight: "normal" }}>
+              *상품 등록 주의사항
+            </p>
             <AlertMsg>
               - 너무 귀여운 사진은 심장이 아파올 수 있습니다.
               <br />
@@ -94,9 +143,14 @@ const AddProduct = () => {
           <div>
             <Title>상품이미지</Title>
             <label htmlFor="file-upload">
-              <Image />
+              <Image src={inputs?.image || defaultimg} />
             </label>
-            <input type="file" id="file-upload" className="a11y-hidden" />
+            <input
+              onChange={handleImageChange}
+              type="file"
+              id="file-upload"
+              className="a11y-hidden"
+            />
           </div>
           <div>
             <Title>상품명</Title>
@@ -118,25 +172,20 @@ const AddProduct = () => {
             <Button
               name="shipping_method"
               value="PARCEL"
-              //fixme: handleInputChange 수정
               onClick={() => {
-                setSelectedBtn("left");
-                // handleInputChange(e);
+                handleButtonClick("shipping_method", "PARCEL", "left");
               }}
-              isSelected={selectedBtn === "left"}
+              $isSelected={selectedBtn === "left"}
             >
               택배, 소포, 등기
             </Button>
             <Button
               name="shipping_method"
               value="DELIVERY"
-              //fixme: handleInputChange 수정
-
               onClick={() => {
-                setSelectedBtn("right");
-                // handleInputChange(e);
+                handleButtonClick("shipping_method", "DELIVERY", "right");
               }}
-              isSelected={selectedBtn === "right"}
+              $isSelected={selectedBtn === "right"}
             >
               직접배송(화물배달)
             </Button>
@@ -164,20 +213,29 @@ const AddProduct = () => {
           name="product_info"
           value={inputs.product_info}
         />
+        <Button width="200px" $padding="19px 0">
+          취소
+        </Button>
+        <Button onClick={handleSubmit} width="200px" $padding="19px 0">
+          저장하기
+        </Button>
       </Layout>
-      <Button width="200px" padding="19px 0">
-        취소
-      </Button>
-      <Button onClick={handleSubmit} width="200px" padding="19px 0">
-        저장하기
-      </Button>
     </>
   );
 };
 
-const Layout = styled.div`
-  margin: 0 auto;
+const SellerCenterHeader = styled(HeaderLayout)`
+  justify-content: space-between;
+  padding: 22px 100px;
+  align-items: center;
 `;
+
+const H1 = styled.h1`
+  font-size: 30px;
+  margin-left: 16px;
+  display: inline-block;
+`;
+
 const BodyLayout = styled.div`
   display: flex;
   justify-content: center;
@@ -199,7 +257,7 @@ const Title = styled.p`
   color: var(--767676, #767676);
 `;
 
-const Image = styled.div`
+const Image = styled.img`
   width: 454px;
   height: 454px;
   /* src: url(${imgicon}); */
@@ -226,11 +284,11 @@ const Button = styled.button<Button>`
   width: ${(props) => props.width || "220px"};
   height: 54px;
   border-radius: 5px;
-  padding: ${(props) => props.padding || "17px 0px"};
+  padding: ${(props) => props.$padding || "17px 0px"};
   margin: 0 10px 16px 0;
-  color: ${(props) => (props.isSelected ? "white" : "#767676")};
+  color: ${(props) => (props.$isSelected ? "white" : "#767676")};
   border: 1px solid var(--c-4-c-4-c-4, #c4c4c4);
-  background: ${(props) => (props.isSelected ? "#21bf48" : "white")};
+  background: ${(props) => (props.$isSelected ? "#21bf48" : "white")};
   font-size: 16px;
   box-sizing: border-box;
 `;
@@ -238,5 +296,6 @@ const Button = styled.button<Button>`
 const ProductInfo = styled.textarea<ProductInfo>`
   width: 1320px;
   height: 700px;
+  margin-bottom: 50px;
 `;
 export default AddProduct;
