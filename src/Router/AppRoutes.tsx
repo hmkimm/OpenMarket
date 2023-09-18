@@ -7,6 +7,7 @@ import AddProduct from "../Pages/AddProduct";
 import ProductDetail from "../Pages/ProductDetail";
 import LogIn from "../Pages/LogIn";
 import ShoppingCart from "../Pages/ShoppingCart";
+import SellerCenter from "Pages/SellerCenter";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const AppRoutes = () => {
         <Route path="/sellermain" element={<SellerMain />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/sellercenter" element={<SellerCenter />} />
       </Routes>
     </BrowserRouter>
   );
