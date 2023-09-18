@@ -12,4 +12,16 @@ const Layout = styled.div`
   `}
 `;
 
-export { Layout, LayoutStyle };
+const HeaderLayout = styled.div`
+  display: flex;
+  position: fixed;
+  z-index: 9;
+  left: 0;
+  right: 0;
+  padding: 22px 0;
+  margin-bottom: 20px;
+  justify-content: space-around;
+  background: #fff;
+  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.4);
+`;
+export { Layout, LayoutStyle, HeaderLayout };
