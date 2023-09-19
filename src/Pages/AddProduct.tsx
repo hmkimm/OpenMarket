@@ -126,7 +126,7 @@ const AddProduct = () => {
         </h2>
         <BodyLayout>
           <div>
-            <p style={{ color: "red", lineHeight: "normal" }}>
+            <p style={{ color: "red", lineHeight: "17px", }}>
               *상품 등록 주의사항
             </p>
             <AlertMsg>
@@ -253,10 +253,13 @@ const BodyLayout = styled.div`
 
 const AlertMsg = styled.p`
   width: 320px;
+  height : 346px;
   background: #ffefe8;
   padding: 20px;
   margin-top: 10px;
   font-size: 14px;
+  line-height : 17px;
+  box-sizing : border-box;
 `;
 const Title = styled.p`
   margin-bottom: 10px;
