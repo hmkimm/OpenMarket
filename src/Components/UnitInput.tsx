@@ -40,16 +40,12 @@ const Title = styled.div`
   color: var(--767676, #767676);
 `;
 
-//fixme: 숫자 버튼 안사라짐
 const Input = styled.input`
   width: 166px;
   padding: 17px 0 17px 16px;
   font-size: 16px;
+  ::-webkit-outer-spin-button,
   ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  ::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
