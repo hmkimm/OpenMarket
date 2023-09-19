@@ -44,8 +44,8 @@ const Input = styled.input`
   width: 166px;
   padding: 17px 0 17px 16px;
   font-size: 16px;
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
