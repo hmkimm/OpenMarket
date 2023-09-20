@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 import { styled } from "styled-components";
-import logo from "../Assets/Icons/Logo-hodu.svg";
+import logo from "../Assets/Icons/mulkong.svg";
 
 import imgicon from "../Assets/Icons/icon-img.svg";
 import defaultimg from "../Assets/Icons/icon-default.svg";
@@ -26,7 +26,7 @@ interface Button {
 
 export interface ProductInputs {
   product_name: string;
-  image: string;
+  image: File | null;
   price: number;
   shipping_method: "PARCEL" | "DELIVERY";
   shipping_fee: number;
@@ -38,16 +38,17 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState<ProductInputs>({
     product_name: "",
-    image: "",
+    image: null,
     price: 0,
     shipping_method: "PARCEL",
     shipping_fee: 0,
     stock: 0,
     product_info: "",
   });
-  console.log(inputs);
   const [selectedBtn, setSelectedBtn] = useState<null | string>(null);
+  const [imgURL, setImgURL] = useState<string>("");
   const handleImg = imageUploadAPI();
+  const addProduct = AddProductAPI(inputs);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -62,25 +63,38 @@ const AddProduct = () => {
   const handleImageChange: ChangeEventHandler<HTMLInputElement> = async (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    if (event.target.files) {
-      const file = event.target.files;
-      console.log(file);
-      const res = await handleImg(file);
-      console.log(res);
-      let imageURL = `https://api.mandarin.weniv.co.kr/${res}`;
+    const file = event.target.files?.[0];
+    if (!file) return;
+    console.log("파일 자체 : ", file);
+    const blob = await fetch(URL.createObjectURL(file)).then((res) =>
+      res.blob()
+    );
+    const formData = new FormData();
+    formData.append("image", blob, file.name);
+
+    // formData.append("image", file);
+
+    try {
+      const res = await handleImg(formData);
+      console.log("이미지 응답 : ", res);
+
+      let imageURL = "https://api.mandarin.weniv.co.kr/";
+      setImgURL(`${imageURL}${res[0]?.filename}`);
       if (file.length > 1) {
         const firstURL = res.split(",")[0];
-        imageURL = `https://api.mandarin.weniv.co.kr/${firstURL}`;
+        setImgURL(`${imageURL}${firstURL}`);
       }
       setInputs((prev) => ({
         ...prev,
-        image: imageURL,
+        image: file,
       }));
+    } catch (error) {
+      console.error("이미지 업로드 오류", error);
     }
   };
-  console.log(inputs.image);
+  console.log("인풋의 이미지 : ", inputs.image);
+
   const handleButtonClick = (name: string, value: string, val: string) => {
-    // const { name, value } = e.target;
     setInputs((prev) => ({
       ...prev,
       [name]: value,
@@ -91,7 +105,7 @@ const AddProduct = () => {
   console.log(inputs);
   const handleSubmit = async () => {
     console.log("handlesumbmit 호출");
-    const res = await AddProductAPI(inputs);
+    const res = await addProduct();
     console.log(res);
   };
   return (
@@ -126,7 +140,7 @@ const AddProduct = () => {
         </h2>
         <BodyLayout>
           <div>
-            <p style={{ color: "red", lineHeight: "17px", }}>
+            <p style={{ color: "red", lineHeight: "17px" }}>
               *상품 등록 주의사항
             </p>
             <AlertMsg>
@@ -149,7 +163,7 @@ const AddProduct = () => {
           <div>
             <Title>상품이미지</Title>
             <label htmlFor="file-upload">
-              <Image src={inputs?.image || defaultimg} />
+              <Image src={imgURL || defaultimg} />
             </label>
             <input
               onChange={handleImageChange}
@@ -253,13 +267,13 @@ const BodyLayout = styled.div`
 
 const AlertMsg = styled.p`
   width: 320px;
-  height : 346px;
+  height: 346px;
   background: #ffefe8;
   padding: 20px;
   margin-top: 10px;
   font-size: 14px;
-  line-height : 17px;
-  box-sizing : border-box;
+  line-height: 17px;
+  box-sizing: border-box;
 `;
 const Title = styled.p`
   margin-bottom: 10px;
