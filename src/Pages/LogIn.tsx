@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
-import logo from "../Assets/Icons/Logo-hodu.svg";
+import logo from "../Assets/Icons/mulkong.svg";
 import Button from "../Components/Common/Button";
 import userToken from "../Recoil/userToken/userToken";
 import ErrorMsg from "../Components/Common/ErrorMsg";
@@ -96,7 +96,7 @@ const LogIn = () => {
     <div>
       <img
         src={logo}
-        style={{ display: "block", margin: "100px auto 70px", width: "238px" }}
+        style={{ display: "block", margin: "100px auto 70px", width: "400px" }}
         alt="hodu-market"
       />
       <FormLayout onSubmit={handleLogIn}>

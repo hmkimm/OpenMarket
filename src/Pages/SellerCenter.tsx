@@ -1,5 +1,5 @@
 import Button from "Components/Common/Button";
-import logo from "../Assets/Icons/Logo-hodu.svg";
+import logo from "../Assets/Icons/mulkong.svg";
 import { HeaderLayout } from "Style/Layout";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
