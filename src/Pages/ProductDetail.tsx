@@ -161,15 +161,20 @@ const ProductDetail = (props: ProductDetailProps) => {
               </FlexLayout>
             </ProudctInfo>
             <DeliveryInfo>
-              <DeliveryMethod>
-                {productDetail?.shipping_method === "PARCEL"
-                  ? "택배배송"
-                  : "화물배달"}{" "}
-                /&nbsp;
-                {productDetail?.shipping_fee !== 0
-                  ? `${productDetail?.shipping_fee}원`
-                  : "무료배송"}
-              </DeliveryMethod>
+              <FlexLayout $jc="space-between">
+                <DeliveryMethod>
+                  {productDetail?.shipping_method === "PARCEL"
+                    ? "택배배송"
+                    : "화물배달"}{" "}
+                  /&nbsp;
+                  {productDetail?.shipping_fee !== 0
+                    ? `${productDetail?.shipping_fee}원`
+                    : "무료배송"}
+                </DeliveryMethod>
+                <div style={{ color: "var(--gray)" }}>
+                  남은 재고 : {productStock}개
+                </div>
+              </FlexLayout>
               <HorizontalLine />
               <CountButton
                 orderNum={orderNum}
