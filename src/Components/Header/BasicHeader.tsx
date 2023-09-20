@@ -95,7 +95,7 @@ const SearchLayout = styled.div`
   justify-content: space-between;
   width: 400px;
   margin-left: 30px;
-  border: 2px solid #21bf48;
+  border: 2px solid var(--primary);
   border-radius: 50px;
   padding: 13px 22px;
   box-sizing: border-box;
