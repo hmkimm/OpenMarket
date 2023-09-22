@@ -25,9 +25,11 @@ const BasicHeader = () => {
   const cartProductNumber = savedCart.length;
   console.log(savedCart, "header cart");
   const handleLogout = () => {
-    alert("로그아웃 하시겠습니까?");
-    setToken("");
-    navigate("/");
+    const isLogOut = window.confirm("로그아웃 하시겠습니까?");
+    if (isLogOut) {
+      setToken("");
+      navigate("/");
+    } else return;
   };
 
   const navigateMain = () => {

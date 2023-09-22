@@ -13,18 +13,17 @@ import LogInAPI from "../API/LogInAPI";
 export interface userInput {
   username: string;
   password: string;
-  login_type: "BUYER" | "SELLER" | "";
+  login_type: "BUYER" | "SELLER" | undefined;
 }
-interface LogInButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  br?: string;
-  borLeft?: string;
-  borRight?: string;
+interface LogInButtonProps {
+  $br?: string;
+  $borLeft?: string;
+  $borRight?: string;
   $isSelected: boolean;
   name: string;
   value: string;
 }
-interface Input extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Input {
   width?: string;
   padding?: string;
   margin?: string;
@@ -38,50 +37,56 @@ const LogIn = () => {
   const [userInput, setUserInput] = useState<userInput>({
     username: "",
     password: "",
-    login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
+    login_type: undefined, // BUYER : 일반 구매자, SELLER : 판매자
   });
   const setToken = useSetRecoilState(userToken);
   const [errMsg, setErrMsg] = useState<string>("");
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(userInput);
+    setErrMsg("");
     const { name, value } = e.currentTarget;
     setUserInput((prevState) => ({
-      ...prevState, //note: 이렇게 하면 기존 상태 값은 유지되고 변경된 값만 새로운 상태 객체에서 업데이트하게 됩니다.
-      [name]: value, //note: 계산된 속성명(Computed Property Name) 문법
+      ...prevState,
+      [name]: value,
     }));
-  };
-  const handleLogIn = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
-    if (!userInput.username && !userInput.password) {
-      setErrMsg("아이디를 입력해주세요.");
+    if (!userInput.login_type) {
+      setErrMsg("회원 타입을 설정해주세요");
     } else if (!userInput.username) {
       setErrMsg("아이디를 입력해주세요.");
     } else if (!userInput.password) {
       setErrMsg("비밀번호를 입력해주세요.");
-    } else {
-      try {
-        const res = await LogInAPI(userInput);
-        setToken(res.token);
-
-        if (userInput.login_type === "SELLER") {
-          navigate("/sellermain");
-        } else {
-          navigate("/buyermain");
-        }
-      } catch (error) {
-        setErrMsg("아이디 또는 비밀번호가 일치하지 않습니다.");
-        setUserInput({
-          username: "",
-          password: "",
-          login_type: "", // BUYER : 일반 구매자, SELLER : 판매자
-        });
-        if (inputRef.current) inputRef.current.focus();
-      }
     }
   };
+  const handleLogIn = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setErrMsg("");
+    console.log(userInput);
+
+    try {
+      const res = await LogInAPI(userInput);
+      setToken(res.token);
+
+      if (userInput.login_type === "SELLER") {
+        navigate("/sellermain");
+      } else {
+        navigate("/buyermain");
+      }
+    } catch (error) {
+      setErrMsg("아이디 또는 비밀번호가 일치하지 않습니다.");
+      setUserInput({
+        username: "",
+        password: "",
+        login_type: undefined, // BUYER : 일반 구매자, SELLER : 판매자
+      });
+      if (inputRef.current) inputRef.current.focus();
+    }
+  };
+
   const handleBtnChange = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setErrMsg("");
     const { name, value } = e.currentTarget;
     setUserInput((prev) => ({
       ...prev,
@@ -104,15 +109,12 @@ const LogIn = () => {
           <LogInButton
             name="login_type"
             value="BUYER"
-            br="10px 10px 0 0 "
-            borLeft="none"
+            $br="10px 10px 0 0 "
+            $borLeft="none"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               handleBtn("BUYER");
               handleBtnChange(e);
             }}
-            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            //   handleInputChange(e);
-            // }}
             $isSelected={selectedBtn === "BUYER"}
           >
             구매회원 로그인
@@ -120,8 +122,8 @@ const LogIn = () => {
           <LogInButton
             name="login_type"
             value="SELLER"
-            br="10px 10px 0 0 "
-            borRight="none"
+            $br="10px 10px 0 0 "
+            $borRight="none"
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               handleBtn("SELLER");
               handleBtnChange(e);
@@ -146,12 +148,13 @@ const LogIn = () => {
           placeholder="비밀번호"
           onChange={handleInputChange}
         />
+        {errMsg === "회원 타입을 설정해주세요" && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "비밀번호를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "아이디 또는 비밀번호가 일치하지 않습니다." && (
           <ErrorMsg>{errMsg}</ErrorMsg>
         )}
         <Button
-          empty={
+          $empty={
             !userInput.login_type || !userInput.username || !userInput.password
           }
           type="submit"
@@ -187,13 +190,13 @@ const LogInButton = styled.button.attrs({
   width: 50%;
   height: 60px;
   font-size: 18px;
-  border-radius: ${(props) => props.br || "10px"};
+  border-radius: ${(props) => props.$br || "10px"};
   border: 1px solid #c4c4c4;
   color: ${(props) => (props.$isSelected ? "white" : "black")};
   border-bottom: transparent;
   background-color: ${(props) => (props.$isSelected ? "var(--primary)" : "")};
-  border-left: ${(props) => props.borLeft};
-  border-right: ${(props) => props.borRight};
+  border-left: ${(props) => props.$borLeft};
+  border-right: ${(props) => props.$borRight};
 `;
 
 const Input = styled.input<Input>`

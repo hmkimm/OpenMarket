@@ -39,12 +39,12 @@ const BuyerMain = () => {
     };
     getProduct();
   }, []);
-  console.log(productList.results);
+  console.log(productList?.results);
   return (
     <div>
       <BasicHeader />
       <Grid>
-        {productList.results?.map((item, i) => {
+        {productList?.results?.map((item, i) => {
           return (
             <Link to={`/products/${item.product_id}`} key={i}>
               <ProductItem
