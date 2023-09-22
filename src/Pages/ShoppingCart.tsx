@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import cartProducts from "../Recoil/cart/cartProducts";
 import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
 import GetCartAPI from "../API/Cart/GetCartAPI";
+import logo from "../Assets/Icons/mulkong-gray.svg";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import { Layout } from "../Style/Layout";
@@ -59,9 +60,8 @@ const ShoppingCart = () => {
     getCartItem();
   }, [fetchCartItem, savedCart]);
 
-  //장바구니 get api, 삭제해도 바로 업뎃 안됨.
+  //note:장바구니 get api, 삭제해도 바로 업뎃 안됨.
   console.log("get api에 저장된 카트템 : ", cartItems);
-
   return (
     <>
       <BasicHeader />
@@ -73,74 +73,79 @@ const ShoppingCart = () => {
           <div>수량</div>
           <div>상품금액</div>
         </CartHeader>
-        <FlexLayout $jc="flex-start">
-          <Button
-            onClick={handleDeleteAllCartItems}
-            width="110px"
-            $padding="10px"
-            $margin=" 10px 15px 10px 0 "
-          >
-            모두 삭제
-          </Button>
+        {savedCart.length === 0 && (
           <div>
-            총{" "}
-            <strong style={{ color: "var(--primary" }}>
-              {savedCart.length}
-            </strong>
-            개
+            <CartMsg> 장바구니가 비었습니다</CartMsg>
+            <EmptyImg src={logo} />
           </div>
-        </FlexLayout>
-        {savedCart &&
-          savedCart?.map((el, i) => {
-            console.log(el.cartId);
-            return (
-              <CartItem key={i}>
-                <CartImg src={el.img} />
-                <div>
-                  <CartProvider>{el.provider}</CartProvider>
-                  <CartName>{el.name}</CartName>
-                  <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
-                  <CartShipping>
-                    {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
-                    &nbsp; /&nbsp;
-                    {el?.shippingFee !== 0
-                      ? `${el?.shippingFee}원`
-                      : "무료배송"}
-                  </CartShipping>
-                </div>
-                <QuantityLayout>
-                  <QuantityButton $borRadius="8px 0 0 8px">
-                    {" "}
-                    <FontAwesomeIcon icon={faMinus} />
-                  </QuantityButton>
-                  <QuantityDisplay>{el.quantity}</QuantityDisplay>
-                  <QuantityButton $borRadius=" 0 8px 8px 0 ">
-                    <FontAwesomeIcon icon={faPlus} />
-                  </QuantityButton>
-                </QuantityLayout>
-                <div
-                  style={{
-                    position: "absolute",
-                    right: "100px",
-                    textAlign: "center",
-                  }}
-                >
-                  <CartPrice color="red" $mb="26px">
-                    {(el.price * el.quantity + el.shippingFee).toLocaleString()}
-                    원
-                  </CartPrice>
-                  <Button $padding="10px" width="130px">
-                    주문하기
-                  </Button>
-                </div>
-                <DeleteButton
-                  onClick={() => {
-                    handleDeleteCart(el?.cartId!);
-                  }}
-                />
-              </CartItem>
-            );
-          })}
+        )}
+        {savedCart.length > 0 && (
+          <FlexLayout $jc="flex-start">
+            <Button
+              onClick={handleDeleteAllCartItems}
+              width="110px"
+              $padding="10px"
+              $margin=" 10px 15px 10px 0 "
+            >
+              모두 삭제
+            </Button>
+            <div>
+              총
+              <strong style={{ color: "var(--primary" }}>
+                {savedCart.length}
+              </strong>
+              개
+            </div>
+          </FlexLayout>
+        )}
+        {savedCart?.map((el, i) => {
+          console.log(el.cartId);
+          return (
+            <CartItem key={i}>
+              <CartImg src={el.img} />
+              <div>
+                <CartProvider>{el.provider}</CartProvider>
+                <CartName>{el.name}</CartName>
+                <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
+                <CartShipping>
+                  {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
+                  &nbsp; /&nbsp;
+                  {el?.shippingFee !== 0 ? `${el?.shippingFee}원` : "무료배송"}
+                </CartShipping>
+              </div>
+              <QuantityLayout>
+                <QuantityButton $borRadius="8px 0 0 8px">
+                  {" "}
+                  <FontAwesomeIcon icon={faMinus} />
+                </QuantityButton>
+                <QuantityDisplay>{el.quantity}</QuantityDisplay>
+                <QuantityButton $borRadius=" 0 8px 8px 0 ">
+                  <FontAwesomeIcon icon={faPlus} />
+                </QuantityButton>
+              </QuantityLayout>
+              <div
+                style={{
+                  position: "absolute",
+                  right: "100px",
+                  textAlign: "center",
+                }}
+              >
+                <CartPrice color="red" $mb="26px">
+                  {(el.price * el.quantity + el.shippingFee).toLocaleString()}원
+                </CartPrice>
+                <Button $padding="10px" width="130px">
+                  주문하기
+                </Button>
+              </div>
+              <DeleteButton
+                onClick={() => {
+                  handleDeleteCart(el?.cartId!);
+                }}
+              />
+            </CartItem>
+          );
+        })}
+        
       </Layout>
     </>
   );
@@ -177,6 +182,23 @@ const SelectButton = styled.button`
   height: 20px;
   border-radius: 50%;
   border: 1px solid var(--primary);
+`;
+
+const EmptyImg = styled.img`
+  width: 1000px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+`;
+const CartMsg = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  color: var(--gray);
 `;
 
 const CartItem = styled.section`
