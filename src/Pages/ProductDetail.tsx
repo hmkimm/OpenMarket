@@ -12,6 +12,7 @@ import { useRecoilState } from "recoil";
 import cartInfo from "../Recoil/cart/cartInfo";
 import cartProducts from "../Recoil/cart/cartProducts";
 import { CartItemType } from "\btypes";
+import HorizontalLine from "Style/HorizontalLine";
 
 interface ProductDetailProps {
   color?: string;
@@ -311,11 +312,7 @@ const DeliveryMethod = styled.div`
   color: var(--gray);
 `;
 
-const HorizontalLine = styled.div`
-  border: 0.5px solid var(--light-gray);
-  width: 100%;
-  margin: 20px 0;
-`;
+
 
 const ContentButton = styled.button<ContentButton>`
   width: 320px;
