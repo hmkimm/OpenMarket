@@ -9,7 +9,7 @@ import plus from "../Assets/Icons/plus-icon_2.svg";
 import equal from "../Assets/Icons/equal-icon.svg";
 
 import BasicHeader from "../Components/Header/BasicHeader";
-import { Layout } from "../Style/Layout";
+import { Layout, Header } from "../Style/Layout";
 import Button from "../Components/Common/Button";
 import del from "../Assets/Icons/icon-delete.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteAllCartsAPI from "../API/Cart/DeleteAllCartsAPI";
 import FlexLayout from "../Style/FlexLayout";
 import { CartItemType } from "\btypes";
+import { useNavigate } from "react-router-dom";
 
 interface QuantityButton {
   $borRadius: string;
@@ -27,6 +28,7 @@ interface CartPrice {
 }
 
 const ShoppingCart = () => {
+  const navigate = useNavigate();
   const fetchCartItem = GetCartAPI();
   const [savedCart, setSavedCart] =
     useRecoilState<CartItemType[]>(cartProducts);
@@ -138,7 +140,9 @@ const ShoppingCart = () => {
                 <CartShipping>
                   {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
                   &nbsp; /&nbsp;
-                  {el?.shippingFee !== 0 ? `${el?.shippingFee.toLocaleString()}원` : "무료배송"}
+                  {el?.shippingFee !== 0
+                    ? `${el?.shippingFee.toLocaleString()}원`
+                    : "무료배송"}
                 </CartShipping>
               </div>
               <QuantityLayout>
@@ -191,7 +195,13 @@ const ShoppingCart = () => {
               </div>
             </TotalPriceLayout>
 
-            <Button width="200px" $margin="0 auto">
+            <Button
+              width="200px"
+              $margin="0 auto"
+              onClick={() => {
+                navigate("/order");
+              }}
+            >
               주문하기
             </Button>
           </>
@@ -201,12 +211,12 @@ const ShoppingCart = () => {
   );
 };
 
-const Header = styled.h1`
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 52px;
-  text-align: center;
-`;
+// const Header = styled.h1`
+//   font-size: 36px;
+//   font-weight: 700;
+//   margin-bottom: 52px;
+//   text-align: center;
+// `;
 
 const CartHeader = styled.div`
   display: flex;
