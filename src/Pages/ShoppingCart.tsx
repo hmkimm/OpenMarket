@@ -5,6 +5,8 @@ import cartProducts from "../Recoil/cart/cartProducts";
 import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
 import GetCartAPI from "../API/Cart/GetCartAPI";
 import logo from "../Assets/Icons/mulkong-gray.svg";
+import plus from "../Assets/Icons/plus-icon_2.svg";
+import equal from "../Assets/Icons/equal-icon.svg";
 
 import BasicHeader from "../Components/Header/BasicHeader";
 import { Layout } from "../Style/Layout";
@@ -31,6 +33,11 @@ const ShoppingCart = () => {
 
   //api에 저장
   const [cartItems, setCartItems] = useState<{}>([]);
+  const [totalPrice, setTotalPrice] = useState({
+    priceSum: 0,
+    shippingFeeSum: 0,
+    total: 0,
+  });
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
@@ -51,6 +58,27 @@ const ShoppingCart = () => {
 
   console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
 
+  useEffect(() => {
+    const calculateSum = () => {
+      let sum = 0;
+      let deliverySum = 0;
+      savedCart.map((el) => {
+        sum += el.price * el.quantity;
+        deliverySum += el.shippingFee;
+
+        setTotalPrice((prev) => ({
+          ...prev,
+          priceSum: sum,
+          shippingFeeSum: deliverySum,
+          total: sum + deliverySum,
+        }));
+      });
+    };
+    console.log("rendering");
+    calculateSum();
+  }, [savedCart]);
+
+  console.log(totalPrice);
   useEffect(() => {
     const getCartItem = async () => {
       const data = await fetchCartItem();
@@ -110,12 +138,11 @@ const ShoppingCart = () => {
                 <CartShipping>
                   {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
                   &nbsp; /&nbsp;
-                  {el?.shippingFee !== 0 ? `${el?.shippingFee}원` : "무료배송"}
+                  {el?.shippingFee !== 0 ? `${el?.shippingFee.toLocaleString()}원` : "무료배송"}
                 </CartShipping>
               </div>
               <QuantityLayout>
                 <QuantityButton $borRadius="8px 0 0 8px">
-                  {" "}
                   <FontAwesomeIcon icon={faMinus} />
                 </QuantityButton>
                 <QuantityDisplay>{el.quantity}</QuantityDisplay>
@@ -145,7 +172,30 @@ const ShoppingCart = () => {
             </CartItem>
           );
         })}
-        
+        {savedCart.length > 0 && (
+          <>
+            <TotalPriceLayout>
+              <div>
+                <PriceInfo>총 상품금액</PriceInfo>
+                <Price>{totalPrice.priceSum.toLocaleString()}원</Price>
+              </div>
+              <img src={plus} alt="더하기" />
+              <div>
+                <PriceInfo>배송비</PriceInfo>
+                <Price>{totalPrice.shippingFeeSum.toLocaleString()}원</Price>
+              </div>
+              <img src={equal} />
+              <div>
+                <PriceInfo>결제 예정 금액</PriceInfo>
+                <Price color="red">{totalPrice.total.toLocaleString()}원</Price>
+              </div>
+            </TotalPriceLayout>
+
+            <Button width="200px" $margin="0 auto">
+              주문하기
+            </Button>
+          </>
+        )}
       </Layout>
     </>
   );
@@ -278,4 +328,26 @@ const QuantityDisplay = styled.div`
 `;
 const CartProductInfo = styled.div``;
 
+const TotalPriceLayout = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 46px 0;
+  margin: 40px 0;
+  background-color: var(--light-gray);
+  border-radius: 10px;
+  box-sizing: border-box;
+  align-items: center;
+`;
+
+const PriceInfo = styled.div`
+  font-size: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+`;
+const Price = styled.div`
+  font-size: 26px;
+  text-align: center;
+  color: ${(props) => props.color || "black"};
+`;
 export default ShoppingCart;
