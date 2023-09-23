@@ -19,12 +19,19 @@ import DeleteAllCartsAPI from "../API/Cart/DeleteAllCartsAPI";
 import FlexLayout from "../Style/FlexLayout";
 import { CartItemType } from "\btypes";
 import { useNavigate } from "react-router-dom";
+import {
+  CartItem,
+  CartImg,
+  CartProvider,
+  CartName,
+  CartPrice,
+  CartShipping,
+  QuantityLayout,
+} from "Style/CartItemStyle";
+
 
 interface QuantityButton {
   $borRadius: string;
-}
-interface CartPrice {
-  $mb?: string;
 }
 
 const ShoppingCart = () => {
@@ -197,7 +204,7 @@ const ShoppingCart = () => {
               width="200px"
               $margin="0 auto"
               onClick={() => {
-                navigate("/order");
+                navigate("/order", { state: totalPrice });
               }}
             >
               주문하기
@@ -209,12 +216,6 @@ const ShoppingCart = () => {
   );
 };
 
-// const Header = styled.h1`
-//   font-size: 36px;
-//   font-weight: 700;
-//   margin-bottom: 52px;
-//   text-align: center;
-// `;
 
 const CartHeader = styled.div`
   display: flex;
@@ -259,46 +260,6 @@ const CartMsg = styled.div`
   color: var(--gray);
 `;
 
-const CartItem = styled.section`
-  display: flex;
-  position: relative;
-  align-items: center;
-  width: 100%;
-  height: 200px;
-  border: 2px solid var(--light-gray);
-  padding: 0 100px 0 30px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  box-sizing: border-box;
-`;
-
-const CartImg = styled.img`
-  width: 160px;
-  height: 160px;
-  margin-right: 36px;
-  border-radius: 10px;
-`;
-
-const CartProvider = styled.div`
-  color: var(--gray);
-  margin-bottom: 10px;
-`;
-
-const CartName = styled.div`
-  font-size: 18px;
-  margin-bottom: 10px;
-`;
-
-const CartPrice = styled.div<CartPrice>`
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: ${(props) => props.$mb || "40px"};
-  color: ${(props) => props.color};
-`;
-
-const CartShipping = styled.div`
-  color: var(--gray);
-`;
 
 const DeleteButton = styled.button`
   display: block;
@@ -310,11 +271,6 @@ const DeleteButton = styled.button`
   background: url(${del}) no-repeat center;
 `;
 
-const QuantityLayout = styled.div`
-  position: absolute;
-  display: flex;
-  right: 378px;
-`;
 const QuantityButton = styled.button<QuantityButton>`
   width: 50px;
   height: 50px;
