@@ -61,23 +61,21 @@ const ShoppingCart = () => {
   console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
 
   useEffect(() => {
-    const calculateSum = () => {
-      let sum = 0;
-      let deliverySum = 0;
-      savedCart.map((el) => {
-        sum += el.price * el.quantity;
-        deliverySum += el.shippingFee;
+    let sum = 0;
+    let deliverySum = 0;
+    savedCart.map((el) => {
+      sum += el.price * el.quantity;
+      deliverySum += el.shippingFee;
 
-        setTotalPrice((prev) => ({
-          ...prev,
-          priceSum: sum,
-          shippingFeeSum: deliverySum,
-          total: sum + deliverySum,
-        }));
-      });
-    };
+      setTotalPrice((prev) => ({
+        ...prev,
+        priceSum: sum,
+        shippingFeeSum: deliverySum,
+        total: sum + deliverySum,
+      }));
+    });
+
     console.log("rendering");
-    calculateSum();
   }, [savedCart]);
 
   console.log(totalPrice);
