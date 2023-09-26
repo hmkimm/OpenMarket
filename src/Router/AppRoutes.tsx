@@ -8,6 +8,7 @@ import ProductDetail from "../Pages/ProductDetail";
 import LogIn from "../Pages/LogIn";
 import ShoppingCart from "../Pages/ShoppingCart";
 import SellerCenter from "Pages/SellerCenter";
+import ProtectedRoute from "./ProtectedRoute";
 import Order from "Pages/Order";
 
 const AppRoutes = () => {
@@ -15,13 +16,17 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LogIn />} />
-        <Route path="/buyermain" element={<BuyerMain />} />
-        <Route path="/products/:productId" element={<ProductDetail />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/buyermain" element={<BuyerMain />} />
+          <Route path="/products/:productId" element={<ProductDetail />} />
+          <Route path="/cart" element={<ShoppingCart />} />
+          <Route path="/order" element={<Order />} />
+        </Route>
+
         <Route path="/sellermain" element={<SellerMain />} />
         <Route path="/addproduct" element={<AddProduct />} />
-        <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/sellercenter" element={<SellerCenter />} />
-        <Route path="/order" element={<Order />} />
       </Routes>
     </BrowserRouter>
   );
