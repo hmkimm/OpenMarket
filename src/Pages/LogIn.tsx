@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
 import logo from "../Assets/Icons/mulkong.svg";
@@ -31,6 +31,8 @@ interface Input {
 
 const LogIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [selectedBtn, setSelectedBtn] = useState<"BUYER" | "SELLER" | null>(
     null
   );
@@ -97,6 +99,11 @@ const LogIn = () => {
   const handleBtn = (btnValue: "BUYER" | "SELLER" | null) => {
     setSelectedBtn(btnValue);
   };
+  useEffect(() => {
+    if (location.state) {
+      setErrMsg(location.state);
+    }
+  }, []);
 
   return (
     <div>
@@ -149,6 +156,7 @@ const LogIn = () => {
           placeholder="비밀번호"
           onChange={handleInputChange}
         />
+        {errMsg === "로그인을 해주세요!" && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "회원 타입을 설정해주세요" && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "비밀번호를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "아이디 또는 비밀번호가 일치하지 않습니다." && (
