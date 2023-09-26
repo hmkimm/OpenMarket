@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
@@ -81,6 +81,7 @@ const LogIn = () => {
         password: "",
         login_type: undefined, // BUYER : 일반 구매자, SELLER : 판매자
       });
+      setSelectedBtn(null);
       if (inputRef.current) inputRef.current.focus();
     }
   };
@@ -93,7 +94,7 @@ const LogIn = () => {
       [name]: value,
     }));
   };
-  const handleBtn = (btnValue: "BUYER" | "SELLER") => {
+  const handleBtn = (btnValue: "BUYER" | "SELLER" | null) => {
     setSelectedBtn(btnValue);
   };
 
