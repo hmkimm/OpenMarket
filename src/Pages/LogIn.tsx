@@ -44,28 +44,26 @@ const LogIn = () => {
   const setToken = useSetRecoilState(userToken);
   const [errMsg, setErrMsg] = useState<string>("");
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(userInput);
-    setErrMsg("");
     const { name, value } = e.currentTarget;
-    setUserInput((prevState) => ({
-      ...prevState,
+
+    setUserInput((prev) => ({
+      ...prev,
       [name]: value,
     }));
+    setErrMsg("");
 
     if (!userInput.login_type) {
       setErrMsg("회원 타입을 설정해주세요");
-    } else if (!userInput.username) {
-      setErrMsg("아이디를 입력해주세요.");
-    } else if (!userInput.password) {
-      setErrMsg("비밀번호를 입력해주세요.");
-    }
+    } 
   };
+
+
   const handleLogIn = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrMsg("");
-    console.log(userInput);
+
 
     try {
       const res = await LogInAPI(userInput);
@@ -104,6 +102,7 @@ const LogIn = () => {
       setErrMsg(location.state);
     }
   }, []);
+
 
   return (
     <div>
@@ -163,7 +162,7 @@ const LogIn = () => {
           <ErrorMsg>{errMsg}</ErrorMsg>
         )}
         <Button
-          $empty={
+          disabled={
             !userInput.login_type || !userInput.username || !userInput.password
           }
           type="submit"
