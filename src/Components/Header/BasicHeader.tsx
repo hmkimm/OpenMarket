@@ -63,10 +63,10 @@ const BasicHeader = () => {
             <AlertCart>{cartProductNumber}</AlertCart>
           </IconBtnLayout>
         </Link>
-        <IconBtnLayout>
+        {/* <IconBtnLayout>
           <IconBtn $bg={user} />
           <span>마이페이지</span>
-        </IconBtnLayout>
+        </IconBtnLayout> */}
         <IconBtnLayout>
           <button onClick={handleLogout}>
             <FontAwesomeIcon icon={faArrowRightFromBracket} size="2xl" />

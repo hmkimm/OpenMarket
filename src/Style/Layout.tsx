@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 const LayoutStyle = css`
   width: 1280px;
   margin: 0 auto;
-  padding-top: 120px;
+  padding: 120px 0;
 `;
 
 const Layout = styled.div`
@@ -24,4 +24,12 @@ const HeaderLayout = styled.div`
   background: #fff;
   box-shadow: 4px 0 6px rgba(0, 0, 0, 0.4);
 `;
-export { Layout, LayoutStyle, HeaderLayout };
+
+const Header = styled.h1`
+font-size: 36px;
+font-weight: 700;
+margin: 52px 0;
+text-align: center;
+`;
+
+export { Layout, LayoutStyle, HeaderLayout, Header };

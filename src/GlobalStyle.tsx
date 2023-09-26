@@ -29,6 +29,11 @@ cursor: pointer;
 border: none;
 color: inherit;
 background-color: transparent;
+
+&:disabled {
+  background-color: var(--light-gray);
+  cursor: not-allowed;
+}
 }
 
 a{
@@ -41,14 +46,16 @@ textarea:focus, input:focus{
 }
 
 input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  /* -webkit-appearance: none;
+  -moz-appearance: none; */
+  /* appearance: none; */
   box-shadow: none;
   border: none;
   border-radius: 0;
   padding: 0;
   box-sizing: border-box;
+
+  
 }
 
 h1 {
