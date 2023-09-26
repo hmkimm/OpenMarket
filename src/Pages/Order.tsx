@@ -91,7 +91,7 @@ const Order = () => {
         <TotalPrice>
           총 주문금액 :
           <span style={{ color: "red" }}>
-            &nbsp;{totalPrice.total.toLocaleString()}원
+            &nbsp;{totalPrice?.total?.toLocaleString()}원
           </span>
         </TotalPrice>
         <H2>배송정보</H2>
@@ -146,20 +146,20 @@ const Order = () => {
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 상품금액</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {totalPrice.priceSum.toLocaleString()}원
+                  {totalPrice?.priceSum.toLocaleString()}원
                 </FinalPaymentInfo>
               </FlexLayout>
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 배송비</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {totalPrice.shippingFeeSum.toLocaleString()}원
+                  {totalPrice?.shippingFeeSum.toLocaleString()}원
                 </FinalPaymentInfo>
               </FlexLayout>
               <HorizontalLine />
               <FlexLayout $jc="space-between" $margin="0 0 20px 0">
                 <FinalPaymentInfo>- 결제금액</FinalPaymentInfo>
                 <FinalPaymentInfo color="red" size="22px">
-                  {totalPrice.total.toLocaleString()}원
+                  {totalPrice?.total.toLocaleString()}원
                 </FinalPaymentInfo>
               </FlexLayout>
               <input type="checkbox" id="notice" onChange={handleInputCheck} />
