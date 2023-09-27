@@ -1,14 +1,20 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import styled from "styled-components";
 
 interface AlertBoxProps {
   children: ReactNode;
+  transY?: string;
+}
+interface BoxLayoutType {
+  transY?: string;
 }
 const AlertBox = (props: AlertBoxProps) => {
+  const { children, ...rest } = props;
+
   return (
     <>
       <Bg />
-      <BoxLayout>{props.children}</BoxLayout>
+      <BoxLayout {...rest}>{children}</BoxLayout>
     </>
   );
 };
@@ -22,35 +28,26 @@ const Bg = styled.div`
   background-color: #454343f7;
   opacity: 0.9;
 `;
-const BoxLayout = styled.div`
+const BoxLayout = styled.div<BoxLayoutType>`
   width: 500px;
-  height: 200px;
+  height: 220px;
   background-color: white;
   color: var(--primary);
+
   margin: 0 auto;
   border-radius: 20px;
-  font-size: 26px;
+  font-size: 23px;
   text-align: center;
-  line-height: 200px;
-
+  line-height: 220px;
   transform: translate(-50%, -50%);
-  animation: slideDown 1s ease-in, slideUp 1s ease-in-out forwards;
-
-  @keyframes slideDown {
-    from {
-      transform: translateY(-100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
+  animation: slideUp 1s ease-in-out forwards;
 
   @keyframes slideUp {
     from {
       transform: translateY(0);
     }
     to {
-      transform: translateY(-390%);
+      transform: translateY(${(props) => props.transY || "-190%"});
     }
   }
 `;
