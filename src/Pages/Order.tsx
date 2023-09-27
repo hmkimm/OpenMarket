@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import HorizontalLine from "Style/HorizontalLine";
 import Input from "Components/Input";
 import FlexLayout from "Style/FlexLayout";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AlertBox from "Components/AlertBox";
 import { createPortal } from "react-dom";
 
@@ -29,7 +29,7 @@ interface FinalPaymentText {
 }
 
 const Order = () => {
-  const $root = document.getElementById("root");
+  const navigate = useNavigate();
   const [savedCart] = useRecoilState<CartItemType[]>(cartProducts);
   const [, setTotalSum] = useState(0);
   const [isPaid, setIsPaid] = useState(false);
@@ -40,12 +40,18 @@ const Order = () => {
     setIsChecked(e.target.checked);
   };
 
-  const handleAlertBox = () => {
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleAlertBox = async () => {
     setIsPaid(true);
-    setTimeout(() => {
-      setIsPaid(false);
-    }, 2000);
+
+    await delay(1500);
+    setIsPaid(false);
+
+    navigate("/buyermain");
   };
+
   useEffect(() => {
     let sum = 0;
     savedCart.map((el) => {
