@@ -15,15 +15,12 @@ import {
   CartShipping,
   QuantityLayout,
 } from "Style/CartItemStyle";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import HorizontalLine from "Style/HorizontalLine";
 import Input from "Components/Input";
 import FlexLayout from "Style/FlexLayout";
 import { useLocation } from "react-router-dom";
 
-interface Input extends React.ComponentPropsWithoutRef<"input"> {
-  htmlFor: string;
-}
 
 interface FinalPaymentText {
   size?: string;
@@ -31,20 +28,19 @@ interface FinalPaymentText {
 }
 
 const Order = () => {
-  const [savedCart, setSavedCart] =
+  const [savedCart] =
     useRecoilState<CartItemType[]>(cartProducts);
-  const [totalSum, setTotalSum] = useState(0);
+  const [, setTotalSum] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const location = useLocation();
   const totalPrice = location.state;
   const handleInputCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
   };
-  console.log(isChecked);
   useEffect(() => {
     let sum = 0;
     savedCart.map((el) => {
-      sum += el.price * el.quantity + el.shippingFee;
+      return sum += el.price * el.quantity + el.shippingFee;
     });
     setTotalSum(sum);
   }, [savedCart]);
@@ -91,7 +87,7 @@ const Order = () => {
         <TotalPrice>
           총 주문금액 :
           <span style={{ color: "red" }}>
-            &nbsp;{totalPrice.total.toLocaleString()}원
+            &nbsp;{totalPrice?.total?.toLocaleString()}원
           </span>
         </TotalPrice>
         <H2>배송정보</H2>
@@ -146,27 +142,29 @@ const Order = () => {
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 상품금액</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {totalPrice.priceSum.toLocaleString()}원
+                  {totalPrice?.priceSum.toLocaleString()}원
                 </FinalPaymentInfo>
               </FlexLayout>
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 배송비</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {totalPrice.shippingFeeSum.toLocaleString()}원
+                  {totalPrice?.shippingFeeSum.toLocaleString()}원
                 </FinalPaymentInfo>
               </FlexLayout>
               <HorizontalLine />
               <FlexLayout $jc="space-between" $margin="0 0 20px 0">
                 <FinalPaymentInfo>- 결제금액</FinalPaymentInfo>
                 <FinalPaymentInfo color="red" size="22px">
-                  {totalPrice.total.toLocaleString()}원
+                  {totalPrice?.total.toLocaleString()}원
                 </FinalPaymentInfo>
               </FlexLayout>
               <input type="checkbox" id="notice" onChange={handleInputCheck} />
               <label htmlFor="notice">
                 주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.
               </label>
-              <Button disabled={!isChecked}>결제하기</Button>
+              <Button disabled={!isChecked} type="submit">
+                결제하기
+              </Button>
             </FinalPayment>
           </div>
         </FlexLayout>
