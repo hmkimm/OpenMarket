@@ -9,6 +9,7 @@ import userToken from "../Recoil/userToken/userToken";
 import ErrorMsg from "../Components/Common/ErrorMsg";
 
 import LogInAPI from "../API/LogInAPI";
+import AlertBox from "Components/AlertBox";
 
 export interface userInput {
   username: string;
@@ -32,7 +33,7 @@ interface Input {
 const LogIn = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [isWrongRoute, setIsWrongRoute] = useState(true);
   const [selectedBtn, setSelectedBtn] = useState<"BUYER" | "SELLER" | null>(
     null
   );
@@ -44,7 +45,7 @@ const LogIn = () => {
   const setToken = useSetRecoilState(userToken);
   const [errMsg, setErrMsg] = useState<string>("");
   const inputRef = useRef<HTMLInputElement | null>(null);
-  
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 
@@ -56,14 +57,12 @@ const LogIn = () => {
 
     if (!userInput.login_type) {
       setErrMsg("회원 타입을 설정해주세요");
-    } 
+    }
   };
-
 
   const handleLogIn = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrMsg("");
-
 
     try {
       const res = await LogInAPI(userInput);
@@ -97,12 +96,14 @@ const LogIn = () => {
   const handleBtn = (btnValue: "BUYER" | "SELLER" | null) => {
     setSelectedBtn(btnValue);
   };
+  console.log(location.state);
   useEffect(() => {
     if (location.state) {
-      setErrMsg(location.state);
+      setTimeout(() => {
+        setIsWrongRoute(false)
+      }, 1500);
     }
   }, []);
-
 
   return (
     <div>
@@ -174,6 +175,9 @@ const LogIn = () => {
         <Link to="/">회원가입 </Link>
         <Link to="/">ㅣ 비밀번호 찾기</Link>
       </LinkLayout>
+      {location.state && isWrongRoute && (
+        <AlertBox transY="-110%">{location.state}</AlertBox>
+      )}
     </div>
   );
 };

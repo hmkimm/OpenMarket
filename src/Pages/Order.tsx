@@ -19,8 +19,9 @@ import { useEffect, useState } from "react";
 import HorizontalLine from "Style/HorizontalLine";
 import Input from "Components/Input";
 import FlexLayout from "Style/FlexLayout";
-import { useLocation } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import AlertBox from "Components/AlertBox";
+import { createPortal } from "react-dom";
 
 interface FinalPaymentText {
   size?: string;
@@ -28,19 +29,33 @@ interface FinalPaymentText {
 }
 
 const Order = () => {
-  const [savedCart] =
-    useRecoilState<CartItemType[]>(cartProducts);
+  const navigate = useNavigate();
+  const [savedCart] = useRecoilState<CartItemType[]>(cartProducts);
   const [, setTotalSum] = useState(0);
+  const [isPaid, setIsPaid] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const location = useLocation();
   const totalPrice = location.state;
   const handleInputCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
   };
+
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleAlertBox = async () => {
+    setIsPaid(true);
+
+    await delay(1500);
+    setIsPaid(false);
+
+    navigate("/buyermain");
+  };
+
   useEffect(() => {
     let sum = 0;
     savedCart.map((el) => {
-      return sum += el.price * el.quantity + el.shippingFee;
+      return (sum += el.price * el.quantity + el.shippingFee);
     });
     setTotalSum(sum);
   }, [savedCart]);
@@ -162,13 +177,18 @@ const Order = () => {
               <label htmlFor="notice">
                 주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.
               </label>
-              <Button disabled={!isChecked} type="submit">
+              <Button
+                disabled={!isChecked}
+                type="submit"
+                onClick={handleAlertBox}
+              >
                 결제하기
               </Button>
             </FinalPayment>
           </div>
         </FlexLayout>
       </Layout>
+      {isPaid && <AlertBox>결제되었습니다 !</AlertBox>}
     </>
   );
 };
