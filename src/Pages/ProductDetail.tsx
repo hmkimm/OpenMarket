@@ -147,7 +147,7 @@ const ProductDetail = (props: ProductDetailProps) => {
   return (
     <>
       <BasicHeader />
-      {productDetail && (
+      {productDetail.image && (
         <ProductDetailLayout>
           <ProductLayout>
             <ProductImage src={productDetail?.image} />
@@ -311,8 +311,6 @@ const DeliveryInfo = styled.section`
 const DeliveryMethod = styled.div`
   color: var(--gray);
 `;
-
-
 
 const ContentButton = styled.button<ContentButton>`
   width: 320px;
