@@ -1,13 +1,14 @@
 # MarketService
 
 
-> ### [🚀 배포 URL](https://mulkong-market.netlify.app/)
+> ### <a href='https://mulkong-market.netlify.app/' target='_blank'>🚀 배포 URL</a>
 
 
 ```
 테스트 계정
 ID: buyer1(구매회원)
 PW: hodu0910
+[🚀 배포 URL](https://mulkong-market.netlify.app/)
 ```
 <br/>
 
