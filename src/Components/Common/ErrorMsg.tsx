@@ -3,8 +3,8 @@ import { styled } from "styled-components";
 
 interface ErrMsgProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  color?: string;
-  margin?: string;
+  $color?: string;
+  $margin?: string;
 }
 
 const ErrorMsg = (props: ErrMsgProps) => {
@@ -14,7 +14,7 @@ const ErrorMsg = (props: ErrMsgProps) => {
 };
 
 const Msg = styled.div<ErrMsgProps>`
-  color: ${(props) => props.color || "#eb5757"};
-  margin: ${(props) => props.margin || "26px 0"};
+  color: ${(props) => props.$color || "#eb5757"};
+  margin: ${(props) => props.$margin || "26px 0"};
 `;
 export default ErrorMsg;

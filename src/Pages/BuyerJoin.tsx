@@ -14,7 +14,7 @@ export interface RegisterInputsType {
   username: string;
   password: string;
   password2: string;
-  phone_number: number | null;
+  phone_number: number | "";
   name: string;
 }
 
@@ -31,7 +31,7 @@ const BuyerJoin = () => {
     username: "",
     password: "",
     password2: "",
-    phone_number: null,
+    phone_number: "",
     name: "",
   });
   const updateMsg = (data: DataType) => {
@@ -75,9 +75,9 @@ const BuyerJoin = () => {
     setSelectedBtn(btnValue);
   };
 
-  const handleValid = async () => {
+  const handleUserNameValid = async () => {
     const res = await isValid();
-    return res;
+    // return res;
   };
   console.log(registerInputs);
   return (
@@ -141,7 +141,7 @@ const BuyerJoin = () => {
             $height="50px"
             $padding="0"
             $fontsize="15px"
-            onClick={handleValid}
+            onClick={handleUserNameValid}
             type="button"
           >
             중복확인
@@ -149,13 +149,13 @@ const BuyerJoin = () => {
         </FlexLayout>
 
         {errMsg === "멋진 아이디네요 :)" && (
-          <ErrorMsg color="var(--primary)" margin="0 0 17px 0">
+          <ErrorMsg $color="var(--primary)" $margin="0 0 17px 0">
             {errMsg}
           </ErrorMsg>
         )}
         {(errMsg === "username 필드를 추가해주세요 :)" ||
           errMsg === "이미 사용 중인 아이디입니다.") && (
-          <ErrorMsg margin="0 0 17px 0">{errMsg}</ErrorMsg>
+          <ErrorMsg $margin="0 0 17px 0">{errMsg}</ErrorMsg>
         )}
         <Input
           name="password"
@@ -204,6 +204,7 @@ const BuyerJoin = () => {
           $mb="10px"
           $margin="0 0 20px 0"
           id="phone"
+          onChange={handleInputChange}
         />
         {errMsg === "아이디를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
 
