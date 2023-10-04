@@ -45,7 +45,8 @@ const Label = styled.label<LabelType>`
 `;
 
 const TextInput = styled.input`
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--gray);
+  border-radius: 6px;
   width: ${(props) => props.width || "334px"};
   height: ${(props) => props.height || "40px"};
   padding: 15px;
