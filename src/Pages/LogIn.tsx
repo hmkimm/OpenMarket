@@ -16,7 +16,7 @@ export interface userInput {
   password: string;
   login_type: "BUYER" | "SELLER" | undefined;
 }
-interface LogInButtonProps {
+export interface LogInButtonProps {
   $br?: string;
   $borLeft?: string;
   $borRight?: string;
@@ -24,7 +24,7 @@ interface LogInButtonProps {
   name: string;
   value: string;
 }
-interface Input {
+export interface InputType {
   width?: string;
   padding?: string;
   margin?: string;
@@ -172,7 +172,7 @@ const LogIn = () => {
         </Button>
       </FormLayout>
       <LinkLayout>
-        <Link to="/">회원가입 </Link>
+        <Link to="/buyerjoin">회원가입 </Link>
         <Link to="/">ㅣ 비밀번호 찾기</Link>
       </LinkLayout>
       {location.state && isWrongRoute && (
@@ -185,7 +185,6 @@ const LogIn = () => {
 const FormLayout = styled.form`
   margin: 0 auto;
   width: 550px;
-  /* height: 352px; */
   border: 1px solid #c4c4c4;
   padding: 0 35px 36px 35px;
   border-radius: 10px;
@@ -211,7 +210,7 @@ const LogInButton = styled.button.attrs({
   border-right: ${(props) => props.$borRight};
 `;
 
-const Input = styled.input<Input>`
+const Input = styled.input<InputType>`
   &::placeholder {
     color: #767676;
     font-size: 16px;
