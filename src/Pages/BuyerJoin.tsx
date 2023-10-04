@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import logo from "../Assets/Icons/mulkong.svg";
 import styled from "styled-components";
 import ErrorMsg from "Components/Common/ErrorMsg";
@@ -14,7 +14,7 @@ export interface RegisterInputsType {
   username: string;
   password: string;
   password2: string;
-  phone_number: number | "";
+  phone_number: string | "";
   name: string;
 }
 
@@ -76,10 +76,31 @@ const BuyerJoin = () => {
   };
 
   const handleUserNameValid = async () => {
-    const res = await isValid();
-    // return res;
+    await isValid();
   };
-  console.log(registerInputs);
+
+  const handlePhoneNum = (e: ChangeEvent<HTMLInputElement>) => {
+    setErrMsg("");
+    const { name, value } = e.target;
+    const inputValue = e.target.value;
+
+    const formattedPhoneNumber = inputValue.replace(
+      /(\d{3})(\d{4})(\d{4})/,
+      "$1-$2-$3"
+    );
+    setRegisterInputs((prev) => ({
+      ...prev,
+      [name]: value,
+      phone_number: formattedPhoneNumber,
+    }));
+
+    const regexNum = /^010-?([0-9]{3,4})-?([0-9]{4})$/;
+
+    if (!regexNum.test(e.target.value)) {
+      setErrMsg("올바른 형식을 입력해주세요");
+    }
+  };
+
   return (
     <>
       <div>
@@ -126,7 +147,7 @@ const BuyerJoin = () => {
         <FlexLayout $jc="space-between" $gap="40px">
           <Input
             name="username"
-            value={registerInputs.username}
+            value={registerInputs?.username}
             label="아이디"
             display="block"
             width="360px"
@@ -204,9 +225,12 @@ const BuyerJoin = () => {
           $mb="10px"
           $margin="0 0 20px 0"
           id="phone"
-          onChange={handleInputChange}
+          maxLength={13}
+          onChange={handlePhoneNum}
         />
-        {errMsg === "아이디를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
+        {errMsg === "올바른 형식을 입력해주세요" && (
+          <ErrorMsg>{errMsg}</ErrorMsg>
+        )}
 
         {errMsg === "로그인을 해주세요!" && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "회원 타입을 설정해주세요" && <ErrorMsg>{errMsg}</ErrorMsg>}
@@ -222,11 +246,9 @@ const BuyerJoin = () => {
       </FormLayout>
 
       <Button
-        disabled={
-          !userInput.login_type || !userInput.username || !userInput.password
-        }
+        disabled={!userInput.login_type || !registerInputs}
         type="submit"
-        width="480px"
+        width="620px"
         $margin="30px auto"
       >
         가입하기
