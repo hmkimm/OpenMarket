@@ -8,11 +8,38 @@ import Input from "Components/Input";
 import { userInput, LogInButtonProps, InputType } from "./LogIn";
 import FlexLayout from "Style/FlexLayout";
 import { Layout } from "Style/Layout";
+import ValidAPI from "API/Join/ValidAPI";
+
+export interface RegisterInputsType {
+  username: string;
+  password: string;
+  password2: string;
+  phone_number: number | null;
+  name: string;
+}
+
+export interface DataType {
+  Success?: string;
+  FAIL_Message?: string;
+}
 
 const BuyerJoin = () => {
   const [selectedBtn, setSelectedBtn] = useState<"BUYER" | "SELLER" | null>(
     null
   );
+  const [registerInputs, setRegisterInputs] = useState<RegisterInputsType>({
+    username: "",
+    password: "",
+    password2: "",
+    phone_number: null,
+    name: "",
+  });
+  const updateMsg = (data: DataType) => {
+    console.log(data);
+    setErrMsg(data.Success! || data.FAIL_Message!);
+  };
+  const isValid = ValidAPI(registerInputs, updateMsg);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [errMsg, setErrMsg] = useState<string>("");
   const [userInput, setUserInput] = useState<userInput>({
@@ -24,7 +51,7 @@ const BuyerJoin = () => {
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 
-    setUserInput((prev) => ({
+    setRegisterInputs((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -48,6 +75,11 @@ const BuyerJoin = () => {
     setSelectedBtn(btnValue);
   };
 
+  const handleValid = async () => {
+    const res = await isValid();
+    return res;
+  };
+  console.log(registerInputs);
   return (
     <>
       <div>
@@ -91,15 +123,10 @@ const BuyerJoin = () => {
             판매회원가입
           </LogInButton>
         </LogInButtonLayout>
-        {/* <LoginInput
-          name="username"
-          value={userInput.username}
-          placeholder="아이디"
-          onChange={handleInputChange}
-          ref={inputRef}
-        /> */}
         <FlexLayout $jc="space-between" $gap="40px">
           <Input
+            name="username"
+            value={registerInputs.username}
             label="아이디"
             display="block"
             width="360px"
@@ -107,17 +134,32 @@ const BuyerJoin = () => {
             mb="10px"
             margin="0 0 20px 0"
             id="id"
+            onChange={handleInputChange}
           />
           <Button
             $margin="5px 0 0 0"
             height="50px"
             $padding="0"
             fontsize="15px"
+            onClick={handleValid}
+            type="button"
           >
             중복확인
           </Button>
         </FlexLayout>
+
+        {errMsg === "멋진 아이디네요 :)" && (
+          <ErrorMsg color="var(--primary)" margin="0 0 17px 0">
+            {errMsg}
+          </ErrorMsg>
+        )}
+        {(errMsg === "username 필드를 추가해주세요 :)" ||
+          errMsg === "이미 사용 중인 아이디입니다.") && (
+          <ErrorMsg margin="0 0 17px 0">{errMsg}</ErrorMsg>
+        )}
         <Input
+          name="password"
+          value={registerInputs.password}
           label="비밀번호"
           display="block"
           width="100%"
@@ -125,8 +167,11 @@ const BuyerJoin = () => {
           mb="10px"
           margin="0 0 20px 0"
           id="pw"
+          onChange={handleInputChange}
         />
         <Input
+          name="password2"
+          value={registerInputs.password2}
           label="비밀번호 재확인"
           display="block"
           labelwidth="100%"
@@ -135,8 +180,11 @@ const BuyerJoin = () => {
           mb="10px"
           margin="0 0 20px 0"
           id="pw-confirm"
+          onChange={handleInputChange}
         />
         <Input
+          name="name"
+          value={registerInputs.name}
           label="이름"
           display="block"
           width="100%"
@@ -144,8 +192,11 @@ const BuyerJoin = () => {
           mb="10px"
           margin="0 0 20px 0"
           id="name"
+          onChange={handleInputChange}
         />
         <Input
+          name="phone_number"
+          value={registerInputs.phone_number!}
           label="휴대폰 번호"
           display="block"
           width="100%"
@@ -155,13 +206,7 @@ const BuyerJoin = () => {
           id="phone"
         />
         {errMsg === "아이디를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
-        {/* <LoginInput
-          name="password"
-          type="password"
-          value={userInput.password}
-          placeholder="비밀번호"
-          onChange={handleInputChange}
-        /> */}
+
         {errMsg === "로그인을 해주세요!" && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "회원 타입을 설정해주세요" && <ErrorMsg>{errMsg}</ErrorMsg>}
         {errMsg === "비밀번호를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
@@ -221,15 +266,15 @@ const LogInButton = styled.button.attrs({
   border-right: ${(props) => props.$borRight};
 `;
 
-const LoginInput = styled.input<InputType>`
-  &::placeholder {
-    color: #767676;
-    font-size: 16px;
-  }
-  border-bottom: 1px solid #c4c4c4;
-  width: ${(props) => props.width || "100%"};
-  padding: ${(props) => props.padding || "20px 0"};
-  margin: ${(props) => props.margin || "34px 0 0 0 "};
-`;
+// const LoginInput = styled.input<InputType>`
+//   &::placeholder {
+//     color: #767676;
+//     font-size: 16px;
+//   }
+//   border-bottom: 1px solid #c4c4c4;
+//   width: ${(props) => props.width || "100%"};
+//   padding: ${(props) => props.padding || "20px 0"};
+//   margin: ${(props) => props.margin || "34px 0 0 0 "};
+// `;
 
 export default BuyerJoin;
