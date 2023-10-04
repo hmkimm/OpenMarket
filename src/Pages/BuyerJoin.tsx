@@ -131,16 +131,16 @@ const BuyerJoin = () => {
             display="block"
             width="360px"
             height="50px"
-            mb="10px"
-            margin="0 0 20px 0"
+            $mb="10px"
+            $margin="0 0 20px 0"
             id="id"
             onChange={handleInputChange}
           />
           <Button
             $margin="5px 0 0 0"
-            height="50px"
+            $height="50px"
             $padding="0"
-            fontsize="15px"
+            $fontsize="15px"
             onClick={handleValid}
             type="button"
           >
@@ -164,8 +164,8 @@ const BuyerJoin = () => {
           display="block"
           width="100%"
           height="50px"
-          mb="10px"
-          margin="0 0 20px 0"
+          $mb="10px"
+          $margin="0 0 20px 0"
           id="pw"
           onChange={handleInputChange}
         />
@@ -174,11 +174,11 @@ const BuyerJoin = () => {
           value={registerInputs.password2}
           label="비밀번호 재확인"
           display="block"
-          labelwidth="100%"
+          $labelwidth="100%"
           width="100%"
           height="50px"
-          mb="10px"
-          margin="0 0 20px 0"
+          $mb="10px"
+          $margin="0 0 20px 0"
           id="pw-confirm"
           onChange={handleInputChange}
         />
@@ -189,8 +189,8 @@ const BuyerJoin = () => {
           display="block"
           width="100%"
           height="50px"
-          mb="10px"
-          margin="0 0 20px 0"
+          $mb="10px"
+          $margin="0 0 20px 0"
           id="name"
           onChange={handleInputChange}
         />
@@ -201,8 +201,8 @@ const BuyerJoin = () => {
           display="block"
           width="100%"
           height="50px"
-          mb="10px"
-          margin="0 0 20px 0"
+          $mb="10px"
+          $margin="0 0 20px 0"
           id="phone"
         />
         {errMsg === "아이디를 입력해주세요." && <ErrorMsg>{errMsg}</ErrorMsg>}
@@ -241,6 +241,7 @@ const FormLayout = styled.form`
   margin: 0 auto;
   width: 550px;
   border: 1px solid #c4c4c4;
+  border: 1px solid var(--primary);
   padding: 0 35px 36px 35px;
   border-radius: 10px;
   border-top: none;
@@ -258,7 +259,7 @@ const LogInButton = styled.button.attrs({
   height: 60px;
   font-size: 18px;
   border-radius: ${(props) => props.$br || "10px"};
-  border: 1px solid #c4c4c4;
+  border: 1px solid var(--primary);
   color: ${(props) => (props.$isSelected ? "white" : "black")};
   border-bottom: transparent;
   background-color: ${(props) => (props.$isSelected ? "var(--primary)" : "")};
