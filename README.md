@@ -24,7 +24,7 @@ PW: hodu0910
 |---|---|
 |![화면 기록 2023-10-02 오후 11 55 14](https://github.com/hmkimm/OpenMarket/assets/124167002/2794c244-3638-4e91-aa5a-557cfaf37253)|![화면 기록 2023-10-02 오후 11 59 41](https://github.com/hmkimm/OpenMarket/assets/124167002/9e405ad6-1420-44e7-b8e1-03547360e345)|
 
-|잔여수량 체크 및 장바구니 담기|장바구니 개별삭제|
+|재고 확인 및 장바구니 담기|장바구니 개별삭제|
 |---|---|
 |![화면 기록 2023-10-02 오후 6 00 13](https://github.com/hmkimm/OpenMarket/assets/124167002/a81b0e65-37fc-4c7c-9c2a-162cd69c1727)|![화면 기록 2023-10-02 오후 6 05 18](https://github.com/hmkimm/OpenMarket/assets/124167002/0afa50bf-0396-41ab-bea2-ebf6d4827180)|
 
