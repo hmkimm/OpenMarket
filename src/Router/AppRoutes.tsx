@@ -10,12 +10,14 @@ import ShoppingCart from "../Pages/ShoppingCart";
 import SellerCenter from "Pages/SellerCenter";
 import ProtectedRoute from "./ProtectedRoute";
 import Order from "Pages/Order";
+import BuyerJoin from "Pages/BuyerJoin";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LogIn />} />
+        <Route path="/buyerjoin" element={<BuyerJoin/>} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/buyermain" element={<BuyerMain />} />

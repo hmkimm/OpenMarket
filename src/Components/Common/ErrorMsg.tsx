@@ -1,15 +1,20 @@
-import  { ReactNode } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 import { styled } from "styled-components";
 
-interface ErrMsgProps {
+interface ErrMsgProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
+  color?: string;
+  margin?: string;
 }
-const ErrorMsg = ({ children }: ErrMsgProps) => {
-  return <Msg>{children}</Msg>;
+
+const ErrorMsg = (props: ErrMsgProps) => {
+  const { children, ...rest } = props;
+
+  return <Msg {...rest}>{children}</Msg>;
 };
 
-const Msg = styled.div`
-  color: #eb5757;
-  margin: 26px 0;
+const Msg = styled.div<ErrMsgProps>`
+  color: ${(props) => props.color || "#eb5757"};
+  margin: ${(props) => props.margin || "26px 0"};
 `;
 export default ErrorMsg;
