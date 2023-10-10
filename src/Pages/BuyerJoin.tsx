@@ -4,11 +4,13 @@ import styled from "styled-components";
 import ErrorMsg from "Components/Common/ErrorMsg";
 import Button from "Components/Common/Button";
 import Input from "Components/Input";
+import { LoginValidation } from "../Utils/LoginValidation";
 
 import { userInput, LogInButtonProps, InputType } from "./LogIn";
 import FlexLayout from "Style/FlexLayout";
 import { Layout } from "Style/Layout";
 import ValidAPI from "API/Join/ValidAPI";
+// import { getTsBuildInfoEmitOutputFilePath } from "typescript";
 
 export interface RegisterInputsType {
   username: string;
@@ -40,6 +42,7 @@ const BuyerJoin = () => {
   };
   const isValid = ValidAPI(registerInputs, updateMsg);
 
+  const { pwValidation } = LoginValidation();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [errMsg, setErrMsg] = useState<string>("");
   const [userInput, setUserInput] = useState<userInput>({
@@ -47,21 +50,43 @@ const BuyerJoin = () => {
     password: "",
     login_type: undefined, // BUYER : 일반 구매자, SELLER : 판매자
   });
+  console.log(registerInputs);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
+    setErrMsg("");
+
+    const pwValidationResult = pwValidation(
+      registerInputs.password,
+      registerInputs.password2
+    );
+    console.log("함수 결과 : ", pwValidationResult);
+    console.log("에러 메세지 : ", errMsg);
 
     setRegisterInputs((prev) => ({
       ...prev,
       [name]: value,
     }));
-    setErrMsg("");
 
+    if (
+      pwValidationResult ===
+      "8자 이상, 영문 대 소문자, 숫자, 특수문자를 사용하세요."
+    ) {
+      setErrMsg(pwValidationResult);
+    }
+
+    if (pwValidationResult === "비밀번호가 일치하지 않습니다.") {
+      setErrMsg(pwValidationResult);
+    }
     if (!userInput.login_type) {
       setErrMsg("회원 타입을 설정해주세요");
     }
   };
 
+  useEffect(() => {
+    console.log('errMsg 업데이트:', errMsg);
+  }, [errMsg]);
+  
   const handleBtnChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     setErrMsg("");
     const { name, value } = e.currentTarget;
@@ -190,6 +215,10 @@ const BuyerJoin = () => {
           id="pw"
           onChange={handleInputChange}
         />
+        {errMsg ===
+          "8자 이상, 영문 대 소문자, 숫자, 특수문자를 사용하세요." && (
+          <ErrorMsg>{errMsg}</ErrorMsg>
+        )}
         <Input
           name="password2"
           value={registerInputs.password2}
@@ -203,6 +232,7 @@ const BuyerJoin = () => {
           id="pw-confirm"
           onChange={handleInputChange}
         />
+        {errMsg=== "비밀번호가 일치하지 않습니다." && <ErrorMsg>{errMsg}</ErrorMsg>}
         <Input
           name="name"
           value={registerInputs.name}
@@ -289,16 +319,5 @@ const LogInButton = styled.button.attrs({
   border-left: ${(props) => props.$borLeft};
   border-right: ${(props) => props.$borRight};
 `;
-
-// const LoginInput = styled.input<InputType>`
-//   &::placeholder {
-//     color: #767676;
-//     font-size: 16px;
-//   }
-//   border-bottom: 1px solid #c4c4c4;
-//   width: ${(props) => props.width || "100%"};
-//   padding: ${(props) => props.padding || "20px 0"};
-//   margin: ${(props) => props.margin || "34px 0 0 0 "};
-// `;
 
 export default BuyerJoin;
