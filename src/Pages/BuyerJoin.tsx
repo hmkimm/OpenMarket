@@ -1,4 +1,4 @@
-import React, { useState, useRef, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import logo from "../Assets/Icons/mulkong.svg";
 import styled from "styled-components";
 import ErrorMsg from "Components/Common/ErrorMsg";
@@ -6,11 +6,10 @@ import Button from "Components/Common/Button";
 import Input from "Components/Input";
 import { LoginValidation } from "../Utils/LoginValidation";
 
-import { userInput, LogInButtonProps, InputType } from "./LogIn";
+import { userInput, LogInButtonProps } from "./LogIn";
 import FlexLayout from "Style/FlexLayout";
-import { Layout } from "Style/Layout";
+// import { Layout } from "Style/Layout";
 import ValidAPI from "API/Join/ValidAPI";
-// import { getTsBuildInfoEmitOutputFilePath } from "typescript";
 
 export interface RegisterInputsType {
   username: string;
@@ -42,8 +41,8 @@ const BuyerJoin = () => {
   };
   const isValid = ValidAPI(registerInputs, updateMsg);
 
-  const { pwValidation } = LoginValidation();
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { pwValidation, idValidation } = LoginValidation();
+  // const inputRef = useRef<HTMLInputElement | null>(null);
   const [errMsg, setErrMsg] = useState<string>("");
   const [userInput, setUserInput] = useState<userInput>({
     username: "",
@@ -54,8 +53,26 @@ const BuyerJoin = () => {
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
+
+    const idValidationResult = idValidation(registerInputs.username);
+    console.log(idValidation(registerInputs.username));
+
     setErrMsg("");
 
+    setRegisterInputs((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (!userInput.login_type) {
+      setErrMsg("회원 타입을 설정해주세요");
+    }
+    if (idValidationResult) {
+      setErrMsg("20자 이내의 영문 대소문자 숫자만 가능합니다.");
+    }
+  };
+
+  const handleBlur = () => {
     const pwValidationResult = pwValidation(
       registerInputs.password,
       registerInputs.password2
@@ -63,11 +80,7 @@ const BuyerJoin = () => {
     console.log("함수 결과 : ", pwValidationResult);
     console.log("에러 메세지 : ", errMsg);
 
-    setRegisterInputs((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+//fixme: 바로 반영 안됨
     if (
       pwValidationResult ===
       "8자 이상, 영문 대 소문자, 숫자, 특수문자를 사용하세요."
@@ -75,18 +88,18 @@ const BuyerJoin = () => {
       setErrMsg(pwValidationResult);
     }
 
-    if (pwValidationResult === "비밀번호가 일치하지 않습니다.") {
+    if (
+      registerInputs.password2 &&
+      pwValidationResult === "비밀번호가 일치하지 않습니다."
+    ) {
       setErrMsg(pwValidationResult);
-    }
-    if (!userInput.login_type) {
-      setErrMsg("회원 타입을 설정해주세요");
     }
   };
 
   useEffect(() => {
-    console.log('errMsg 업데이트:', errMsg);
+    console.log("errMsg 업데이트:", errMsg);
   }, [errMsg]);
-  
+
   const handleBtnChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     setErrMsg("");
     const { name, value } = e.currentTarget;
@@ -203,6 +216,9 @@ const BuyerJoin = () => {
           errMsg === "이미 사용 중인 아이디입니다.") && (
           <ErrorMsg $margin="0 0 17px 0">{errMsg}</ErrorMsg>
         )}
+        {errMsg === "20자 이내의 영문 대소문자 숫자만 가능합니다." && (
+          <ErrorMsg $margin="0 0 17px 0">{errMsg}</ErrorMsg>
+        )}
         <Input
           name="password"
           value={registerInputs.password}
@@ -214,6 +230,7 @@ const BuyerJoin = () => {
           $margin="0 0 20px 0"
           id="pw"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
         {errMsg ===
           "8자 이상, 영문 대 소문자, 숫자, 특수문자를 사용하세요." && (
@@ -231,8 +248,11 @@ const BuyerJoin = () => {
           $margin="0 0 20px 0"
           id="pw-confirm"
           onChange={handleInputChange}
+          onBlur={handleBlur}
         />
-        {errMsg=== "비밀번호가 일치하지 않습니다." && <ErrorMsg>{errMsg}</ErrorMsg>}
+        {errMsg === "비밀번호가 일치하지 않습니다." && (
+          <ErrorMsg>{errMsg}</ErrorMsg>
+        )}
         <Input
           name="name"
           value={registerInputs.name}
@@ -286,10 +306,11 @@ const BuyerJoin = () => {
     </>
   );
 };
-const JoinLayout = styled(Layout)`
-  padding-top: 160px;
-  padding-bottom: 80px;
-`;
+// const JoinLayout = styled(Layout)`
+//   padding-top: 160px;
+//   padding-bottom: 80px;
+// `;
+
 const FormLayout = styled.form`
   margin: 0 auto;
   width: 550px;
