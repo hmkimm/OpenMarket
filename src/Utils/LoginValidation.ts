@@ -33,5 +33,11 @@ export const LoginValidation = () => {
     }
   };
 
-  return { pwValidation, idValidation };
+  const phoneNumValidation = (num : number | string )=> {
+    const formattedPhoneNumber = String(num).replace(/-/g, '');
+
+    return formattedPhoneNumber;
+  }
+
+  return { pwValidation, idValidation , phoneNumValidation};
 };
