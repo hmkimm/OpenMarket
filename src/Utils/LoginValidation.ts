@@ -1,13 +1,14 @@
-
 export const LoginValidation = () => {
+
   const idValidation = (id: string) => {
     const IdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z0-9]{1,20}$/;
 
     const regexResult = IdRegex.test(id);
-    console.log("id 검사 : ", regexResult);
+    console.log("id 유효성 검사 : ", regexResult);
+    console.log("사용하는 값 : ", id);
 
 
-    if(!regexResult) {
+    if (!regexResult) {
       const errMsg = "20자 이내의 영문 대소문자 숫자만 가능합니다.";
       return errMsg;
     }
@@ -32,5 +33,11 @@ export const LoginValidation = () => {
     }
   };
 
-  return { pwValidation, idValidation };
+  const phoneNumValidation = (num : number | string )=> {
+    const formattedPhoneNumber = String(num).replace(/-/g, '');
+
+    return formattedPhoneNumber;
+  }
+
+  return { pwValidation, idValidation , phoneNumValidation};
 };

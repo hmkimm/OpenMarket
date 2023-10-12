@@ -5,11 +5,12 @@ import ErrorMsg from "Components/Common/ErrorMsg";
 import Button from "Components/Common/Button";
 import Input from "Components/Input";
 import { LoginValidation } from "../Utils/LoginValidation";
+import SignUpAPI from "API/Join/SignUpAPI";
 
 import { userInput, LogInButtonProps } from "./LogIn";
 import FlexLayout from "Style/FlexLayout";
-// import { Layout } from "Style/Layout";
 import ValidAPI from "API/Join/ValidAPI";
+import { Link } from "react-router-dom";
 
 export interface RegisterInputsType {
   username: string;
@@ -28,6 +29,8 @@ const BuyerJoin = () => {
   const [selectedBtn, setSelectedBtn] = useState<"BUYER" | "SELLER" | null>(
     null
   );
+
+  const [isChecked, setIsChecked] = useState(false);
   const [registerInputs, setRegisterInputs] = useState<RegisterInputsType>({
     username: "",
     password: "",
@@ -41,23 +44,29 @@ const BuyerJoin = () => {
   };
   const isValid = ValidAPI(registerInputs, updateMsg);
 
-  const { pwValidation, idValidation } = LoginValidation();
-  // const inputRef = useRef<HTMLInputElement | null>(null);
+  const { pwValidation, idValidation, phoneNumValidation } = LoginValidation();
+  const handleSignUp = SignUpAPI(registerInputs);
   const [errMsg, setErrMsg] = useState<string>("");
   const [userInput, setUserInput] = useState<userInput>({
     username: "",
     password: "",
     login_type: undefined, // BUYER : 일반 구매자, SELLER : 판매자
   });
-  console.log(registerInputs);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-
-    const idValidationResult = idValidation(registerInputs.username);
-    console.log(idValidation(registerInputs.username));
-
     setErrMsg("");
+
+    if (name === "username") {
+      const checkId = e.target.value;
+      const idValidationResult = idValidation(checkId);
+
+      if (idValidationResult) {
+        setErrMsg("20자 이내의 영문 대소문자 숫자만 가능합니다.");
+      }
+    }
+
+    //note: onchange는 바뀌고 나서 상태가 업데이트 되기 때문에 바로 바로 동작하기가 어려움. 따라서 e.target.value로 직접 지정해야 업데이트를 바로 할 수 있음. registerInputs.username처럼 상태가 업데이트 되야하는건 바로 업데이트가 안된다.
 
     setRegisterInputs((prev) => ({
       ...prev,
@@ -66,9 +75,6 @@ const BuyerJoin = () => {
 
     if (!userInput.login_type) {
       setErrMsg("회원 타입을 설정해주세요");
-    }
-    if (idValidationResult) {
-      setErrMsg("20자 이내의 영문 대소문자 숫자만 가능합니다.");
     }
   };
 
@@ -80,7 +86,6 @@ const BuyerJoin = () => {
     console.log("함수 결과 : ", pwValidationResult);
     console.log("에러 메세지 : ", errMsg);
 
-//fixme: 바로 반영 안됨
     if (
       pwValidationResult ===
       "8자 이상, 영문 대 소문자, 숫자, 특수문자를 사용하세요."
@@ -113,19 +118,16 @@ const BuyerJoin = () => {
     setSelectedBtn(btnValue);
   };
 
-  const handleUserNameValid = async () => {
-    await isValid();
+  const handleUserNameValid = () => {
+    isValid();
   };
 
   const handlePhoneNum = (e: ChangeEvent<HTMLInputElement>) => {
     setErrMsg("");
     const { name, value } = e.target;
-    const inputValue = e.target.value;
 
-    const formattedPhoneNumber = inputValue.replace(
-      /(\d{3})(\d{4})(\d{4})/,
-      "$1-$2-$3"
-    );
+    const formattedPhoneNumber = phoneNumValidation(e.target.value);
+
     setRegisterInputs((prev) => ({
       ...prev,
       [name]: value,
@@ -134,14 +136,24 @@ const BuyerJoin = () => {
 
     const regexNum = /^010-?([0-9]{3,4})-?([0-9]{4})$/;
 
-    if (!regexNum.test(e.target.value)) {
+    if (!regexNum.test(formattedPhoneNumber)) {
       setErrMsg("올바른 형식을 입력해주세요");
     }
   };
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = event.target;
+    setIsChecked(checked);
+  };
+
+  const handleSubmit = () => {
+    handleSignUp();
+  };
+  console.log("판매유형 : ", userInput.login_type);
+
   return (
     <>
-      <div>
+      <Link to="/">
         <img
           src={logo}
           style={{
@@ -151,7 +163,7 @@ const BuyerJoin = () => {
           }}
           alt="hodu-market"
         />
-      </div>
+      </Link>
 
       <FormLayout>
         <LogInButtonLayout>
@@ -288,7 +300,9 @@ const BuyerJoin = () => {
         {errMsg === "아이디 또는 비밀번호가 일치하지 않습니다." && (
           <ErrorMsg>{errMsg}</ErrorMsg>
         )}
-        <input type="checkbox" id="info" style={{ marginRight: "10px" }} />
+        <input type="checkbox" id="info" style={{ marginRight: "10px" }}
+          checked={isChecked}
+          onChange={handleCheckboxChange} />
         <label htmlFor="info">
           호두샵의 이용약관 및 개인정보처리방침에 대한 내용을 확인하였고
           동의합니다.
@@ -296,20 +310,17 @@ const BuyerJoin = () => {
       </FormLayout>
 
       <Button
-        disabled={!userInput.login_type || !registerInputs}
+        disabled={userInput.login_type===undefined || !isChecked }
         type="submit"
         width="620px"
         $margin="30px auto"
+        onClick={handleSubmit}
       >
         가입하기
       </Button>
     </>
   );
 };
-// const JoinLayout = styled(Layout)`
-//   padding-top: 160px;
-//   padding-bottom: 80px;
-// `;
 
 const FormLayout = styled.form`
   margin: 0 auto;
