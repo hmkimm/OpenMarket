@@ -1,14 +1,14 @@
 # MarketService
 
 
-> ### [🚀 배포 URL](https://mulkong-market.netlify.app/)
+> ### [🚀 배포 URL](https://d1aj463p8fjhgr.cloudfront.net/)
 
 
 
 ```
 테스트 계정
-ID: buyer1(구매회원)
-PW: hodu0910
+ID: Mulkong1(구매회원)
+PW: Mulkong1!
 ```
 <br/>
 
