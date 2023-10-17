@@ -21,7 +21,8 @@ import Input from "Components/Input";
 import FlexLayout from "Style/FlexLayout";
 import { useLocation, useNavigate } from "react-router-dom";
 import AlertBox from "Components/AlertBox";
-import { createPortal } from "react-dom";
+import MetaTag from "Components/Common/MetaTag";
+// import { createPortal } from "react-dom";
 
 interface FinalPaymentText {
   size?: string;
@@ -62,6 +63,11 @@ const Order = () => {
 
   return (
     <>
+      <MetaTag
+         title='Mulkong 마켓 결제하기'
+         description='Mulkong 마켓에서 장바구니에 담은 물품들을 결제해보세요'
+         url='https://d1aj463p8fjhgr.cloudfront.net/order'
+      />
       <BasicHeader />
       <Layout>
         <Header>주문/결제하기</Header>

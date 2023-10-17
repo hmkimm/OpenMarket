@@ -10,6 +10,7 @@ import insta from "../Assets/Icons/insta.svg";
 import fb from "../Assets/Icons/fb.svg";
 import yt from "../Assets/Icons/yt.svg";
 import ProductItem from "../Components/Common/ProductItem";
+import MetaTag from "Components/Common/MetaTag";
 import userToken from "../Recoil/userToken/userToken";
 
 interface ProductList {
@@ -41,7 +42,12 @@ const BuyerMain = () => {
   }, []);
   console.log(productList?.results);
   return (
-    <div>
+    <>
+      <MetaTag
+          title='Mulkong 마켓 상품 페이지'
+          description='Mulkong 마켓에서 다른 사람들의 판매 물건을 쉽게 모아볼 수 있습니다'
+          url='https://d1aj463p8fjhgr.cloudfront.net/buyermain'
+        />
       <BasicHeader />
       <Grid>
         {productList?.results?.map((item, i) => {
@@ -86,7 +92,7 @@ const BuyerMain = () => {
           </InfoTxt>
         </div>
       </Footer>
-    </div>
+    </>
   );
 };
 

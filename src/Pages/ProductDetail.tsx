@@ -9,10 +9,11 @@ import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
 import AddCartAPI from "../API/Product/AddCartAPI";
 import { useRecoilState } from "recoil";
-import cartInfo from "../Recoil/cart/cartInfo";
+// import cartInfo from "../Recoil/cart/cartInfo";
 import cartProducts from "../Recoil/cart/cartProducts";
 import { CartItemType } from "\btypes";
 import HorizontalLine from "Style/HorizontalLine";
+import MetaTag from "Components/Common/MetaTag";
 
 interface ProductDetailProps {
   color?: string;
@@ -31,7 +32,7 @@ interface productDetail {
   product_id: number;
 }
 
-interface ContentButton {
+interface ContentButtonType {
   $isClicked?: boolean;
 }
 
@@ -146,6 +147,15 @@ const ProductDetail = (props: ProductDetailProps) => {
   console.log("상품 상세⛸️ : ", productDetail);
   return (
     <>
+      <MetaTag
+        title="Mulkong 마켓 상품보기"
+        description={`Mulkong 마켓에서 ${productDetail?.product_name} 상품의 가격, 배송정보 등의 세부사항을 확인해보세요`}
+        imageUrl={productDetail?.image}
+        imageWidth="800px"
+        imageHeight="400px"
+        url="https://d1aj463p8fjhgr.cloudfront.net/products/152"
+      />
+
       <BasicHeader />
       {productDetail.image && (
         <ProductDetailLayout>
@@ -312,7 +322,7 @@ const DeliveryMethod = styled.div`
   color: var(--gray);
 `;
 
-const ContentButton = styled.button<ContentButton>`
+const ContentButton = styled.button<ContentButtonType>`
   width: 320px;
   padding: 19px;
   background-color: white;
