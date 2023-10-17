@@ -1,7 +1,21 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom/client";
 import App from "./App";
+import { HelmetProvider } from "react-helmet-async";
+const container = document.getElementById("root") as HTMLElement;
+const root = ReactDOM.createRoot(container);
 
-const container = document.getElementById("root") as Element | DocumentFragment;
-const root = createRoot(container);
-root.render(<App />);
+if (container.hasChildNodes()) {
+  ReactDOM.hydrateRoot(
+    container,
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  );
+} else {
+  root.render(
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  );
+}
+

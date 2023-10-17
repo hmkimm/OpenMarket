@@ -6,6 +6,7 @@ import Button from "Components/Common/Button";
 import Input from "Components/Input";
 import { LoginValidation } from "../Utils/LoginValidation";
 import SignUpAPI from "API/Join/SignUpAPI";
+import MetaTag from "Components/Common/MetaTag";
 
 import { userInput, LogInButtonProps } from "./LogIn";
 import FlexLayout from "Style/FlexLayout";
@@ -153,6 +154,11 @@ const BuyerJoin = () => {
 
   return (
     <>
+      <MetaTag
+        title='Mulkong 마켓 회원가입'
+        description='Mulkong 마켓에 회원가입 하고 다양한 사람들의 물품을 거래해보세요'
+        url='https://d1aj463p8fjhgr.cloudfront.net/buyerjoin'
+      />
       <Link to="/">
         <img
           src={logo}

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import del from "../Assets/Icons/icon-delete.svg";
 
-interface QuantityButton {
+interface QuantityButtonType {
   $borRadius: string;
 }
-interface CartPrice {
+interface CartPriceType {
   $mb?: string;
 }
 
@@ -38,7 +38,7 @@ const CartName = styled.div`
   margin-bottom: 10px;
 `;
 
-const CartPrice = styled.div<CartPrice>`
+const CartPrice = styled.div<CartPriceType>`
   font-size: 18px;
   font-weight: 700;
   margin-bottom: ${(props) => props.$mb || "40px"};
@@ -65,7 +65,7 @@ const QuantityLayout = styled.div`
   display: flex;
   right: 378px;
 `;
-const QuantityButton = styled.button<QuantityButton>`
+const QuantityButton = styled.button<QuantityButtonType>`
   width: 50px;
   height: 50px;
   padding: 15px;

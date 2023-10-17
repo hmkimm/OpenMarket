@@ -7,6 +7,7 @@ import logo from "../Assets/Icons/mulkong.svg";
 import Button from "../Components/Common/Button";
 import userToken from "../Recoil/userToken/userToken";
 import ErrorMsg from "../Components/Common/ErrorMsg";
+import MetaTag from "Components/Common/MetaTag";
 
 import LogInAPI from "../API/LogInAPI";
 import AlertBox from "Components/AlertBox";
@@ -106,7 +107,12 @@ const LogIn = () => {
   }, []);
 
   return (
-    <div>
+    <>
+     <MetaTag
+         title='Mulkong 마켓 로그인'
+         description='Mulkong 마켓에 로그인 하고 다양한 물품을 거래해보세요'
+         url='https://d1aj463p8fjhgr.cloudfront.net/'
+      />
       <img
         src={logo}
         style={{ display: "block", margin: "100px auto 70px", width: "400px" }}
@@ -178,7 +184,7 @@ const LogIn = () => {
       {location.state && isWrongRoute && (
         <AlertBox transY="-110%">{location.state}</AlertBox>
       )}
-    </div>
+    </>
   );
 };
 

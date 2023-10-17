@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import userToken from "Recoil/userToken/userToken";

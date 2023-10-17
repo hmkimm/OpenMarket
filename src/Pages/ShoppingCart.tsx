@@ -28,6 +28,7 @@ import {
   CartShipping,
   QuantityLayout,
 } from "Style/CartItemStyle";
+import MetaTag from "Components/Common/MetaTag";
 
 
 interface QuantityButton {
@@ -99,6 +100,11 @@ const ShoppingCart = () => {
   console.log("get api에 저장된 카트템 : ", cartItems);
   return (
     <>
+      <MetaTag
+        title="Mulkong 마켓 장바구니"
+        description='Mulkong 마켓에서 장바구니에 담은 상품들을 확인해보세요'
+        url="https://d1aj463p8fjhgr.cloudfront.net/cart"
+      />
       <BasicHeader />
       <Layout>
         <Header>장바구니</Header>
@@ -236,12 +242,12 @@ const SelectButtonIndicator = styled.button`
   border: 1px solid var(--primary);
 `;
 
-const SelectButton = styled.button`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid var(--primary);
-`;
+// const SelectButton = styled.button`
+//   width: 20px;
+//   height: 20px;
+//   border-radius: 50%;
+//   border: 1px solid var(--primary);
+// `;
 
 const EmptyImg = styled.img`
   width: 1000px;
