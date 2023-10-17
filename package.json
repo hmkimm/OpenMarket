@@ -37,6 +37,9 @@
     "build-and-serve": "npm run build && npm run serve",
     "postbuild" : "react-snap"
   },
+  "reactSnap": {
+    "include":["/","/buyerjoin","/buyermain","/order", "/cart"]
+  },
   "eslintConfig": {
     "extends": [
       "react-app"
