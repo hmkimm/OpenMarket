@@ -163,7 +163,7 @@ const AddProduct = () => {
           <div>
             <Title>상품이미지</Title>
             <label htmlFor="file-upload">
-              <Image src={imgURL || defaultimg} />
+              <Image src={imgURL || defaultimg} alt={inputs.product_name} />
             </label>
             <input
               onChange={handleImageChange}

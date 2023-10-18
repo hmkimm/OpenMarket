@@ -160,7 +160,7 @@ const ProductDetail = (props: ProductDetailProps) => {
       {productDetail.image && (
         <ProductDetailLayout>
           <ProductLayout>
-            <ProductImage src={productDetail?.image} />
+            <ProductImage src={productDetail?.image} alt={productDetail?.product_name}/>
             <ProudctInfo>
               <CompanyInfo>{productDetail?.store_name}</CompanyInfo>
               <ProductName>{productDetail?.product_name}</ProductName>

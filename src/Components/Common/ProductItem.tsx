@@ -11,7 +11,7 @@ interface ProductItemProps {
 export default function ProductItem(props: ProductItemProps) {
   return (
     <ProductLayout>
-      <ProductImg src={props.img || pouch} alt="노트북 파우치" />
+      <ProductImg src={props.img || pouch} alt={props.name} />
       <ProductSeller>{props.seller}</ProductSeller>
       <ProductName>{props.name}</ProductName>
       <Price>
