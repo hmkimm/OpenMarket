@@ -132,7 +132,7 @@ const LogIn = () => {
             }}
             $isSelected={selectedBtn === "BUYER"}
           >
-            구매회원 로그인
+            구매회원 로그인!!
           </LogInButton>
           <LogInButton
             name="login_type"
