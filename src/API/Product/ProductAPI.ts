@@ -1,11 +1,12 @@
 import URL from "../URL";
 import userToken from "Recoil/userToken/userToken";
 import { useRecoilValue } from "recoil";
+import { useCallback } from "react";
 
 const ProductAPI = () => {
   const token = useRecoilValue(userToken);
 
-  const fetchproducts = async () => {
+  const fetchproducts = useCallback(async () => {
     try {
       const res = await fetch(`${URL}/products/`, {
         method: "GET",
@@ -18,7 +19,8 @@ const ProductAPI = () => {
     } catch (error) {
       console.error("product api 오류", error);
     }
-  };
+  }, [token]);
+
   return { fetchproducts };
 };
 

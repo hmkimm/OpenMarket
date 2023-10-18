@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 
 import ProductAPI from "../API/Product/ProductAPI";
@@ -11,7 +10,6 @@ import fb from "../Assets/Icons/fb.svg";
 import yt from "../Assets/Icons/yt.svg";
 import ProductItem from "../Components/Common/ProductItem";
 import MetaTag from "Components/Common/MetaTag";
-import userToken from "../Recoil/userToken/userToken";
 
 interface ProductList {
   results?: MyProduct[];
@@ -23,7 +21,7 @@ interface MyProduct {
   price: number;
   image: string;
 }
-interface SnsBtn {
+interface SnsBtnType {
   $img: string;
 }
 const BuyerMain = () => {
@@ -39,16 +37,17 @@ const BuyerMain = () => {
       console.log("rendering");
     };
     getProduct();
-  }, []);
+    console.log('render~~~~~')
+  }, [fetchproducts]);
   console.log(productList?.results);
   return (
     <>
       <MetaTag
-          title='Mulkong 마켓 상품 페이지'
-          description='Mulkong 마켓에서 다른 사람들의 판매 물건을 쉽게 모아볼 수 있습니다'
-          imageUrl="https://i.ibb.co/fNSQzNm/Group-2.png"
-          url='https://d1aj463p8fjhgr.cloudfront.net/buyermain'
-        />
+        title="Mulkong 마켓 상품 페이지"
+        description="Mulkong 마켓에서 다른 사람들의 판매 물건을 쉽게 모아볼 수 있습니다"
+        imageUrl="https://i.ibb.co/fNSQzNm/Group-2.png"
+        url="https://d1aj463p8fjhgr.cloudfront.net/buyermain"
+      />
       <BasicHeader />
       <Grid>
         {productList?.results?.map((item, i) => {
@@ -68,12 +67,12 @@ const BuyerMain = () => {
         <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
           <Links>
             <div>
-              <a href="#">호두샵 소개 ㅣ </a>
-              <a href="#">이용약관 ㅣ </a>
-              <a href="#">개인정보처리방침 ㅣ </a>
-              <a href="#">전자금융거래약관 ㅣ </a>
-              <a href="#">청소년보호정책 ㅣ </a>
-              <a href="#">제휴문의 </a>
+              <a href="/">호두샵 소개 ㅣ </a>
+              <a href="/">이용약관 ㅣ </a>
+              <a href="/">개인정보처리방침 ㅣ </a>
+              <a href="/">전자금융거래약관 ㅣ </a>
+              <a href="/">청소년보호정책 ㅣ </a>
+              <a href="/">제휴문의 </a>
             </div>
             <div>
               <SnsBtn $img={insta} />
@@ -119,7 +118,7 @@ const InfoTxt = styled.p`
   line-height: 24px;
 `;
 
-const SnsBtn = styled.button<SnsBtn>`
+const SnsBtn = styled.button<SnsBtnType>`
   width: 32px;
   height: 32px;
   background: url(${(props) => props.$img}) no-repeat center;
