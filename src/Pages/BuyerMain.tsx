@@ -46,6 +46,7 @@ const BuyerMain = () => {
       <MetaTag
           title='Mulkong 마켓 상품 페이지'
           description='Mulkong 마켓에서 다른 사람들의 판매 물건을 쉽게 모아볼 수 있습니다'
+          imageUrl="https://i.ibb.co/fNSQzNm/Group-2.png"
           url='https://d1aj463p8fjhgr.cloudfront.net/buyermain'
         />
       <BasicHeader />

@@ -157,6 +157,7 @@ const BuyerJoin = () => {
       <MetaTag
         title='Mulkong 마켓 회원가입'
         description='Mulkong 마켓에 회원가입 하고 다양한 사람들의 물품을 거래해보세요'
+        imageUrl="https://i.ibb.co/fNSQzNm/Group-2.png"
         url='https://d1aj463p8fjhgr.cloudfront.net/buyerjoin'
       />
       <Link to="/">
