@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +13,7 @@ interface CountButtonProps {
   children: React.ReactNode;
 }
 
-interface Button {
+interface ButtonType {
   $br?: string;
 }
 
@@ -38,7 +38,6 @@ const CountButton = (props: CountButtonProps) => {
     }
   };
 
-  useEffect(() => {}, [handlePlus, handleMinus]);
 
   return (
     <FlexLayout $jc="flex-start">
@@ -53,7 +52,7 @@ const CountButton = (props: CountButtonProps) => {
   );
 };
 
-const Button = styled.button<Button>`
+const Button = styled.button<ButtonType>`
   width: 50px;
   height: 50px;
   padding: 15px;

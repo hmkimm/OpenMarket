@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, ReactNode } from "react";
+import React from "react";
 import { styled } from "styled-components";
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {

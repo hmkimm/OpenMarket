@@ -4,7 +4,6 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../Assets/Icons/mulkong.svg";
 import search from "../../Assets/Icons/search.svg";
-import cart from "../../Assets/Icons/shopping-cart.svg";
 import user from "../../Assets/Icons/icon-user.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
@@ -12,19 +11,17 @@ import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
 
 import userToken from "../../Recoil/userToken/userToken";
 import cartProducts from "../../Recoil/cart/cartProducts";
-import Button from "Components/Common/Button";
 
-interface IconBtnLayout {
+interface IconBtnLayoutType {
   $position?: string;
 }
-interface IconBtn {
+interface IconBtnType {
   $bg: string;
 }
 const SellerHeader = () => {
   const navigate = useNavigate();
   const setToken = useSetRecoilState(userToken);
   const savedCart = useRecoilValue(cartProducts);
-  const cartProductNumber = savedCart.length;
   console.log(savedCart, "header cart");
   const handleLogout = () => {
     alert("로그아웃 하시겠습니까?");
@@ -109,7 +106,7 @@ const SearchBtn = styled.button`
   background: url(${search}) no-repeat center;
 `;
 
-const IconBtnLayout = styled.div<IconBtnLayout>`
+const IconBtnLayout = styled.div<IconBtnLayoutType>`
   display: flex;
   position: ${(props) => props.$position};
   flex-direction: column;
@@ -123,22 +120,22 @@ const IconBtnLayout = styled.div<IconBtnLayout>`
     margin-left: 47px;
   } */
 `;
-const IconBtn = styled.button<IconBtn>`
+const IconBtn = styled.button<IconBtnType>`
   width: 32px;
   height: 32px;
   background: url(${(props) => props.$bg}) no-repeat center;
 `;
 
-const AlertCart = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  position: absolute;
-  top: -3px;
-  right: 5px;
-  color: white;
-  text-align: center;
-  line-height: 20px;
-`;
+// const AlertCart = styled.div`
+//   width: 20px;
+//   height: 20px;
+//   background-color: red;
+//   border-radius: 50%;
+//   position: absolute;
+//   top: -3px;
+//   right: 5px;
+//   color: white;
+//   text-align: center;
+//   line-height: 20px;
+// `;
 export default SellerHeader;
