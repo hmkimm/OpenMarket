@@ -151,8 +151,8 @@ const ProductDetail = (props: ProductDetailProps) => {
         title="Mulkong 마켓 상품보기"
         description={`Mulkong 마켓에서 ${productDetail?.product_name} 상품의 가격, 배송정보 등의 세부사항을 확인해보세요`}
         imageUrl={productDetail?.image}
-        imageWidth="800px"
-        imageHeight="400px"
+        imageWidth="800"
+        imageHeight="400"
         url="https://d1aj463p8fjhgr.cloudfront.net/products/152"
       />
 

@@ -111,6 +111,7 @@ const LogIn = () => {
      <MetaTag
          title='Mulkong 마켓 로그인'
          description='Mulkong 마켓에 로그인 하고 다양한 물품을 거래해보세요'
+         imageUrl="https://i.ibb.co/fNSQzNm/Group-2.png"
          url='https://d1aj463p8fjhgr.cloudfront.net/'
       />
       <img
