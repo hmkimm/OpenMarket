@@ -34,12 +34,10 @@ const BuyerMain = () => {
     const getProduct = async () => {
       const res = await fetchproducts();
       setProductList(res);
-      console.log("rendering");
     };
     getProduct();
-    console.log('render~~~~~')
   }, [fetchproducts]);
-  console.log(productList?.results);
+  
   return (
     <>
       <MetaTag

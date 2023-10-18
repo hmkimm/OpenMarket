@@ -1,4 +1,3 @@
-import React from "react";
 import URL from "API/URL";
 import { RegisterInputsType } from "Pages/BuyerJoin";
 

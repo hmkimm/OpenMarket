@@ -30,8 +30,7 @@ import {
 } from "Style/CartItemStyle";
 import MetaTag from "Components/Common/MetaTag";
 
-
-interface QuantityButton {
+interface QuantityButtonType {
   $borRadius: string;
 }
 
@@ -75,7 +74,7 @@ const ShoppingCart = () => {
       sum += el.price * el.quantity;
       deliverySum += el.shippingFee;
 
-      setTotalPrice((prev) => ({
+      return setTotalPrice((prev) => ({
         ...prev,
         priceSum: sum,
         shippingFeeSum: deliverySum,
@@ -102,7 +101,7 @@ const ShoppingCart = () => {
     <>
       <MetaTag
         title="Mulkong 마켓 장바구니"
-        description='Mulkong 마켓에서 장바구니에 담은 상품들을 확인해보세요'
+        description="Mulkong 마켓에서 장바구니에 담은 상품들을 확인해보세요"
         url="https://d1aj463p8fjhgr.cloudfront.net/cart"
       />
       <BasicHeader />
@@ -199,7 +198,7 @@ const ShoppingCart = () => {
                 <PriceInfo>배송비</PriceInfo>
                 <Price>{totalPrice.shippingFeeSum.toLocaleString()}원</Price>
               </div>
-              <img src={equal} />
+              <img src={equal} alt="equal" />
               <div>
                 <PriceInfo>결제 예정 금액</PriceInfo>
                 <Price color="red">{totalPrice.total.toLocaleString()}원</Price>
@@ -221,7 +220,6 @@ const ShoppingCart = () => {
     </>
   );
 };
-
 
 const CartHeader = styled.div`
   display: flex;
@@ -266,7 +264,6 @@ const CartMsg = styled.div`
   color: var(--gray);
 `;
 
-
 const DeleteButton = styled.button`
   display: block;
   width: 22px;
@@ -277,7 +274,7 @@ const DeleteButton = styled.button`
   background: url(${del}) no-repeat center;
 `;
 
-const QuantityButton = styled.button<QuantityButton>`
+const QuantityButton = styled.button<QuantityButtonType>`
   width: 50px;
   height: 50px;
   padding: 15px;
@@ -296,7 +293,7 @@ const QuantityDisplay = styled.div`
   border-right: none;
   box-sizing: border-box;
 `;
-const CartProductInfo = styled.div``;
+
 
 const TotalPriceLayout = styled.div`
   display: flex;

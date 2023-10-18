@@ -4,7 +4,7 @@ import SellerProductListAPI from "../API/Product/SellerProductListAPI";
 import SellerHeader from "Components/Header/SellerHeader";
 
 const SellerMain = () => {
-  const [product, setProduct] = useState({});
+  const [, setProduct] = useState({});
   const fetchProduct = SellerProductListAPI();
   useEffect(() => {
     const getProductList = async () => {
@@ -13,8 +13,7 @@ const SellerMain = () => {
       setProduct(res);
     };
     getProductList();
-    console.log(product);
-  }, []);
+  }, [fetchProduct]);
   return (
     <div>
       <SellerHeader />
