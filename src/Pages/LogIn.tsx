@@ -98,13 +98,15 @@ const LogIn = () => {
     setSelectedBtn(btnValue);
   };
   console.log(location.state);
+
   useEffect(() => {
     if (location.state) {
       setTimeout(() => {
         setIsWrongRoute(false);
       }, 1500);
     }
-  }, []);
+    console.log('rendering')
+  }, [location.state]);
 
   return (
     <>

@@ -1,7 +1,6 @@
 import React, {
   ChangeEvent,
   ChangeEventHandler,
-  TextareaHTMLAttributes,
   useState,
 } from "react";
 import { styled } from "styled-components";
@@ -16,7 +15,7 @@ import { Layout, HeaderLayout } from "Style/Layout";
 import { useNavigate } from "react-router-dom";
 import imageUploadAPI from "API/Product/ImageUploadAPI";
 
-interface Button {
+interface ButtonType {
   width?: string;
   $padding?: string;
   name?: string;
@@ -33,7 +32,7 @@ export interface ProductInputs {
   stock: number;
   product_info: string;
 }
-interface ProductInfo extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
+// interface ProductInfo extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
 const AddProduct = () => {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState<ProductInputs>({
@@ -304,7 +303,7 @@ const TextInput = styled.input`
   margin-bottom: 16px;
 `;
 
-const Button = styled.button<Button>`
+const Button = styled.button<ButtonType>`
   width: ${(props) => props.width || "220px"};
   height: 54px;
   border-radius: 5px;
@@ -317,7 +316,7 @@ const Button = styled.button<Button>`
   box-sizing: border-box;
 `;
 
-const ProductInfo = styled.textarea<ProductInfo>`
+const ProductInfo = styled.textarea`
   width: 1320px;
   height: 700px;
   margin-bottom: 50px;
