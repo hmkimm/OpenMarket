@@ -38,7 +38,7 @@
     "postbuild" : "react-snap"
   },
   "reactSnap": {
-    "include":["/","/buyerjoin","/buyermain","/order", "/cart"]
+    "include":["/","/buyerjoin"]
   },
   "eslintConfig": {
     "extends": [
