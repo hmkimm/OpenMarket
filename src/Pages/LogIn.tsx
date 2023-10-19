@@ -113,7 +113,7 @@ const LogIn = () => {
       <MetaTag
         title="Mulkong 마켓 로그인"
         description="Mulkong 마켓에 로그인 하고 다양한 물품을 거래해보세요"
-        imageUrl="https://i.ibb.co/fNSQzNm/Group-2.png"
+        imageUrl="https://blog.kakaocdn.net/dn/bpi5dp/btsyH1TCRFJ/M6XUKoY6A48ikwOSDkEAnK/img.png"
         url="https://d1aj463p8fjhgr.cloudfront.net/"
       />
       <img
@@ -134,7 +134,7 @@ const LogIn = () => {
             }}
             $isSelected={selectedBtn === "BUYER"}
           >
-            구매회원 로그인!!
+            구매회원 로그인
           </LogInButton>
           <LogInButton
             name="login_type"
