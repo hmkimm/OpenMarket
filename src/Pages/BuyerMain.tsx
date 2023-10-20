@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -37,7 +37,7 @@ const BuyerMain = () => {
     };
     getProduct();
   }, [fetchproducts]);
-  
+
   return (
     <>
       <MetaTag
@@ -50,7 +50,11 @@ const BuyerMain = () => {
       <Grid>
         {productList?.results?.map((item, i) => {
           return (
-            <Link to={`/products/${item.product_id}`} key={i}>
+            <Link
+              to={`/products/${item.product_id}`}
+              key={i}
+              style={{ width: "100%" }}
+            >
               <ProductItem
                 seller={item.store_name}
                 name={item.product_name}
@@ -126,13 +130,22 @@ const SnsBtn = styled.button<SnsBtnType>`
   }
 `;
 
+
 const Grid = styled.div`
   display: grid;
-  padding-top: 120px;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  padding-top: 160px;
+  margin: 0 auto 50px;
   grid-gap: 70px;
-  margin: 0 auto 50px auto;
-  max-width: calc(380px * 3 + 70px * 2);
+
+  @media (max-width: 1280px) {
+    grid-template-columns: repeat(2, minmax(380px, auto));
+    width: calc(380px * 2 + 70px);
+  }
+
+  @media (min-width: 1281px) {
+    grid-template-columns: repeat(3, minmax(380px, 1fr));
+    width: calc(380px * 3 + 140px);
+  }
 `;
 
 export default BuyerMain;
