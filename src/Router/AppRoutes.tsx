@@ -18,10 +18,10 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<LogIn />} />
         <Route path="/buyerjoin" element={<BuyerJoin />} />
-        <Route path="/buyermain" element={<BuyerMain />} />
-        <Route path="/products/:productId" element={<ProductDetail />} />
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/buyermain" element={<BuyerMain />} />
+          <Route path="/products/:productId" element={<ProductDetail />} />
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/order" element={<Order />} />
         </Route>
