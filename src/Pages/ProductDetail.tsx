@@ -86,9 +86,13 @@ const ProductDetail = (props: ProductDetailProps) => {
   };
   console.log(savedCart);
   const handleCart = async () => {
+    // if (productStock === 0) {
+    //   alert("재고가 없습니다!");
+    // }
     const res: ResponseType = await addCart();
     console.log("카트 정보 : ", res);
     // 새로운 카트 아이템 생성
+
     const cartItem: CartItemType = {
       img: productDetail?.image,
       provider: productDetail?.store_name,
@@ -217,8 +221,17 @@ const ProductDetail = (props: ProductDetailProps) => {
                 </FlexLayout>
               </FlexLayout>
               <FlexLayout $gap="14px">
-                <Button width="416px">바로 구매</Button>
-                <Button width="200px" onClick={handleCart}>
+                <Button
+                  width="416px"
+                  onClick={() => alert("장바구니에서 구매해주세요!")}
+                >
+                  바로 구매
+                </Button>
+                <Button
+                  width="200px"
+                  onClick={handleCart}
+                  disabled={!productStock}
+                >
                   장바구니
                 </Button>
               </FlexLayout>
