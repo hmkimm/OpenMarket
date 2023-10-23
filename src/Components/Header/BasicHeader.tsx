@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 import userToken from "../../Recoil/userToken/userToken";
-import cartProducts from "../../Recoil/cart/cartProducts";
+import apiCartItems from "Recoil/cart/apiCartItems";
 
 interface IconBtnLayoutType {
   $position?: string;
@@ -19,9 +19,9 @@ interface IconBtnType {
 const BasicHeader = () => {
   const navigate = useNavigate();
   const setToken = useSetRecoilState(userToken);
-  const savedCart = useRecoilValue(cartProducts);
-  const cartProductNumber = savedCart.length;
-  
+  const apiCart = useRecoilValue(apiCartItems);
+  const cartProductNumber = apiCart.length;
+
   const handleLogout = () => {
     const isLogOut = window.confirm("로그아웃 하시겠습니까?");
     if (isLogOut) {

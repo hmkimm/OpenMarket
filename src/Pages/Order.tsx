@@ -22,6 +22,8 @@ import FlexLayout from "Style/FlexLayout";
 import { useLocation, useNavigate } from "react-router-dom";
 import AlertBox from "Components/AlertBox";
 import MetaTag from "Components/Common/MetaTag";
+import apiCartItems from "Recoil/cart/apiCartItems";
+import { ApiCartType } from "./ShoppingCart";
 // import { createPortal } from "react-dom";
 
 interface FinalPaymentText {
@@ -31,12 +33,13 @@ interface FinalPaymentText {
 
 const Order = () => {
   const navigate = useNavigate();
-  const [savedCart] = useRecoilState<CartItemType[]>(cartProducts);
+  // const [savedCart] = useRecoilState<CartItemType[]>(cartProducts);
   const [, setTotalSum] = useState(0);
   const [isPaid, setIsPaid] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const location = useLocation();
   const totalPrice = location.state;
+  const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
   const handleInputCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
   };
@@ -55,35 +58,35 @@ const Order = () => {
 
   useEffect(() => {
     let sum = 0;
-    savedCart.map((el) => {
-      return (sum += el.price * el.quantity + el.shippingFee);
+    apiCart.map((el) => {
+      return (sum += el.price * el.quantity + el.shipping_fee);
     });
     setTotalSum(sum);
-  }, [savedCart]);
+  }, [apiCart]);
 
   return (
     <>
       <MetaTag
-         title='Mulkong 마켓 결제하기'
-         description='Mulkong 마켓에서 장바구니에 담은 물품들을 결제해보세요'
-         url='https://d1aj463p8fjhgr.cloudfront.net/order'
+        title="Mulkong 마켓 결제하기"
+        description="Mulkong 마켓에서 장바구니에 담은 물품들을 결제해보세요"
+        url="https://d1aj463p8fjhgr.cloudfront.net/order"
       />
       <BasicHeader />
       <Layout>
         <Header>주문/결제하기</Header>
-        {savedCart?.map((el, i) => {
+        {apiCart?.map((el, i) => {
           return (
             <CartItem key={i}>
-              <CartImg src={el.img} />
+              <CartImg src={el.image} />
               <div>
-                <CartProvider>{el.provider}</CartProvider>
-                <CartName>{el.name}</CartName>
+                <CartProvider>{el.store_name}</CartProvider>
+                <CartName>{el.product_name}</CartName>
                 <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
                 <CartShipping>
-                  {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
+                  {el?.shipping_method === "PARCEL" ? "택배배송" : "화물배달"}
                   &nbsp; /&nbsp;
-                  {el?.shippingFee !== 0
-                    ? `${el?.shippingFee.toLocaleString()}원`
+                  {el?.shipping_fee !== 0
+                    ? `${el?.shipping_fee.toLocaleString()}원`
                     : "무료배송"}
                 </CartShipping>
               </div>
@@ -99,7 +102,7 @@ const Order = () => {
                 }}
               >
                 <CartPrice $mb="0">
-                  {(el.price * el.quantity + el.shippingFee).toLocaleString()}원
+                  {(el.price * el.quantity + el. shipping_fee).toLocaleString()}원
                 </CartPrice>
               </div>
             </CartItem>

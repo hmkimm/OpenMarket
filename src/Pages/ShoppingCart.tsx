@@ -33,6 +33,7 @@ import ProductDetailAPI from "API/Product/ProductDetailAPI";
 import userToken from "Recoil/userToken/userToken";
 import { productDetail } from "./ProductDetail";
 import Loading from "Components/Loading";
+import apiCartItems from "Recoil/cart/apiCartItems";
 
 interface QuantityButtonType {
   $borRadius: string;
@@ -53,15 +54,16 @@ interface CartInfoType {
   quantity: number;
 }
 
-interface ApiCartType extends productDetail {
+export interface ApiCartType extends productDetail {
   quantity: number;
   cart_item_id: number;
 }
 const ShoppingCart = () => {
   const navigate = useNavigate();
   const fetchCartItem = GetCartAPI();
-  const [savedCart, setSavedCart] =
-    useRecoilState<CartItemType[]>(cartProducts);
+  // const [savedCart, setSavedCart] =
+  //   useRecoilState<CartItemType[]>(cartProducts);
+  const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
   const [loading, setLoading] = useState(true);
   //api에 저장
   const [cartItems, setCartItems] = useState<CartItemsType>({
@@ -70,6 +72,7 @@ const ShoppingCart = () => {
     previous: null,
     results: [],
   });
+
   const [totalPrice, setTotalPrice] = useState({
     priceSum: 0,
     shippingFeeSum: 0,
@@ -81,27 +84,27 @@ const ShoppingCart = () => {
 
   const handleDeleteAllCartItems = async () => {
     await handleDeleteAllCart();
-    setSavedCart([]);
+    setApiCart([]);
   };
 
   const handleDeleteCart = async (cartId: number) => {
     await delCartItem(cartId);
-    const existingItemIndex = savedCart.findIndex((el) => el.cartId === cartId);
-    const deletedCart = [...savedCart];
+    const existingItemIndex = apiCart.findIndex(
+      (el) => el.cart_item_id === cartId
+    );
+    const deletedCart = [...apiCart];
     deletedCart.splice(existingItemIndex, 1);
-    setSavedCart([...deletedCart]);
-
-    console.log(deletedCart, "삭제된 카트");
+    setApiCart([...deletedCart]);
   };
 
-  console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
+  // console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
 
   useEffect(() => {
     let sum = 0;
     let deliverySum = 0;
-    savedCart.map((el) => {
+    apiCart.map((el) => {
       sum += el.price * el.quantity;
-      deliverySum += el.shippingFee;
+      deliverySum += el.shipping_fee;
 
       return setTotalPrice((prev) => ({
         ...prev,
@@ -110,16 +113,13 @@ const ShoppingCart = () => {
         total: sum + deliverySum,
       }));
     });
-  }, [savedCart]);
-
-  console.log(totalPrice);
-  const [apiCart, setApiCart] = useState<ApiCartType[]>([]);
+  }, [apiCart]);
 
   useEffect(() => {
     const getCartItem = async () => {
       const data = await fetchCartItem();
 
-      console.log("이게 데이터 : ", data.results);
+      // console.log("이게 데이터 : ", data.results);
 
       const apiPromises = data.results.map(async (el) => {
         const getDetail = ProductDetailAPI(el.product_id, token);
@@ -132,20 +132,20 @@ const ShoppingCart = () => {
         };
         return apiResults;
       });
-      console.log(apiPromises);
       // 모든 API 호출을 병렬로 실행
       const results = await Promise.all(apiPromises);
       setLoading(false);
       console.log("API 결과: ", results);
       setApiCart(results);
+      // setSavedCart(results);
       console.log("원래 결과 : ", data);
-      setCartItems(data);
+      // setCartItems(data);
     };
     getCartItem();
-  }, [savedCart]);
-
+  }, []);
+  console.log("api 리코일 : ", apiCart);
   //note:장바구니 get api, 삭제해도 바로 업뎃 안됨.
-  console.log("get api에 저장된 카트템 : ", cartItems);
+  // console.log("get api에 저장된 카트템 : ", cartItems);
   return (
     <>
       <MetaTag
@@ -183,7 +183,7 @@ const ShoppingCart = () => {
               <div>
                 총
                 <strong style={{ color: "var(--primary" }}>
-                  {savedCart.length}
+                  {apiCart.length}
                 </strong>
                 개
               </div>
@@ -207,13 +207,14 @@ const ShoppingCart = () => {
                   </CartShipping>
                 </div>
                 <QuantityLayout>
-                  <QuantityButton $borRadius="8px 0 0 8px">
-                    <FontAwesomeIcon icon={faMinus} />
-                  </QuantityButton>
-                  <QuantityDisplay>{el.quantity}</QuantityDisplay>
-                  <QuantityButton $borRadius=" 0 8px 8px 0 ">
+                  {/* <QuantityButton $borRadius="8px 0 0 8px"> */}
+                  {/* <FontAwesomeIcon icon={faMinus} /> */}
+                  {/* </QuantityButton> */}
+                  <QuantityDisplay>{el.quantity}개</QuantityDisplay>
+                  {/* <div>{el.quantity}개</div> */}
+                  {/* <QuantityButton $borRadius=" 0 8px 8px 0 ">
                     <FontAwesomeIcon icon={faPlus} />
-                  </QuantityButton>
+                  </QuantityButton> */}
                 </QuantityLayout>
                 <div
                   style={{
@@ -241,7 +242,7 @@ const ShoppingCart = () => {
               </CartItem>
             );
           })}
-          {savedCart.length > 0 && (
+          {apiCart.length > 0 && (
             <>
               <TotalPriceLayout>
                 <div>
@@ -334,15 +335,17 @@ const QuantityButton = styled.button<QuantityButtonType>`
   border-radius: ${(props) => props.$borRadius};
 `;
 const QuantityDisplay = styled.div`
+  position: absolute;
   width: 50px;
-  height: 50px;
-  text-align: center;
+  /* right: 70%; */
+  /* height: 50px; */
+  /* text-align: center;
   line-height: 25px;
-  padding: 15px;
-  border: 1px solid var(--light-gray);
-  border-left: none;
+  padding: 15px; */
+  /* border: 1px solid var(--light-gray); */
+  /* border-left: none;
   border-right: none;
-  box-sizing: border-box;
+  box-sizing: border-box; */
 `;
 
 const TotalPriceLayout = styled.div`

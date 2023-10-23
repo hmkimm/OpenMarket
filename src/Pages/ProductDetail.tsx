@@ -8,19 +8,20 @@ import CountButton from "../Components/CountButton";
 import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
 import AddCartAPI from "../API/Product/AddCartAPI";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 // import cartInfo from "../Recoil/cart/cartInfo";
 import cartProducts from "../Recoil/cart/cartProducts";
 import { CartItemType } from "\btypes";
 import HorizontalLine from "Style/HorizontalLine";
 import MetaTag from "Components/Common/MetaTag";
+import userToken from "Recoil/userToken/userToken";
 
 interface ProductDetailProps {
   color?: string;
   $isSelected?: boolean;
 }
 
-interface productDetail {
+export interface productDetail {
   image: string;
   store_name: string;
   product_name: string;
@@ -53,7 +54,8 @@ const ProductDetail = (props: ProductDetailProps) => {
   const navigate = useNavigate();
   const params = useParams();
   const productId = params.productId;
-  const getDetail = ProductDetailAPI(productId);
+  const token = useRecoilValue(userToken);
+  const getDetail = ProductDetailAPI(productId, token);
   const [productDetail, setProductDetail] = useState<productDetail>({
     image: "",
     store_name: "",
@@ -82,6 +84,7 @@ const ProductDetail = (props: ProductDetailProps) => {
   const handleClick = (num: number) => {
     setIsClicked(num);
   };
+  console.log(savedCart);
   const handleCart = async () => {
     const res: ResponseType = await addCart();
     console.log("카트 정보 : ", res);
@@ -142,7 +145,7 @@ const ProductDetail = (props: ProductDetailProps) => {
       setProductDetail(res);
     };
     handleDetail();
-  }, [getDetail]);
+  }, []);
 
   console.log("상품 상세⛸️ : ", productDetail);
   return (
@@ -160,7 +163,10 @@ const ProductDetail = (props: ProductDetailProps) => {
       {productDetail.image && (
         <ProductDetailLayout>
           <ProductLayout>
-            <ProductImage src={productDetail?.image} alt={productDetail?.product_name}/>
+            <ProductImage
+              src={productDetail?.image}
+              alt={productDetail?.product_name}
+            />
             <ProudctInfo>
               <CompanyInfo>{productDetail?.store_name}</CompanyInfo>
               <ProductName>{productDetail?.product_name}</ProductName>
