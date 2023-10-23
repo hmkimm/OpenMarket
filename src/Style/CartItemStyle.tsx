@@ -63,7 +63,7 @@ const DeleteButton = styled.button`
 const QuantityLayout = styled.div`
   position: absolute;
   display: flex;
-  right: 378px;
+  right: 39%;
 `;
 const QuantityButton = styled.button<QuantityButtonType>`
   width: 50px;
