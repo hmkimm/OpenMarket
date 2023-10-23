@@ -3,10 +3,10 @@ import { useCallback } from "react";
 import userToken from "../../Recoil/userToken/userToken";
 import { useRecoilValue } from "recoil";
 
-const ProductDetailAPI = (productId: string | undefined) => {
-  const token = useRecoilValue(userToken);
+const ProductDetailAPI = (productId: string | number | undefined, token : string) => {
+  // const token = useRecoilValue(userToken);
 
-  const getDetail = useCallback(async () => {
+  const getDetail = async () => {
     try {
       const res = await fetch(`${URL}/products/${productId}`, {
         method: "GET",
@@ -21,7 +21,7 @@ const ProductDetailAPI = (productId: string | undefined) => {
       console.error("api error", error);
       throw error;
     }
-  }, [token, productId]);
+  }
 
   return getDetail;
 };
