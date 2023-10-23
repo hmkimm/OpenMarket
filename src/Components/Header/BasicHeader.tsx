@@ -21,7 +21,7 @@ const BasicHeader = () => {
   const setToken = useSetRecoilState(userToken);
   const savedCart = useRecoilValue(cartProducts);
   const cartProductNumber = savedCart.length;
-  console.log(savedCart, "header cart");
+  
   const handleLogout = () => {
     const isLogOut = window.confirm("로그아웃 하시겠습니까?");
     if (isLogOut) {
