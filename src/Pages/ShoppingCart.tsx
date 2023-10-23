@@ -32,6 +32,7 @@ import MetaTag from "Components/Common/MetaTag";
 import ProductDetailAPI from "API/Product/ProductDetailAPI";
 import userToken from "Recoil/userToken/userToken";
 import { productDetail } from "./ProductDetail";
+import Loading from "Components/Loading";
 
 interface QuantityButtonType {
   $borRadius: string;
@@ -51,12 +52,17 @@ interface CartInfoType {
   product_id: number;
   quantity: number;
 }
+
+interface ApiCartType extends productDetail {
+  quantity: number;
+  cart_item_id: number;
+}
 const ShoppingCart = () => {
   const navigate = useNavigate();
   const fetchCartItem = GetCartAPI();
   const [savedCart, setSavedCart] =
     useRecoilState<CartItemType[]>(cartProducts);
-
+  const [loading, setLoading] = useState(true);
   //api에 저장
   const [cartItems, setCartItems] = useState<CartItemsType>({
     count: 0,
@@ -107,7 +113,7 @@ const ShoppingCart = () => {
   }, [savedCart]);
 
   console.log(totalPrice);
-  const [apiCart, setApiCart] = useState<CartInfoType[]>();
+  const [apiCart, setApiCart] = useState<ApiCartType[]>([]);
 
   useEffect(() => {
     const getCartItem = async () => {
@@ -119,13 +125,17 @@ const ShoppingCart = () => {
         const getDetail = ProductDetailAPI(el.product_id, token);
         const res = await getDetail();
 
-        const apiResults = { ...res, quantity: el.quantity };
+        const apiResults = {
+          ...res,
+          quantity: el.quantity,
+          cart_item_id: el.cart_item_id,
+        };
         return apiResults;
       });
       console.log(apiPromises);
       // 모든 API 호출을 병렬로 실행
       const results = await Promise.all(apiPromises);
-
+      setLoading(false);
       console.log("API 결과: ", results);
       setApiCart(results);
       console.log("원래 결과 : ", data);
@@ -144,118 +154,127 @@ const ShoppingCart = () => {
         url="https://d1aj463p8fjhgr.cloudfront.net/cart"
       />
       <BasicHeader />
-      <Layout>
-        <Header>장바구니</Header>
-        <CartHeader>
-          <SelectButtonIndicator />
-          <div>상품정보</div>
-          <div>수량</div>
-          <div>상품금액</div>
-        </CartHeader>
-        {savedCart.length === 0 && (
-          <div>
-            <CartMsg> 장바구니가 비었습니다</CartMsg>
-            <EmptyImg src={logo} />
-          </div>
-        )}
-        {savedCart.length > 0 && (
-          <FlexLayout $jc="flex-start">
-            <Button
-              onClick={handleDeleteAllCartItems}
-              width="110px"
-              $padding="10px"
-              $margin=" 10px 15px 10px 0 "
-            >
-              모두 삭제
-            </Button>
+      {apiCart && (
+        <Layout>
+          <Header>장바구니</Header>
+          <CartHeader>
+            <SelectButtonIndicator />
+            <div>상품정보</div>
+            <div>수량</div>
+            <div>상품금액</div>
+          </CartHeader>
+          {loading && <Loading />}
+          {apiCart?.length === 0 && (
             <div>
-              총
-              <strong style={{ color: "var(--primary" }}>
-                {savedCart.length}
-              </strong>
-              개
+              <CartMsg> 장바구니가 비었습니다</CartMsg>
+              <EmptyImg src={logo} />
             </div>
-          </FlexLayout>
-        )}
-        {savedCart?.map((el, i) => {
-          console.log(el.cartId);
-          return (
-            <CartItem key={i}>
-              <CartImg src={el.img} />
+          )}
+          {apiCart?.length > 0 && (
+            <FlexLayout $jc="flex-start">
+              <Button
+                onClick={handleDeleteAllCartItems}
+                width="110px"
+                $padding="10px"
+                $margin=" 10px 15px 10px 0 "
+              >
+                모두 삭제
+              </Button>
               <div>
-                <CartProvider>{el.provider}</CartProvider>
-                <CartName>{el.name}</CartName>
-                <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
-                <CartShipping>
-                  {el?.shippingMethod === "PARCEL" ? "택배배송" : "화물배달"}
-                  &nbsp; /&nbsp;
-                  {el?.shippingFee !== 0
-                    ? `${el?.shippingFee.toLocaleString()}원`
-                    : "무료배송"}
-                </CartShipping>
+                총
+                <strong style={{ color: "var(--primary" }}>
+                  {savedCart.length}
+                </strong>
+                개
               </div>
-              <QuantityLayout>
-                <QuantityButton $borRadius="8px 0 0 8px">
-                  <FontAwesomeIcon icon={faMinus} />
-                </QuantityButton>
-                <QuantityDisplay>{el.quantity}</QuantityDisplay>
-                <QuantityButton $borRadius=" 0 8px 8px 0 ">
-                  <FontAwesomeIcon icon={faPlus} />
-                </QuantityButton>
-              </QuantityLayout>
-              <div
-                style={{
-                  position: "absolute",
-                  right: "100px",
-                  textAlign: "center",
+            </FlexLayout>
+          )}
+          {apiCart?.map((el, i) => {
+            // console.log(el.cartId);
+            return (
+              <CartItem key={i}>
+                <CartImg src={el.image} />
+                <div>
+                  <CartProvider>{el.store_name}</CartProvider>
+                  <CartName>{el.product_name}</CartName>
+                  <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
+                  <CartShipping>
+                    {el?.shipping_method === "PARCEL" ? "택배배송" : "화물배달"}
+                    &nbsp; /&nbsp;
+                    {el?.shipping_fee !== 0
+                      ? `${el?.shipping_fee.toLocaleString()}원`
+                      : "무료배송"}
+                  </CartShipping>
+                </div>
+                <QuantityLayout>
+                  <QuantityButton $borRadius="8px 0 0 8px">
+                    <FontAwesomeIcon icon={faMinus} />
+                  </QuantityButton>
+                  <QuantityDisplay>{el.quantity}</QuantityDisplay>
+                  <QuantityButton $borRadius=" 0 8px 8px 0 ">
+                    <FontAwesomeIcon icon={faPlus} />
+                  </QuantityButton>
+                </QuantityLayout>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "100px",
+                    textAlign: "center",
+                  }}
+                >
+                  <CartPrice color="red" $mb="26px">
+                    {(
+                      el.price * el.quantity +
+                      el.shipping_fee
+                    ).toLocaleString()}
+                    원
+                  </CartPrice>
+                  <Button $padding="10px" width="130px">
+                    주문하기
+                  </Button>
+                </div>
+                <DeleteButton
+                  onClick={() => {
+                    handleDeleteCart(el?.cart_item_id!);
+                  }}
+                />
+              </CartItem>
+            );
+          })}
+          {savedCart.length > 0 && (
+            <>
+              <TotalPriceLayout>
+                <div>
+                  <PriceInfo>총 상품금액</PriceInfo>
+                  <Price>{totalPrice.priceSum.toLocaleString()}원</Price>
+                </div>
+                <img src={plus} alt="더하기" />
+                <div>
+                  <PriceInfo>배송비</PriceInfo>
+                  <Price>{totalPrice.shippingFeeSum.toLocaleString()}원</Price>
+                </div>
+                <img src={equal} alt="equal" />
+                <div>
+                  <PriceInfo>결제 예정 금액</PriceInfo>
+                  <Price color="red">
+                    {totalPrice.total.toLocaleString()}원
+                  </Price>
+                </div>
+              </TotalPriceLayout>
+
+              <Button
+                width="200px"
+                $margin="0 auto"
+                onClick={() => {
+                  navigate("/order", { state: totalPrice });
                 }}
               >
-                <CartPrice color="red" $mb="26px">
-                  {(el.price * el.quantity + el.shippingFee).toLocaleString()}원
-                </CartPrice>
-                <Button $padding="10px" width="130px">
-                  주문하기
-                </Button>
-              </div>
-              <DeleteButton
-                onClick={() => {
-                  handleDeleteCart(el?.cartId!);
-                }}
-              />
-            </CartItem>
-          );
-        })}
-        {savedCart.length > 0 && (
-          <>
-            <TotalPriceLayout>
-              <div>
-                <PriceInfo>총 상품금액</PriceInfo>
-                <Price>{totalPrice.priceSum.toLocaleString()}원</Price>
-              </div>
-              <img src={plus} alt="더하기" />
-              <div>
-                <PriceInfo>배송비</PriceInfo>
-                <Price>{totalPrice.shippingFeeSum.toLocaleString()}원</Price>
-              </div>
-              <img src={equal} alt="equal" />
-              <div>
-                <PriceInfo>결제 예정 금액</PriceInfo>
-                <Price color="red">{totalPrice.total.toLocaleString()}원</Price>
-              </div>
-            </TotalPriceLayout>
-
-            <Button
-              width="200px"
-              $margin="0 auto"
-              onClick={() => {
-                navigate("/order", { state: totalPrice });
-              }}
-            >
-              주문하기
-            </Button>
-          </>
-        )}
-      </Layout>
+                주문하기
+              </Button>
+            </>
+          )}
+        </Layout>
+      )}
     </>
   );
 };
