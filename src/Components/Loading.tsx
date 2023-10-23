@@ -12,12 +12,12 @@ const Loading = () => {
 };
 
 const Background = styled.div`
-  position: absolute;
-  width: 100vw;
+  position: fixed;
+  width: 100%;
   height: 100vh;
   top: 0;
   left: 0;
-  background: #e3e2e2f3;
+  background: #f6f4f4f3;
   z-index: 999;
   display: flex;
   flex-direction: column;
