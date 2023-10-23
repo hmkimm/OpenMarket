@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import cartProducts from "../Recoil/cart/cartProducts";
 import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
 import GetCartAPI from "../API/Cart/GetCartAPI";
@@ -29,11 +29,28 @@ import {
   QuantityLayout,
 } from "Style/CartItemStyle";
 import MetaTag from "Components/Common/MetaTag";
+import ProductDetailAPI from "API/Product/ProductDetailAPI";
+import userToken from "Recoil/userToken/userToken";
+import { productDetail } from "./ProductDetail";
 
 interface QuantityButtonType {
   $borRadius: string;
 }
 
+export interface CartItemsType {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: CartInfoType[];
+}
+
+interface CartInfoType {
+  cart_item_id: number;
+  is_active: boolean;
+  my_cart: number;
+  product_id: number;
+  quantity: number;
+}
 const ShoppingCart = () => {
   const navigate = useNavigate();
   const fetchCartItem = GetCartAPI();
@@ -41,12 +58,18 @@ const ShoppingCart = () => {
     useRecoilState<CartItemType[]>(cartProducts);
 
   //api에 저장
-  const [cartItems, setCartItems] = useState<{}>([]);
+  const [cartItems, setCartItems] = useState<CartItemsType>({
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+  });
   const [totalPrice, setTotalPrice] = useState({
     priceSum: 0,
     shippingFeeSum: 0,
     total: 0,
   });
+  const token = useRecoilValue(userToken);
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
@@ -81,19 +104,35 @@ const ShoppingCart = () => {
         total: sum + deliverySum,
       }));
     });
-
-    console.log("rendering");
   }, [savedCart]);
 
   console.log(totalPrice);
+  const [apiCart, setApiCart] = useState<CartInfoType[]>();
+
   useEffect(() => {
     const getCartItem = async () => {
       const data = await fetchCartItem();
+
+      console.log("이게 데이터 : ", data.results);
+
+      const apiPromises = data.results.map(async (el) => {
+        const getDetail = ProductDetailAPI(el.product_id, token);
+        const res = await getDetail();
+
+        const apiResults = { ...res, quantity: el.quantity };
+        return apiResults;
+      });
+      console.log(apiPromises);
+      // 모든 API 호출을 병렬로 실행
+      const results = await Promise.all(apiPromises);
+
+      console.log("API 결과: ", results);
+      setApiCart(results);
+      console.log("원래 결과 : ", data);
       setCartItems(data);
-      console.log("rendering test");
     };
     getCartItem();
-  }, [fetchCartItem, savedCart]);
+  }, [savedCart]);
 
   //note:장바구니 get api, 삭제해도 바로 업뎃 안됨.
   console.log("get api에 저장된 카트템 : ", cartItems);
@@ -240,13 +279,6 @@ const SelectButtonIndicator = styled.button`
   border: 1px solid var(--primary);
 `;
 
-// const SelectButton = styled.button`
-//   width: 20px;
-//   height: 20px;
-//   border-radius: 50%;
-//   border: 1px solid var(--primary);
-// `;
-
 const EmptyImg = styled.img`
   width: 1000px;
   position: absolute;
@@ -293,7 +325,6 @@ const QuantityDisplay = styled.div`
   border-right: none;
   box-sizing: border-box;
 `;
-
 
 const TotalPriceLayout = styled.div`
   display: flex;
