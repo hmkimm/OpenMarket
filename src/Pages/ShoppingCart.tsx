@@ -230,9 +230,9 @@ const ShoppingCart = () => {
                     ).toLocaleString()}
                     원
                   </CartPrice>
-                  <Button $padding="10px" width="130px">
+                  {/* <Button $padding="10px" width="130px">
                     주문하기
-                  </Button>
+                  </Button> */}
                 </div>
                 <DeleteButton
                   onClick={() => {
@@ -337,6 +337,7 @@ const QuantityButton = styled.button<QuantityButtonType>`
 const QuantityDisplay = styled.div`
   position: absolute;
   width: 50px;
+  font-size: 18px;
   /* right: 70%; */
   /* height: 50px; */
   /* text-align: center;
