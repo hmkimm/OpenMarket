@@ -71,7 +71,7 @@ const Order = () => {
   useEffect(() => {
     let sum = 0;
     apiCart.map((el) => {
-      return (sum += el.price * el.quantity + el.shipping_fee);
+      return (sum += el.price * el.quantity + el?.shipping_fee);
     });
     setTotalSum(sum);
   }, [apiCart]);
@@ -126,7 +126,7 @@ const Order = () => {
                 <CartPrice $mb="0">
                   {(
                     directProduct.price * directProduct.orderNum +
-                    directProduct.shipping_fee
+                    directProduct?.shipping_fee
                   )?.toLocaleString()}
                   원
                 </CartPrice>
@@ -139,7 +139,7 @@ const Order = () => {
                 &nbsp;{" "}
                 {(
                   directProduct.price * directProduct.orderNum +
-                  directProduct.shipping_fee
+                  directProduct?.shipping_fee
                 )?.toLocaleString()}
                 원
               </span>
@@ -179,7 +179,7 @@ const Order = () => {
                     <CartPrice $mb="0">
                       {(
                         el.price * el.quantity +
-                        el.shipping_fee
+                        el?.shipping_fee
                       )?.toLocaleString()}
                       원
                     </CartPrice>
@@ -259,7 +259,7 @@ const Order = () => {
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 배송비</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {directProduct.shipping_fee?.toLocaleString() ||
+                  {directProduct?.shipping_fee?.toLocaleString() ||
                     totalPrice?.shippingFeeSum?.toLocaleString()}
                   원
                 </FinalPaymentInfo>
@@ -271,7 +271,7 @@ const Order = () => {
                   {directProduct
                     ? (
                         directProduct.price * directProduct.orderNum +
-                        directProduct.shipping_fee
+                        directProduct?.shipping_fee
                       )?.toLocaleString()
                     : totalPrice?.total?.toLocaleString()}
                   원
