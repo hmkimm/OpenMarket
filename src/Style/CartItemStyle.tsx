@@ -41,7 +41,7 @@ const CartName = styled.div`
 const CartPrice = styled.div<CartPriceType>`
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: ${(props) => props.$mb || "40px"};
+  /* margin-bottom: ${(props) => props.$mb || "40px"}; */
   color: ${(props) => props.color};
 `;
 
@@ -63,6 +63,7 @@ const DeleteButton = styled.button`
 const QuantityLayout = styled.div`
   position: absolute;
   display: flex;
+  align-items: center;
   right: 39%;
 `;
 const QuantityButton = styled.button<QuantityButtonType>`
