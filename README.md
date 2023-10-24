@@ -7,7 +7,9 @@
 
 ```
 테스트 계정
-ID: Mulkong1(구매회원)
+
+구매회원
+ID: Mulkong1
 PW: Mulkong1!
 ```
 <br/>
