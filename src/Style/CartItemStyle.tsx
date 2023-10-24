@@ -41,14 +41,13 @@ const CartName = styled.div`
 const CartPrice = styled.div<CartPriceType>`
   font-size: 18px;
   font-weight: 700;
-  /* margin-bottom: ${(props) => props.$mb || "40px"}; */
+  margin-bottom: ${(props) => props.$mb || "40px"};
   color: ${(props) => props.color};
 `;
 
 const CartShipping = styled.div`
   color: var(--gray);
 `;
-
 
 const DeleteButton = styled.button`
   display: block;
