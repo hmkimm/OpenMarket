@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
-import cartProducts from "../Recoil/cart/cartProducts";
 import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
 import GetCartAPI from "../API/Cart/GetCartAPI";
 import logo from "../Assets/Icons/mulkong-gray.svg";
@@ -12,12 +11,8 @@ import BasicHeader from "../Components/Header/BasicHeader";
 import { Layout, Header } from "../Style/Layout";
 import Button from "../Components/Common/Button";
 import del from "../Assets/Icons/icon-delete.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DeleteAllCartsAPI from "../API/Cart/DeleteAllCartsAPI";
 import FlexLayout from "../Style/FlexLayout";
-import { CartItemType } from "\btypes";
 import { useNavigate } from "react-router-dom";
 import {
   CartItem,
@@ -61,17 +56,9 @@ export interface ApiCartType extends productDetail {
 const ShoppingCart = () => {
   const navigate = useNavigate();
   const fetchCartItem = GetCartAPI();
-  // const [savedCart, setSavedCart] =
-  //   useRecoilState<CartItemType[]>(cartProducts);
+
   const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
   const [loading, setLoading] = useState(true);
-  //api에 저장
-  const [cartItems, setCartItems] = useState<CartItemsType>({
-    count: 0,
-    next: null,
-    previous: null,
-    results: [],
-  });
 
   const [totalPrice, setTotalPrice] = useState({
     priceSum: 0,
@@ -97,7 +84,6 @@ const ShoppingCart = () => {
     setApiCart([...deletedCart]);
   };
 
-  // console.log("리코일 장바구니 템 상세🏌🏻‍♀️ : ", savedCart);
 
   useEffect(() => {
     let sum = 0;
@@ -119,7 +105,6 @@ const ShoppingCart = () => {
     const getCartItem = async () => {
       const data = await fetchCartItem();
 
-      // console.log("이게 데이터 : ", data.results);
 
       const apiPromises = data.results.map(async (el) => {
         const getDetail = ProductDetailAPI(el.product_id, token);
@@ -135,17 +120,13 @@ const ShoppingCart = () => {
       // 모든 API 호출을 병렬로 실행
       const results = await Promise.all(apiPromises);
       setLoading(false);
-      console.log("API 결과: ", results);
       setApiCart(results);
-      // setSavedCart(results);
-      console.log("원래 결과 : ", data);
-      // setCartItems(data);
+
     };
     getCartItem();
   }, []);
   console.log("api 리코일 : ", apiCart);
-  //note:장바구니 get api, 삭제해도 바로 업뎃 안됨.
-  // console.log("get api에 저장된 카트템 : ", cartItems);
+
   return (
     <>
       <MetaTag
@@ -190,7 +171,6 @@ const ShoppingCart = () => {
             </FlexLayout>
           )}
           {apiCart?.map((el, i) => {
-            // console.log(el.cartId);
             return (
               <CartItem key={i}>
                 <CartImg src={el.image} />
@@ -223,7 +203,7 @@ const ShoppingCart = () => {
                     textAlign: "center",
                   }}
                 >
-                  <CartPrice color="red" $mb="26px">
+                  <CartPrice color="red" $mb="0">
                     {(
                       el.price * el.quantity +
                       el.shipping_fee
