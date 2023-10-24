@@ -10,6 +10,7 @@ import fb from "../Assets/Icons/fb.svg";
 import yt from "../Assets/Icons/yt.svg";
 import ProductItem from "../Components/Common/ProductItem";
 import MetaTag from "Components/Common/MetaTag";
+import Loading from "Components/Loading";
 
 interface ProductList {
   results?: MyProduct[];
@@ -29,11 +30,12 @@ const BuyerMain = () => {
   const [productList, setProductList] = useState<ProductList>({
     results: [],
   });
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getProduct = async () => {
       const res = await fetchproducts();
       setProductList(res);
+      setIsLoading(false);
     };
     getProduct();
   }, [fetchproducts]);
@@ -47,6 +49,7 @@ const BuyerMain = () => {
         url="https://d1aj463p8fjhgr.cloudfront.net/buyermain"
       />
       <BasicHeader />
+      {isLoading && <Loading />}
       <Grid>
         {productList?.results?.map((item, i) => {
           return (
@@ -129,7 +132,6 @@ const SnsBtn = styled.button<SnsBtnType>`
     margin-left: 14px;
   }
 `;
-
 
 const Grid = styled.div`
   display: grid;
