@@ -1,5 +1,5 @@
 import BasicHeader from "Components/Header/BasicHeader";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import cartProducts from "Recoil/cart/cartProducts";
 
 import { CartItemType } from "\btypes";
@@ -24,7 +24,7 @@ import AlertBox from "Components/AlertBox";
 import MetaTag from "Components/Common/MetaTag";
 import apiCartItems from "Recoil/cart/apiCartItems";
 import { ApiCartType } from "./ShoppingCart";
-// import { createPortal } from "react-dom";
+import product from "Recoil/cart/product";
 
 interface FinalPaymentText {
   size?: string;
@@ -39,7 +39,9 @@ const Order = () => {
   const [isChecked, setIsChecked] = useState(false);
   const location = useLocation();
   const totalPrice = location.state;
-  const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
+  const apiCart = useRecoilValue<ApiCartType[]>(apiCartItems);
+  const [directProduct, setDirectProduct] = useRecoilState(product);
+
   const handleInputCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
   };
@@ -64,6 +66,14 @@ const Order = () => {
     setTotalSum(sum);
   }, [apiCart]);
 
+  console.log("바로구매 : ", directProduct);
+
+  useEffect(() => {
+    return () => {
+      setDirectProduct("");
+    };
+  }, []);
+  console.log(totalPrice);
   return (
     <>
       <MetaTag
@@ -74,24 +84,26 @@ const Order = () => {
       <BasicHeader />
       <Layout>
         <Header>주문/결제하기</Header>
-        {apiCart?.map((el, i) => {
-          return (
-            <CartItem key={i}>
-              <CartImg src={el.image} />
+        {directProduct ? (
+          <>
+            <CartItem>
+              <CartImg src={directProduct?.image} />
               <div>
-                <CartProvider>{el.store_name}</CartProvider>
-                <CartName>{el.product_name}</CartName>
-                <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
+                <CartProvider>{directProduct.store_name}</CartProvider>
+                <CartName>{directProduct.product_name}</CartName>
+                <CartPrice>{directProduct.price?.toLocaleString()}원</CartPrice>
                 <CartShipping>
-                  {el?.shipping_method === "PARCEL" ? "택배배송" : "화물배달"}
+                  {directProduct?.shipping_method === "PARCEL"
+                    ? "택배배송"
+                    : "화물배달"}
                   &nbsp; /&nbsp;
-                  {el?.shipping_fee !== 0
-                    ? `${el?.shipping_fee.toLocaleString()}원`
+                  {directProduct?.shipping_fee !== 0
+                    ? `${directProduct?.shipping_fee?.toLocaleString()}원`
                     : "무료배송"}
                 </CartShipping>
               </div>
               <QuantityLayout>
-                <QuantityDisplay>{el.quantity}개</QuantityDisplay>
+                <QuantityDisplay>{directProduct.orderNum}개</QuantityDisplay>
               </QuantityLayout>
               <div
                 style={{
@@ -102,18 +114,78 @@ const Order = () => {
                 }}
               >
                 <CartPrice $mb="0">
-                  {(el.price * el.quantity + el. shipping_fee).toLocaleString()}원
+                  {(
+                    directProduct.price * directProduct.orderNum +
+                    directProduct.shipping_fee
+                  )?.toLocaleString()}
+                  원
                 </CartPrice>
               </div>
             </CartItem>
-          );
-        })}
-        <TotalPrice>
-          총 주문금액 :
-          <span style={{ color: "red" }}>
-            &nbsp;{totalPrice?.total?.toLocaleString()}원
-          </span>
-        </TotalPrice>
+
+            <TotalPrice>
+              총 주문금액 :
+              <span style={{ color: "red" }}>
+                &nbsp;{" "}
+                {(
+                  directProduct.price * directProduct.orderNum +
+                  directProduct.shipping_fee
+                )?.toLocaleString()}
+                원
+              </span>
+            </TotalPrice>
+          </>
+        ) : (
+          <>
+            {apiCart?.map((el, i) => {
+              return (
+                <CartItem key={i}>
+                  <CartImg src={el.image} />
+                  <div>
+                    <CartProvider>{el.store_name}</CartProvider>
+                    <CartName>{el.product_name}</CartName>
+                    <CartPrice>{el.price?.toLocaleString()}원</CartPrice>
+                    <CartShipping>
+                      {el?.shipping_method === "PARCEL"
+                        ? "택배배송"
+                        : "화물배달"}
+                      &nbsp; /&nbsp;
+                      {el?.shipping_fee !== 0
+                        ? `${el?.shipping_fee?.toLocaleString()}원`
+                        : "무료배송"}
+                    </CartShipping>
+                  </div>
+                  <QuantityLayout>
+                    <QuantityDisplay>{el.quantity}개</QuantityDisplay>
+                  </QuantityLayout>
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "100px",
+                      textAlign: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CartPrice $mb="0">
+                      {(
+                        el.price * el.quantity +
+                        el.shipping_fee
+                      )?.toLocaleString()}
+                      원
+                    </CartPrice>
+                  </div>
+                </CartItem>
+              );
+            })}
+            <TotalPrice>
+              총 주문금액 :
+              <span style={{ color: "red" }}>
+                &nbsp;{totalPrice?.total?.toLocaleString()}원
+              </span>
+            </TotalPrice>
+          </>
+        )}
+
         <H2>배송정보</H2>
         <HorizontalLine />
         <DeliveryLayout>
@@ -166,20 +238,33 @@ const Order = () => {
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 상품금액</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {totalPrice?.priceSum.toLocaleString()}원
+                  {directProduct
+                    ? (
+                        directProduct.price * directProduct.orderNum
+                      )?.toLocaleString()
+                    : totalPrice?.priceSum?.toLocaleString()}
+                  원
                 </FinalPaymentInfo>
               </FlexLayout>
               <FlexLayout $jc="space-between">
                 <FinalPaymentInfo>- 배송비</FinalPaymentInfo>
                 <FinalPaymentInfo>
-                  {totalPrice?.shippingFeeSum.toLocaleString()}원
+                  {directProduct.shipping_fee?.toLocaleString() ||
+                    totalPrice?.shippingFeeSum?.toLocaleString()}
+                  원
                 </FinalPaymentInfo>
               </FlexLayout>
               <HorizontalLine />
               <FlexLayout $jc="space-between" $margin="0 0 20px 0">
                 <FinalPaymentInfo>- 결제금액</FinalPaymentInfo>
                 <FinalPaymentInfo color="red" size="22px">
-                  {totalPrice?.total.toLocaleString()}원
+                  {directProduct
+                    ? (
+                        directProduct.price * directProduct.orderNum +
+                        directProduct.shipping_fee
+                      )?.toLocaleString()
+                    : totalPrice?.total?.toLocaleString()}
+                  원
                 </FinalPaymentInfo>
               </FlexLayout>
               <input type="checkbox" id="notice" onChange={handleInputCheck} />
@@ -189,7 +274,9 @@ const Order = () => {
               <Button
                 disabled={!isChecked}
                 type="submit"
-                onClick={handleAlertBox}
+                onClick={() => {
+                  handleAlertBox();
+                }}
               >
                 결제하기
               </Button>

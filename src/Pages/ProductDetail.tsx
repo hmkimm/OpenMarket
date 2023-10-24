@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductDetailAPI from "../API/Product/ProductDetailAPI";
 import BasicHeader from "../Components/Header/BasicHeader";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Button from "../Components/Common/Button";
 import CountButton from "../Components/CountButton";
 import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
 import AddCartAPI from "../API/Product/AddCartAPI";
-import { useRecoilState, useRecoilValue } from "recoil";
-// import cartInfo from "../Recoil/cart/cartInfo";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import cartProducts from "../Recoil/cart/cartProducts";
 import { CartItemType } from "\btypes";
 import HorizontalLine from "Style/HorizontalLine";
 import MetaTag from "Components/Common/MetaTag";
 import userToken from "Recoil/userToken/userToken";
+import product from "Recoil/cart/product";
 
 interface ProductDetailProps {
   color?: string;
@@ -70,7 +70,6 @@ const ProductDetail = (props: ProductDetailProps) => {
   const productStock = productDetail?.stock;
   console.log("남은 재고 : ", productStock);
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
-  // const [cart]
   console.log("cart 🥎 : ", savedCart);
   const [isClicked, setIsClicked] = useState<null | number>(null);
   const [orderNum, setOrderNum] = useState(1);
@@ -79,6 +78,7 @@ const ProductDetail = (props: ProductDetailProps) => {
     quantity: 1,
     check: true,
   });
+  const setDirectProduct = useSetRecoilState(product);
   const addCart = AddCartAPI(cartInfo);
 
   const handleClick = (num: number) => {
@@ -86,9 +86,6 @@ const ProductDetail = (props: ProductDetailProps) => {
   };
   console.log(savedCart);
   const handleCart = async () => {
-    // if (productStock === 0) {
-    //   alert("재고가 없습니다!");
-    // }
     const res: ResponseType = await addCart();
     console.log("카트 정보 : ", res);
     // 새로운 카트 아이템 생성
@@ -150,6 +147,14 @@ const ProductDetail = (props: ProductDetailProps) => {
     };
     handleDetail();
   }, []);
+
+  const handleDirectBuying = () => {
+    setDirectProduct({
+      ...productDetail,
+      orderNum,
+    });
+    navigate("/order");
+  };
 
   console.log("상품 상세⛸️ : ", productDetail);
   return (
@@ -223,7 +228,9 @@ const ProductDetail = (props: ProductDetailProps) => {
               <FlexLayout $gap="14px">
                 <Button
                   width="416px"
-                  onClick={() => alert("장바구니에서 구매해주세요!")}
+                  // onClick={() => alert("장바구니에서 구매해주세요!")}
+                  onClick={handleDirectBuying}
+                  disabled={!productStock}
                 >
                   바로 구매
                 </Button>
