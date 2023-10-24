@@ -25,6 +25,7 @@ import MetaTag from "Components/Common/MetaTag";
 import apiCartItems from "Recoil/cart/apiCartItems";
 import { ApiCartType } from "./ShoppingCart";
 import product from "Recoil/cart/product";
+import DeleteAllCartsAPI from "API/Cart/DeleteAllCartsAPI";
 
 interface FinalPaymentText {
   size?: string;
@@ -33,30 +34,39 @@ interface FinalPaymentText {
 
 const Order = () => {
   const navigate = useNavigate();
-  // const [savedCart] = useRecoilState<CartItemType[]>(cartProducts);
   const [, setTotalSum] = useState(0);
   const [isPaid, setIsPaid] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const location = useLocation();
   const totalPrice = location.state;
-  const apiCart = useRecoilValue<ApiCartType[]>(apiCartItems);
+  const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
+  const handleDeleteAllCart = DeleteAllCartsAPI();
+
   const [directProduct, setDirectProduct] = useRecoilState(product);
 
   const handleInputCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
   };
 
+  const handleBuying = async () => {
+    if (totalPrice) {
+      await handleDeleteAllCart();
+      setApiCart([]);
+    }
+
+    const handleAlertBox = async () => {
+      setIsPaid(true);
+
+      await delay(1500);
+      setIsPaid(false);
+
+      navigate("/buyermain");
+    };
+    handleAlertBox();
+  };
+
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
-
-  const handleAlertBox = async () => {
-    setIsPaid(true);
-
-    await delay(1500);
-    setIsPaid(false);
-
-    navigate("/buyermain");
-  };
 
   useEffect(() => {
     let sum = 0;
@@ -67,7 +77,7 @@ const Order = () => {
   }, [apiCart]);
 
   console.log("바로구매 : ", directProduct);
-
+  console.log("장바구니 : ", apiCart);
   useEffect(() => {
     return () => {
       setDirectProduct("");
@@ -275,7 +285,7 @@ const Order = () => {
                 disabled={!isChecked}
                 type="submit"
                 onClick={() => {
-                  handleAlertBox();
+                  handleBuying();
                 }}
               >
                 결제하기
