@@ -11,6 +11,7 @@ import SellerCenter from "Pages/SellerCenter";
 import ProtectedRoute from "./ProtectedRoute";
 import Order from "Pages/Order";
 import BuyerJoin from "Pages/BuyerJoin";
+import NotFound from "Pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
         <Route path="/sellermain" element={<SellerMain />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/sellercenter" element={<SellerCenter />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
