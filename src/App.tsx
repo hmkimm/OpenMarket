@@ -10,9 +10,7 @@ const App: React.FC = () => {
   return (
     <RecoilRoot>
       <GlobalStyle />
-      <Helmet>
-        <AppRoutes />
-      </Helmet>
+      <AppRoutes />
     </RecoilRoot>
   );
 };
