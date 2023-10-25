@@ -97,7 +97,6 @@ const LogIn = () => {
   const handleBtn = (btnValue: "BUYER" | "SELLER" | null) => {
     setSelectedBtn(btnValue);
   };
-  console.log(location.state);
 
   useEffect(() => {
     if (location.state) {
