@@ -11,6 +11,8 @@ import MetaTag from "Components/Common/MetaTag";
 
 import LogInAPI from "../API/LogInAPI";
 import AlertBox from "Components/AlertBox";
+import SocialKakao from "Components/SocialKaKao";
+import FlexLayout from "Style/FlexLayout";
 
 export interface userInput {
   username: string;
@@ -104,7 +106,7 @@ const LogIn = () => {
         setIsWrongRoute(false);
       }, 1500);
     }
-    console.log('rendering')
+    console.log("rendering");
   }, [location.state]);
 
   return (
@@ -170,14 +172,28 @@ const LogIn = () => {
         {errMsg === "아이디 또는 비밀번호가 일치하지 않습니다." && (
           <ErrorMsg>{errMsg}</ErrorMsg>
         )}
-        <Button
-          disabled={
-            !userInput.login_type || !userInput.username || !userInput.password
-          }
-          type="submit"
-        >
-          로그인
-        </Button>
+        <FlexLayout $margin="10px 0">
+          <Button
+            disabled={
+              !userInput.login_type ||
+              !userInput.username ||
+              !userInput.password
+            }
+            type="submit"
+            width="50%"
+            $margin="10px 10px 0 0"
+            $br="15px"
+            $fontsize="16px"
+            style={{
+              backgroundColor: "transparent",
+              border: "1px solid var(--primary)",
+              color: "var(--primary)",
+            }}
+          >
+            아이디 로그인
+          </Button>
+          <SocialKakao />
+        </FlexLayout>
       </FormLayout>
       <LinkLayout>
         <Link to="/buyerjoin">회원가입 </Link>
