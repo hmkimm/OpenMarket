@@ -4,19 +4,32 @@ import userToken from "../../Recoil/userToken/userToken";
 import { useCallback } from "react";
 import { CartItemsType } from "Pages/ShoppingCart";
 
-const GetCartAPI = (): (() => Promise<CartItemsType>) => {
+// const GetCartAPI = (): (() => Promise<CartItemsType>) => {
+
+const GetCartAPI = () => {
   const token = useRecoilValue(userToken);
-  const fetchCartItem = useCallback(async (): Promise<CartItemsType> => {
+
+  const fetchCartItem = useCallback(async () => {
+    let authorizationToken;
+
+    if (localStorage.getItem("kakaoToken")) {
+      authorizationToken = `Bearer ${localStorage.getItem("kakaoToken")}`;
+    } else {
+      authorizationToken = `JWT ${token}`;
+    }
+    console.log(authorizationToken);
     try {
       const res = await fetch(`${URL}/cart`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `JWT ${token}`,
+          Authorization: authorizationToken,
+
+          // Authorization: `JWT ${token}`,
+
         },
       });
 
-      const result : CartItemsType= await res.json();
+      const result: CartItemsType = await res.json();
       return result;
     } catch (error) {
       console.error("api error", error);
@@ -24,7 +37,7 @@ const GetCartAPI = (): (() => Promise<CartItemsType>) => {
     }
   }, [token]);
 
-  return fetchCartItem;
+  return { fetchCartItem };
 };
 
 export default GetCartAPI;

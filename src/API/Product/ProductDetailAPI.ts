@@ -7,11 +7,22 @@ const ProductDetailAPI = (productId: string | number | undefined, token : string
   // const token = useRecoilValue(userToken);
 
   const getDetail = async () => {
+    let authorizationToken;
+
+    if (localStorage.getItem("kakaoToken")) {
+      authorizationToken = `Bearer ${localStorage.getItem("kakaoToken")}`;
+    } else {
+      authorizationToken = `JWT ${token}`;
+    }
+    console.log(authorizationToken);
+
+    
     try {
       const res = await fetch(`${URL}/products/${productId}`, {
         method: "GET",
         headers: {
-          Authorization: `JWT ${token}`,
+          Authorization: authorizationToken,
+          // Authorization: `JWT ${token}`,
         },
       });
       const result = await res.json();
