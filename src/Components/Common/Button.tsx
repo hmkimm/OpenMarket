@@ -8,7 +8,8 @@ interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
   $margin?: string;
   $empty?: boolean;
   $height?: string;
-  $fontsize?:string;
+  $fontsize?: string;
+  $br ?: string;
 }
 
 const Button = ({ children, ...rest }: ButtonProps) => {
@@ -23,7 +24,7 @@ const ButtonStyle = styled.button<ButtonProps>`
   margin: ${(props) => props.$margin || "36px 0 0 0"};
   background-color: ${(props) =>
     props.$empty ? "var(--light-gray)" : "var(--primary)"};
-  border-radius: 5px;
+  border-radius: ${(props) => props.$br || "5px"};
   font-size: ${(props) => props.$fontsize || "18px"};
   color: #fff;
 `;
