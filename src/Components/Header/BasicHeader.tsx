@@ -24,9 +24,11 @@ const BasicHeader = () => {
 
   const handleLogout = () => {
     const isLogOut = window.confirm("로그아웃 하시겠습니까?");
+  
     if (isLogOut) {
       setToken("");
       navigate("/");
+      localStorage.removeItem("kakaoToken");
     } else return;
   };
 
