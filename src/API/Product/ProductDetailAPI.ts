@@ -14,7 +14,6 @@ const ProductDetailAPI = (productId: string | number | undefined, token : string
     } else {
       authorizationToken = `JWT ${token}`;
     }
-    console.log(authorizationToken);
 
     
     try {
