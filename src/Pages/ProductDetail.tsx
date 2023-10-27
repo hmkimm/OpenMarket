@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import ProductDetailAPI from "../API/Product/ProductDetailAPI";
 import BasicHeader from "../Components/Header/BasicHeader";
 import styled from "styled-components";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../Components/Common/Button";
 import CountButton from "../Components/CountButton";
 import FlexLayout from "../Style/FlexLayout";
 import { Layout } from "../Style/Layout";
 import AddCartAPI from "../API/Product/AddCartAPI";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+// import cartInfo from "../Recoil/cart/cartInfo";
+import cartProducts from "../Recoil/cart/cartProducts";
+import { CartItemType } from "\btypes";
 import HorizontalLine from "Style/HorizontalLine";
 import MetaTag from "Components/Common/MetaTag";
 import userToken from "Recoil/userToken/userToken";
@@ -47,7 +50,6 @@ export interface CartInfoType {
   quantity: number;
   check: boolean;
 }
-
 const ProductDetail = (props: ProductDetailProps) => {
   const navigate = useNavigate();
   const params = useParams();
@@ -67,7 +69,9 @@ const ProductDetail = (props: ProductDetailProps) => {
   });
   const productStock = productDetail?.stock;
   console.log("남은 재고 : ", productStock);
-  // const [savedCart, setSavedCart] = useRecoilState(cartProducts);
+  const [savedCart, setSavedCart] = useRecoilState(cartProducts);
+  // const [cart]
+  console.log("cart 🥎 : ", savedCart);
   const [isClicked, setIsClicked] = useState<null | number>(null);
   const [orderNum, setOrderNum] = useState(1);
   const [cartInfo, setCartInfo] = useState({
@@ -75,53 +79,54 @@ const ProductDetail = (props: ProductDetailProps) => {
     quantity: 1,
     check: true,
   });
+  console.log('cartInfo : ', cartInfo)
   const setDirectProduct = useSetRecoilState(product);
   const addCart = AddCartAPI(cartInfo);
+  console.log(addCart)
 
   const handleClick = (num: number) => {
     setIsClicked(num);
   };
-  // console.log(savedCart);
-
+  console.log(savedCart);
   const handleCart = async () => {
     const res: ResponseType = await addCart();
     console.log("카트 정보 : ", res);
     // 새로운 카트 아이템 생성
 
-    // const cartItem: CartItemType = {
-    //   img: productDetail?.image,
-    //   provider: productDetail?.store_name,
-    //   name: productDetail?.product_name,
-    //   price: productDetail?.price,
-    //   shippingMethod: productDetail?.shipping_method,
-    //   shippingFee: productDetail?.shipping_fee,
-    //   quantity: orderNum,
-    //   myCart: res?.my_cart,
-    //   cartId: res?.cart_item_id,
-    //   productId: productDetail?.product_id,
-    // };
+    const cartItem: CartItemType = {
+      img: productDetail?.image,
+      provider: productDetail?.store_name,
+      name: productDetail?.product_name,
+      price: productDetail?.price,
+      shippingMethod: productDetail?.shipping_method,
+      shippingFee: productDetail?.shipping_fee,
+      quantity: orderNum,
+      myCart: res?.my_cart,
+      cartId: res?.cart_item_id,
+      productId: productDetail?.product_id,
+    };
 
     // 장바구니에 해당 아이템이 이미 있는지 검사
-    // const existingCartItemIndex = savedCart.findIndex((item: CartItemType) => {
-    //   return item.name === cartItem.name;
-    // });
+    const existingCartItemIndex = savedCart.findIndex((item: CartItemType) => {
+      return item.name === cartItem.name;
+    });
 
-    // if (existingCartItemIndex !== -1) {
-    //   // 이미 장바구니에 있는 아이템일 경우, 수량만 더하기
-    //   const updatedCart = [...savedCart];
-    //   updatedCart[existingCartItemIndex] = {
-    //     ...updatedCart[existingCartItemIndex],
-    //     quantity:
-    //       updatedCart[existingCartItemIndex].quantity + cartItem.quantity,
-    //   };
+    if (existingCartItemIndex !== -1) {
+      // 이미 장바구니에 있는 아이템일 경우, 수량만 더하기
+      const updatedCart = [...savedCart];
+      updatedCart[existingCartItemIndex] = {
+        ...updatedCart[existingCartItemIndex],
+        quantity:
+          updatedCart[existingCartItemIndex].quantity + cartItem.quantity,
+      };
 
-    //   setSavedCart(updatedCart);
-    // } else {
-    //   // 장바구니에 없는 아이템일 경우, 아이템을 추가
-    //   setSavedCart([...savedCart, cartItem]);
-    // }
+      setSavedCart(updatedCart);
+    } else {
+      // 장바구니에 없는 아이템일 경우, 아이템을 추가
+      setSavedCart([...savedCart, cartItem]);
+    }
 
-    // navigate("/cart");
+    navigate("/cart");
   };
 
   const handleCountChange = (orderNum: number) => {
@@ -136,11 +141,7 @@ const ProductDetail = (props: ProductDetailProps) => {
   console.log("주문하려는 상품 정보 : ", cartInfo);
   console.log("주문개수 : ", orderNum);
   console.log("남은 재고 : ", productStock);
-  // console.log('리코일 저장 savedCart : ', savedCart)
-  // const productState = useSelector((state: RootState) => state.product);
-  // const directProduct = productState;
-  //   console.log(directProduct);
-    
+
   useEffect(() => {
     const handleDetail = async () => {
       const res = await getDetail();
@@ -155,11 +156,9 @@ const ProductDetail = (props: ProductDetailProps) => {
       ...productDetail,
       orderNum,
     });
-
-    // console.log(directProduct)
     navigate("/order");
   };
-  console.log("redux : ", product);
+
   console.log("상품 상세⛸️ : ", productDetail);
   return (
     <>
@@ -232,7 +231,6 @@ const ProductDetail = (props: ProductDetailProps) => {
               <FlexLayout $gap="14px">
                 <Button
                   width="416px"
-                  // onClick={() => alert("장바구니에서 구매해주세요!")}
                   onClick={handleDirectBuying}
                   disabled={!productStock}
                 >
