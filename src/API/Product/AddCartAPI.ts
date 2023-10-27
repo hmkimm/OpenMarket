@@ -4,19 +4,11 @@ import { useRecoilValue } from "recoil";
 import { ResponseType } from "Pages/ProductDetail";
 import { CartInfoType } from "Pages/ProductDetail";
 
-// const AddCartAPI = (cartInfo: CartInfoType): (() => Promise<ResponseType>) => {
 
 const AddCartAPI = (cartInfo: CartInfoType): (() => Promise<ResponseType>) => {
   const token = useRecoilValue(userToken);
+
   const addCart = async (): Promise<ResponseType> => {
-    let authorizationToken;
-
-    if (localStorage.getItem("kakaoToken")) {
-      authorizationToken = `Bearer ${localStorage.getItem("kakaoToken")}`;
-    } else {
-      authorizationToken = `JWT ${token}`;
-    }
-
     try {
       const res = await fetch(`${URL}/cart/`, {
         method: "POST",

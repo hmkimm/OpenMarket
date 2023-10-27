@@ -10,22 +10,11 @@ const GetCartAPI = () => {
   const token = useRecoilValue(userToken);
 
   const fetchCartItem = useCallback(async () => {
-    let authorizationToken;
-
-    if (localStorage.getItem("kakaoToken")) {
-      authorizationToken = `Bearer ${localStorage.getItem("kakaoToken")}`;
-    } else {
-      authorizationToken = `JWT ${token}`;
-    }
-    console.log(authorizationToken);
     try {
       const res = await fetch(`${URL}/cart`, {
         method: "GET",
         headers: {
-          Authorization: authorizationToken,
-
-          // Authorization: `JWT ${token}`,
-
+          Authorization: `JWT ${token}`,
         },
       });
 
@@ -37,7 +26,7 @@ const GetCartAPI = () => {
     }
   }, [token]);
 
-  return  fetchCartItem ;
+  return fetchCartItem;
 };
 
 export default GetCartAPI;

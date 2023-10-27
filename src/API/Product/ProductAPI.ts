@@ -7,21 +7,13 @@ const ProductAPI = () => {
   const token = useRecoilValue(userToken);
 
   const fetchproducts = useCallback(async () => {
-    let authorizationToken;
 
-    if (localStorage.getItem("kakaoToken")) {
-      authorizationToken = `Bearer ${localStorage.getItem("kakaoToken")}`;
-    } else {
-      authorizationToken = `JWT ${token}`;
-    }
-    console.log(authorizationToken);
 
     try {
       const res = await fetch(`${URL}/products/`, {
         method: "GET",
         headers: {
-          // Authorization: `JWT ${token}`,
-          Authorization: authorizationToken,
+          Authorization: `JWT ${token}`,
         },
       });
       const data = await res.json();

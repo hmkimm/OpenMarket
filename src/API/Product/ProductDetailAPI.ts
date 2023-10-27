@@ -1,10 +1,10 @@
 import URL from "../URL";
 
-const ProductDetailAPI = (productId: string | number | undefined, token : string) => {
-
+const ProductDetailAPI = (
+  productId: string | number | undefined,
+  token: string
+) => {
   const getDetail = async () => {
-
-    
     try {
       const res = await fetch(`${URL}/products/${productId}`, {
         method: "GET",
@@ -19,7 +19,7 @@ const ProductDetailAPI = (productId: string | number | undefined, token : string
       console.error("api error", error);
       throw error;
     }
-  }
+  };
 
   return getDetail;
 };

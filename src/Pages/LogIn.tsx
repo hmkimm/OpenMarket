@@ -11,7 +11,6 @@ import MetaTag from "Components/Common/MetaTag";
 
 import LogInAPI from "../API/LogInAPI";
 import AlertBox from "Components/AlertBox";
-import SocialKakao from "Components/SocialKaKao";
 import FlexLayout from "Style/FlexLayout";
 
 export interface userInput {
@@ -180,8 +179,8 @@ const LogIn = () => {
               !userInput.password
             }
             type="submit"
-            width="50%"
-            $margin="10px 10px 0 0"
+            $margin="20px 0 0 0"
+            width="65%"
             $br="15px"
             $fontsize="16px"
             style={{
@@ -192,7 +191,6 @@ const LogIn = () => {
           >
             아이디 로그인
           </Button>
-          <SocialKakao />
         </FlexLayout>
       </FormLayout>
       <LinkLayout>
