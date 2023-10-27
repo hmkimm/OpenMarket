@@ -55,6 +55,8 @@ export interface ApiCartType extends productDetail {
 }
 const ShoppingCart = () => {
   const navigate = useNavigate();
+  const token = useRecoilValue(userToken);
+
   const fetchCartItem = GetCartAPI();
 
   const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
@@ -65,7 +67,6 @@ const ShoppingCart = () => {
     shippingFeeSum: 0,
     total: 0,
   });
-  const token = useRecoilValue(userToken);
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
@@ -83,7 +84,6 @@ const ShoppingCart = () => {
     deletedCart.splice(existingItemIndex, 1);
     setApiCart([...deletedCart]);
   };
-
 
   useEffect(() => {
     let sum = 0;
@@ -104,25 +104,28 @@ const ShoppingCart = () => {
   useEffect(() => {
     const getCartItem = async () => {
       const data = await fetchCartItem();
+      console.log(data);
 
+      if (data.results) {
+        const apiPromises = data.results?.map(async (el) => {
+          const getDetail = ProductDetailAPI(el.product_id, token);
+          const res = await getDetail();
 
-      const apiPromises = data.results.map(async (el) => {
-        const getDetail = ProductDetailAPI(el.product_id, token);
-        const res = await getDetail();
+          const apiResults = {
+            ...res,
+            quantity: el.quantity,
+            cart_item_id: el.cart_item_id,
+          };
+          return apiResults;
+        });
 
-        const apiResults = {
-          ...res,
-          quantity: el.quantity,
-          cart_item_id: el.cart_item_id,
-        };
-        return apiResults;
-      });
-      // 모든 API 호출을 병렬로 실행
-      const results = await Promise.all(apiPromises);
-      setLoading(false);
-      setApiCart(results);
-
+        // 모든 API 호출을 병렬로 실행
+        const results = await Promise.all(apiPromises);
+        setLoading(false);
+        setApiCart(results);
+      }
     };
+    setLoading(false);
     getCartItem();
   }, []);
   console.log("api 리코일 : ", apiCart);

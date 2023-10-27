@@ -37,7 +37,7 @@ const GetCartAPI = () => {
     }
   }, [token]);
 
-  return { fetchCartItem };
+  return  fetchCartItem ;
 };
 
 export default GetCartAPI;
