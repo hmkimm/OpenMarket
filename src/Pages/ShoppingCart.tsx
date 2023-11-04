@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
 import GetCartAPI from "../API/Cart/GetCartAPI";
 import logo from "../Assets/Icons/mulkong-gray.svg";
@@ -29,6 +29,7 @@ import userToken from "Recoil/userToken/userToken";
 import { productDetail } from "./ProductDetail";
 import Loading from "Components/Loading";
 import apiCartItems from "Recoil/cart/apiCartItems";
+import cartProducts from "Recoil/cart/cartProducts";
 
 interface QuantityButtonType {
   $borRadius: string;
@@ -67,6 +68,7 @@ const ShoppingCart = () => {
     shippingFeeSum: 0,
     total: 0,
   });
+  const setSavedCart = useSetRecoilState(cartProducts)
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
@@ -121,13 +123,14 @@ const ShoppingCart = () => {
 
         // 모든 API 호출을 병렬로 실행
         const results = await Promise.all(apiPromises);
-        setLoading(false);
         setApiCart(results);
       }
-    };
-    setLoading(false);
+      setLoading(false);
+    }
+
     getCartItem();
   }, []);
+  
   console.log("api 리코일 : ", apiCart);
 
   return (
@@ -250,7 +253,9 @@ const ShoppingCart = () => {
                 width="200px"
                 $margin="0 auto"
                 onClick={() => {
-                  navigate("/order", { state: totalPrice });
+                  navigate("/order", { state: totalPrice })
+                  setSavedCart([])
+                  ;
                 }}
               >
                 주문하기
