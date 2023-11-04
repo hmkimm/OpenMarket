@@ -1,6 +1,5 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { CartItemType } from "../../\btypes";
 import { ApiCartType } from "Pages/ShoppingCart";
 
 const { persistAtom } = recoilPersist();
