@@ -110,7 +110,7 @@ const ShoppingCart = () => {
   const { data: cartItemData } = useQuery("cartItems", fetchCartItem, {
     refetchOnWindowFocus: false,
     // staleTime: 60 * 1000,
-    // staleTime: 0,
+    staleTime: 0,
   });
   console.log("cartItemData : ", cartItemData);
 
@@ -168,12 +168,11 @@ const ShoppingCart = () => {
   // }
   useEffect(() => {
     const getCartItem = async () => {
-      // const data = await fetchCartItem();
-      // console.log(data);
+      const data = await fetchCartItem();
+      console.log(data);
 
-      if (cartItemData) {
-        console.log(cartItemData.results);
-        const apiPromises = cartItemData.results?.map(async (el) => {
+      if (data) {
+        const apiPromises = data.results?.map(async (el) => {
           const getDetail = ProductDetailAPI(el.product_id, token);
           console.log(getDetail);
           const res = await getDetail();
