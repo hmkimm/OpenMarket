@@ -5,13 +5,17 @@ import GlobalStyle from "./GlobalStyle";
 
 import { RecoilRoot } from "recoil";
 import { Helmet } from "react-helmet-async";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const App: React.FC = () => {
+  const queryClient = new QueryClient();
   return (
-    <RecoilRoot>
-      <GlobalStyle />
-      <AppRoutes />
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <GlobalStyle />
+        <AppRoutes />
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 };
 

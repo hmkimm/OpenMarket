@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useQuery, useQueries } from "react-query";
 import DeleteCartAPI from "../API/Cart/DeleteCartAPI";
 import GetCartAPI from "../API/Cart/GetCartAPI";
 import logo from "../Assets/Icons/mulkong-gray.svg";
@@ -30,6 +31,7 @@ import { productDetail } from "./ProductDetail";
 import Loading from "Components/Loading";
 import apiCartItems from "Recoil/cart/apiCartItems";
 import cartProducts from "Recoil/cart/cartProducts";
+import { useProductDetails } from "\bHooks/useProductDetails";
 
 interface QuantityButtonType {
   $borRadius: string;
@@ -68,7 +70,7 @@ const ShoppingCart = () => {
     shippingFeeSum: 0,
     total: 0,
   });
-  const setSavedCart = useSetRecoilState(cartProducts)
+  const setSavedCart = useSetRecoilState(cartProducts);
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
@@ -90,7 +92,7 @@ const ShoppingCart = () => {
   useEffect(() => {
     let sum = 0;
     let deliverySum = 0;
-    apiCart.map((el) => {
+    apiCart?.map((el) => {
       sum += el.price * el.quantity;
       deliverySum += el.shipping_fee;
 
@@ -103,16 +105,79 @@ const ShoppingCart = () => {
     });
   }, [apiCart]);
 
+  //16번
+
+  const { data: cartItemData } = useQuery("cartItems", fetchCartItem, {
+    refetchOnWindowFocus: false,
+    // staleTime: 60 * 1000,
+    // staleTime: 0,
+  });
+  console.log("cartItemData : ", cartItemData);
+
+  // if(cartItemData) {
+  // const queries = (cartItemData?.results || []).map((el) => ({
+  //   queryKey: ["productDetail", el.product_id],
+  //   queryFn: () => ProductDetailAPI(el.product_id, token),
+  //   staleTime: 60 * 1000,
+  //   refetchOnWindowFocus: false,
+  //   // enabled: !!cartItemData,
+  // }));
+
+  // const detailresults = useQueries(queries);
+  // console.log(detailresults);
+
+  // detailresults.forEach(async (result, index) => {
+  // const data = await result.data;
+  // console.log(data)
+  // setApiCart(data)
+  //상품 디테일 정보
+  // console.log(`Result ${index}: `, data);
+  // setApiCart((prev) => ({
+  //   ...prev,
+  //   // data
+  // }));
+  // });
+
+  // const apiPromises = detailresults?.map((el: any) => el.data);
+  //note : 완성
+  // if (apiPromises) {
+  //   Promise.all(apiPromises)
+  //     .then((cartItemResults) => {
+  //       console.log(cartItemResults); // 이곳에 각 Promise의 결과 값이 배열로 담겨 있습니다.
+
+  //       const cartItemPromises = cartItemData?.results?.map(async (el: any) => {
+  //         //el은 카트 아이템 정보
+  //         console.log(el);
+  //         const apiResults = {
+  //           // ...data,
+  //           quantity: el.quantity,
+  //           cart_item_id: el.cart_item_id,
+  //         };
+  //         console.log(apiResults);
+  //         return apiResults;
+  //       });
+
+  //       // const results =  Promise.all(apiPromises);
+  //       // console.log(results);
+  //       console.log(cartItemPromises);
+  //       // setApiCart(results);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error); // Promise 중 하나라도 거부(rejected)되면 에러를 출력합니다.
+  //     });
+  // }
   useEffect(() => {
     const getCartItem = async () => {
-      const data = await fetchCartItem();
-      console.log(data);
+      // const data = await fetchCartItem();
+      // console.log(data);
 
-      if (data.results) {
-        const apiPromises = data.results?.map(async (el) => {
+      if (cartItemData) {
+        console.log(cartItemData.results);
+        const apiPromises = cartItemData.results?.map(async (el) => {
           const getDetail = ProductDetailAPI(el.product_id, token);
+          console.log(getDetail);
           const res = await getDetail();
-
+          console.log("res : ", res);
           const apiResults = {
             ...res,
             quantity: el.quantity,
@@ -126,11 +191,11 @@ const ShoppingCart = () => {
         setApiCart(results);
       }
       setLoading(false);
-    }
-
+    };
+    console.log("rendering");
     getCartItem();
-  }, []);
-  
+  }, [cartItemData]);
+
   console.log("api 리코일 : ", apiCart);
 
   return (
@@ -170,7 +235,7 @@ const ShoppingCart = () => {
               <div>
                 총
                 <strong style={{ color: "var(--primary" }}>
-                  {apiCart.length}
+                  {apiCart?.length}
                 </strong>
                 개
               </div>
@@ -228,7 +293,7 @@ const ShoppingCart = () => {
               </CartItem>
             );
           })}
-          {apiCart.length > 0 && (
+          {apiCart?.length > 0 && (
             <>
               <TotalPriceLayout>
                 <div>
@@ -253,9 +318,8 @@ const ShoppingCart = () => {
                 width="200px"
                 $margin="0 auto"
                 onClick={() => {
-                  navigate("/order", { state: totalPrice })
-                  setSavedCart([])
-                  ;
+                  navigate("/order", { state: totalPrice });
+                  setSavedCart([]);
                 }}
               >
                 주문하기

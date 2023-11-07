@@ -14,6 +14,7 @@ import HorizontalLine from "Style/HorizontalLine";
 import MetaTag from "Components/Common/MetaTag";
 import userToken from "Recoil/userToken/userToken";
 import product from "Recoil/cart/product";
+import { useQuery } from "react-query";
 
 interface ProductDetailProps {
   color?: string;
@@ -54,19 +55,18 @@ const ProductDetail = (props: ProductDetailProps) => {
   const productId = params.productId;
   const token = useRecoilValue(userToken);
   const getDetail = ProductDetailAPI(productId, token);
-  const [productDetail, setProductDetail] = useState<productDetail>({
-    image: "",
-    store_name: "",
-    product_name: "",
-    price: 0,
-    shipping_method: "",
-    product_info: "",
-    shipping_fee: 0,
-    stock: 0,
-    product_id: 0,
-  });
-  const productStock = productDetail?.stock;
-  console.log("남은 재고 : ", productStock);
+  // const [productDetail, setProductDetail] = useState<productDetail>({
+  //   image: "",
+  //   store_name: "",
+  //   product_name: "",
+  //   price: 0,
+  //   shipping_method: "",
+  //   product_info: "",
+  //   shipping_fee: 0,
+  //   stock: 0,
+  //   product_id: 0,
+  // });
+
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
   console.log("cart 🥎 : ", savedCart);
   const [isClicked, setIsClicked] = useState<null | number>(null);
@@ -97,16 +97,22 @@ const ProductDetail = (props: ProductDetailProps) => {
       }));
     }
   };
+const queryKey = ['productDetail', productId]
+  const {data : productDetail} = useQuery(queryKey, getDetail, {
+    staleTime : 60 * 1000,
+    refetchOnWindowFocus : false
+  })
 
-  useEffect(() => {
-    const handleDetail = async () => {
-      const res = await getDetail();
+  const productStock = productDetail?.stock;
+  // useEffect(() => {
+  //   const handleDetail = async () => {
+  //     const res = await getDetail();
 
-      setProductDetail(res);
-    };
-    handleDetail();
-    console.log('savedCart : ', savedCart)
-  }, []);
+  //     setProductDetail(res);
+  //   };
+  //   handleDetail();
+  //   console.log('savedCart : ', savedCart)
+  // }, []);
 
   const handleDirectBuying = () => {
     setDirectProduct({
@@ -115,7 +121,11 @@ const ProductDetail = (props: ProductDetailProps) => {
     });
     navigate("/order");
   };
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
+  const handleImageLoad = () => {
+    setIsImageLoaded(true);
+  };
   console.log("상품 상세⛸️ : ", productDetail);
   return (
     <>
@@ -129,12 +139,14 @@ const ProductDetail = (props: ProductDetailProps) => {
       />
 
       <BasicHeader />
-      {productDetail.image && (
+      {/* {isLoading && <Loading/>} */}
+      {productDetail?.image && (
         <ProductDetailLayout>
           <ProductLayout>
             <ProductImage
               src={productDetail?.image}
               alt={productDetail?.product_name}
+              onLoad={handleImageLoad}
             />
             <ProudctInfo>
               <CompanyInfo>{productDetail?.store_name}</CompanyInfo>
