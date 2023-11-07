@@ -14,6 +14,7 @@ import HorizontalLine from "Style/HorizontalLine";
 import MetaTag from "Components/Common/MetaTag";
 import userToken from "Recoil/userToken/userToken";
 import product from "Recoil/cart/product";
+import { useQuery } from "react-query";
 
 interface ProductDetailProps {
   color?: string;
@@ -54,19 +55,18 @@ const ProductDetail = (props: ProductDetailProps) => {
   const productId = params.productId;
   const token = useRecoilValue(userToken);
   const getDetail = ProductDetailAPI(productId, token);
-  const [productDetail, setProductDetail] = useState<productDetail>({
-    image: "",
-    store_name: "",
-    product_name: "",
-    price: 0,
-    shipping_method: "",
-    product_info: "",
-    shipping_fee: 0,
-    stock: 0,
-    product_id: 0,
-  });
-  const productStock = productDetail?.stock;
-  console.log("남은 재고 : ", productStock);
+  // const [productDetail, setProductDetail] = useState<productDetail>({
+  //   image: "",
+  //   store_name: "",
+  //   product_name: "",
+  //   price: 0,
+  //   shipping_method: "",
+  //   product_info: "",
+  //   shipping_fee: 0,
+  //   stock: 0,
+  //   product_id: 0,
+  // });
+
   const [savedCart, setSavedCart] = useRecoilState(cartProducts);
   console.log("cart 🥎 : ", savedCart);
   const [isClicked, setIsClicked] = useState<null | number>(null);
@@ -85,40 +85,6 @@ const ProductDetail = (props: ProductDetailProps) => {
   };
   const handleCart = async () => {
     await addCart();
-    // const res: ResponseType = await addCart();
-    {
-      // 새로운 카트 아이템 생성
-      // const cartItem: CartItemType = {
-      //   img: productDetail?.image,
-      //   provider: productDetail?.store_name,
-      //   name: productDetail?.product_name,
-      //   price: productDetail?.price,
-      //   shippingMethod: productDetail?.shipping_method,
-      //   shippingFee: productDetail?.shipping_fee,
-      //   quantity: orderNum,
-      //   myCart: res?.my_cart,
-      //   cartId: res?.cart_item_id,
-      //   productId: productDetail?.product_id,
-      // };
-      // 장바구니에 해당 아이템이 이미 있는지 검사
-      // const existingCartItemIndex = savedCart.findIndex((item: CartItemType) => {
-      //   return item.name === cartItem.name;
-      // });
-      // if (existingCartItemIndex !== -1) {
-      //   // 이미 장바구니에 있는 아이템일 경우, 수량만 더하기
-      //   const updatedCart = [...savedCart];
-      //   updatedCart[existingCartItemIndex] = {
-      //     ...updatedCart[existingCartItemIndex],
-      //     quantity:
-      //       updatedCart[existingCartItemIndex].quantity + cartItem.quantity,
-      //   };
-      //   setSavedCart(updatedCart);
-      // } else {
-      //   // 장바구니에 없는 아이템일 경우, 아이템을 추가
-      //   setSavedCart([...savedCart, cartItem]);
-      // }
-    }
-
     navigate("/cart");
   };
 
@@ -131,15 +97,22 @@ const ProductDetail = (props: ProductDetailProps) => {
       }));
     }
   };
+const queryKey = ['productDetail', productId]
+  const {data : productDetail} = useQuery(queryKey, getDetail, {
+    staleTime : 60 * 1000,
+    refetchOnWindowFocus : false
+  })
 
-  useEffect(() => {
-    const handleDetail = async () => {
-      const res = await getDetail();
-      console.log("rendering test");
-      setProductDetail(res);
-    };
-    handleDetail();
-  }, []);
+  const productStock = productDetail?.stock;
+  // useEffect(() => {
+  //   const handleDetail = async () => {
+  //     const res = await getDetail();
+
+  //     setProductDetail(res);
+  //   };
+  //   handleDetail();
+  //   console.log('savedCart : ', savedCart)
+  // }, []);
 
   const handleDirectBuying = () => {
     setDirectProduct({
@@ -148,7 +121,11 @@ const ProductDetail = (props: ProductDetailProps) => {
     });
     navigate("/order");
   };
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
+  const handleImageLoad = () => {
+    setIsImageLoaded(true);
+  };
   console.log("상품 상세⛸️ : ", productDetail);
   return (
     <>
@@ -162,12 +139,14 @@ const ProductDetail = (props: ProductDetailProps) => {
       />
 
       <BasicHeader />
-      {productDetail.image && (
+      {/* {isLoading && <Loading/>} */}
+      {productDetail?.image && (
         <ProductDetailLayout>
           <ProductLayout>
             <ProductImage
               src={productDetail?.image}
               alt={productDetail?.product_name}
+              onLoad={handleImageLoad}
             />
             <ProudctInfo>
               <CompanyInfo>{productDetail?.store_name}</CompanyInfo>

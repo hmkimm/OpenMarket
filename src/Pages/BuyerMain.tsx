@@ -11,6 +11,7 @@ import yt from "../Assets/Icons/yt.svg";
 import ProductItem from "../Components/Common/ProductItem";
 import MetaTag from "Components/Common/MetaTag";
 import Loading from "Components/Loading";
+import { useQuery } from "react-query";
 
 interface ProductList {
   results?: MyProduct[];
@@ -27,18 +28,27 @@ interface SnsBtnType {
 }
 const BuyerMain = () => {
   const { fetchproducts } = ProductAPI();
-  const [productList, setProductList] = useState<ProductList>({
-    results: [],
+  // const [productList, setProductList] = useState<ProductList>({
+  //   results: [],
+  // });
+
+  const { data: productList, isLoading } = useQuery("products", fetchproducts, {
+    staleTime: 1000 * 60,
+    refetchOnWindowFocus : false
+
   });
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const getProduct = async () => {
-      const res = await fetchproducts();
-      setProductList(res);
-      setIsLoading(false);
-    };
-    getProduct();
-  }, [fetchproducts]);
+  console.log(productList);
+
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const getProduct = async () => {
+  //     const res = await fetchproducts();
+  //     setProductList(res);
+  //     setIsLoading(false);
+  //   };
+  //   getProduct();
+  // }, [fetchproducts]);
 
   return (
     <>
@@ -51,7 +61,7 @@ const BuyerMain = () => {
       <BasicHeader />
       {isLoading && <Loading />}
       <Grid>
-        {productList?.results?.map((item, i) => {
+        {productList?.results?.map((item: MyProduct, i: number) => {
           return (
             <Link
               to={`/products/${item.product_id}`}
