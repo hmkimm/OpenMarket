@@ -11,6 +11,9 @@
 구매회원
 ID: Mulkong1
 PW: Mulkong1!
+
+ID: buyer1 
+PW: hodu0910
 ```
 <br/>
 
