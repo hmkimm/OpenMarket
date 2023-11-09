@@ -31,7 +31,8 @@ import { productDetail } from "./ProductDetail";
 import Loading from "Components/Loading";
 import apiCartItems from "Recoil/cart/apiCartItems";
 import cartProducts from "Recoil/cart/cartProducts";
-import { useProductDetails } from "\bHooks/useProductDetails";
+import { useCallback } from "react";
+// import { useProductDetails } from "\bHooks/useProductDetails";
 
 interface QuantityButtonType {
   $borRadius: string;
@@ -74,10 +75,11 @@ const ShoppingCart = () => {
   const delCartItem = DeleteCartAPI();
   const handleDeleteAllCart = DeleteAllCartsAPI();
 
-  const handleDeleteAllCartItems = async () => {
+  const handleDeleteAllCartItems = useCallback(async () => {
     await handleDeleteAllCart();
     setApiCart([]);
-  };
+  }, []);
+
 
   const handleDeleteCart = async (cartId: number) => {
     await delCartItem(cartId);
@@ -107,37 +109,6 @@ const ShoppingCart = () => {
 
   //16번
 
-  const { data: cartItemData } = useQuery("cartItems", fetchCartItem, {
-    refetchOnWindowFocus: false,
-    // staleTime: 60 * 1000,
-    staleTime: 0,
-  });
-  console.log("cartItemData : ", cartItemData);
-
-  // if(cartItemData) {
-  // const queries = (cartItemData?.results || []).map((el) => ({
-  //   queryKey: ["productDetail", el.product_id],
-  //   queryFn: () => ProductDetailAPI(el.product_id, token),
-  //   staleTime: 60 * 1000,
-  //   refetchOnWindowFocus: false,
-  //   // enabled: !!cartItemData,
-  // }));
-
-  // const detailresults = useQueries(queries);
-  // console.log(detailresults);
-
-  // detailresults.forEach(async (result, index) => {
-  // const data = await result.data;
-  // console.log(data)
-  // setApiCart(data)
-  //상품 디테일 정보
-  // console.log(`Result ${index}: `, data);
-  // setApiCart((prev) => ({
-  //   ...prev,
-  //   // data
-  // }));
-  // });
-
   // const apiPromises = detailresults?.map((el: any) => el.data);
   //note : 완성
   // if (apiPromises) {
@@ -166,34 +137,37 @@ const ShoppingCart = () => {
   //       console.error(error); // Promise 중 하나라도 거부(rejected)되면 에러를 출력합니다.
   //     });
   // }
+
+
   useEffect(() => {
-    const getCartItem = async () => {
-      const data = await fetchCartItem();
-      console.log(data);
+  const getCartItem = async () => {
+    const data = await fetchCartItem();
+    if (data) {
+      // if (cartItemData) {
+      // if(cartItemData && cartItemData.count > 0){
+      // console.log("cartItemData : ", cartItemData, cartItemData.count);
+      const apiPromises = data.results?.map(async (el) => {
+        const getDetail = ProductDetailAPI(el.product_id, token);
+        const res = await getDetail();
+        console.log("res : ", res);
+        const apiResults = {
+          ...res,
+          quantity: el.quantity,
+          cart_item_id: el.cart_item_id,
+        };
+        return apiResults;
+      });
 
-      if (data) {
-        const apiPromises = data.results?.map(async (el) => {
-          const getDetail = ProductDetailAPI(el.product_id, token);
-          console.log(getDetail);
-          const res = await getDetail();
-          console.log("res : ", res);
-          const apiResults = {
-            ...res,
-            quantity: el.quantity,
-            cart_item_id: el.cart_item_id,
-          };
-          return apiResults;
-        });
+      // 모든 API 호출을 병렬로 실행
+      const results = await Promise.all(apiPromises);
+      setApiCart(results);
+    }
+    setLoading(false);
 
-        // 모든 API 호출을 병렬로 실행
-        const results = await Promise.all(apiPromises);
-        setApiCart(results);
-      }
-      setLoading(false);
-    };
-    console.log("rendering");
-    getCartItem();
-  }, [cartItemData]);
+  };
+  getCartItem();
+  }, []);
+
 
   console.log("api 리코일 : ", apiCart);
 
@@ -214,14 +188,15 @@ const ShoppingCart = () => {
             <div>수량</div>
             <div>상품금액</div>
           </CartHeader>
-          {loading && <Loading />}
-          {apiCart?.length === 0 && (
+
+          {!loading && apiCart?.length === 0 && (
             <div>
               <CartMsg> 장바구니가 비었습니다</CartMsg>
               <EmptyImg src={logo} />
             </div>
           )}
-          {apiCart?.length > 0 && (
+          {loading && <Loading />}
+          {!loading && apiCart?.length > 0 && (
             <FlexLayout $jc="flex-start">
               <Button
                 onClick={handleDeleteAllCartItems}

@@ -38,7 +38,6 @@ const BuyerMain = () => {
 
   });
   console.log(productList);
-
   // const [isLoading, setIsLoading] = useState(true);
 
   // useEffect(() => {
