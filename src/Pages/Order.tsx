@@ -1,8 +1,6 @@
 import BasicHeader from "Components/Header/BasicHeader";
-import { useRecoilState, useRecoilValue } from "recoil";
-import cartProducts from "Recoil/cart/cartProducts";
+import { useRecoilState } from "recoil";
 
-import { CartItemType } from "\btypes";
 import styled from "styled-components";
 import Button from "Components/Common/Button";
 import { Layout, Header } from "Style/Layout";
@@ -41,7 +39,6 @@ const Order = () => {
   const totalPrice = location.state;
   const [apiCart, setApiCart] = useRecoilState<ApiCartType[]>(apiCartItems);
   const handleDeleteAllCart = DeleteAllCartsAPI();
-
   const [directProduct, setDirectProduct] = useRecoilState(product);
 
   const handleInputCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
