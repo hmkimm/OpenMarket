@@ -15,6 +15,7 @@ import MetaTag from "Components/Common/MetaTag";
 import userToken from "Recoil/userToken/userToken";
 import product from "Recoil/cart/product";
 import { useQuery } from "react-query";
+import Loading from "Components/Loading";
 
 interface ProductDetailProps {
   color?: string;
@@ -97,11 +98,12 @@ const ProductDetail = (props: ProductDetailProps) => {
       }));
     }
   };
-const queryKey = ['productDetail', productId]
-  const {data : productDetail} = useQuery(queryKey, getDetail, {
-    staleTime : 60 * 1000,
-    refetchOnWindowFocus : false
-  })
+  const queryKey = ["productDetail", productId];
+  const { data: productDetail } = useQuery(queryKey, getDetail, {
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
 
   const productStock = productDetail?.stock;
   // useEffect(() => {
