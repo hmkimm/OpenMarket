@@ -4,8 +4,7 @@ import { useRecoilValue } from "recoil";
 import userToken from "Recoil/userToken/userToken";
 
 const ProtectedRoute = () => {
-  const isLogIn =
-    useRecoilValue(userToken) || localStorage.getItem("kakaoToken");
+  const isLogIn = useRecoilValue(userToken);
 
   const navigate = useNavigate();
   const ErrMsg = "로그인을 해주세요!";
