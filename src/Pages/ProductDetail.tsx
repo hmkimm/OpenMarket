@@ -137,7 +137,6 @@ const ProductDetail = (props: ProductDetailProps) => {
         imageUrl={productDetail?.image}
         imageWidth="800"
         imageHeight="400"
-        url="https://d1aj463p8fjhgr.cloudfront.net/products/152"
       />
 
       <BasicHeader />

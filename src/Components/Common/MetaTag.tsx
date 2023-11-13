@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 interface MetaProps {
   title: string;
   description: string;
-  url: string;
+  url?: string;
   imageUrl?: string;
   imageWidth?: string;
   imageHeight?: string;
