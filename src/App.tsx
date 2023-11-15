@@ -6,15 +6,18 @@ import GlobalStyle from "./GlobalStyle";
 import { RecoilRoot } from "recoil";
 import { Helmet } from "react-helmet-async";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { CookiesProvider } from "react-cookie";
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <GlobalStyle />
-        <AppRoutes />
-      </RecoilRoot>
+      <CookiesProvider>
+        <RecoilRoot>
+          <GlobalStyle />
+          <AppRoutes />
+        </RecoilRoot>
+      </CookiesProvider>
     </QueryClientProvider>
   );
 };

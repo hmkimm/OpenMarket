@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
+import { useCookies } from "react-cookie";
 
 import logo from "../Assets/Icons/mulkong.svg";
 import Button from "../Components/Common/Button";
@@ -33,6 +34,7 @@ export interface InputType {
 }
 
 const LogIn = () => {
+  const [cookies, setCookies] = useCookies(["loginToken"]);
   const navigate = useNavigate();
   const location = useLocation();
   const [isWrongRoute, setIsWrongRoute] = useState(true);
@@ -69,6 +71,11 @@ const LogIn = () => {
     try {
       const res = await LogInAPI(userInput);
       setToken(res.token);
+      setCookies("loginToken", res.token, {
+        path: "/",
+        secure: true,
+        httpOnly: true,
+      });
 
       if (userInput.login_type === "SELLER") {
         navigate("/sellermain");
